@@ -50,13 +50,13 @@ return {
       status.component.git_branch { surround = { separator = "none" } },
       -- add a component for the current git diff if it exists and use no separator for the sections
       status.component.git_diff { padding = { left = 1 }, surround = { separator = "none" } },
+      -- harpoon index
+      status.component.harpoon_index,
       -- fill the rest of the statusline
       -- the elements after this will appear in the middle of the statusline
       status.component.fill(),
       -- add a component to display if the LSP is loading, disable showing running client names, and use no separator
       status.component.lsp { lsp_client_names = false, surround = { separator = "none", color = "bg" } },
-      -- harpoon index
-      status.component.harpoon_index,
       -- fill the rest of the statusline
       -- the elements after this will appear on the right of the statusline
       status.component.fill(),
