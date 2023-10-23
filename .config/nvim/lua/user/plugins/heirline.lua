@@ -49,7 +49,7 @@ return {
       -- add a component for the current git branch if it exists and use no separator for the sections
       status.component.git_branch { surround = { separator = "none" } },
       -- add a component for the current git diff if it exists and use no separator for the sections
-      status.component.git_diff { padding = { left = 1 }, surround = { separator = "none" } },
+      status.component.git_diff { padding = { left = 1, right = 1 }, surround = { separator = "none" } },
       -- harpoon index
       status.component.harpoon_index,
       -- fill the rest of the statusline
