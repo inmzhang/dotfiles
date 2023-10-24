@@ -12,21 +12,7 @@ alias frs="ls -d ~/WorkDir/RustProject/*/ | sk --preview 'cloc --exclude-dir=tar
 alias fpy="ls -d ~/WorkDir/PythonProject/*/ | sk | xargs nvim"
 # Select and open python project
 alias fcc="ls -d ~/WorkDir/CppProject/*/ | sk | xargs nvim"
-# open notes in neorg
-alias notes="nvim +'Neorg workspace notes'"
 # nautilus
 alias open="nautilus"
 # trans env variable
 export TARGET_LANG=zh-CN
-
-# Julia mirror
-export JULIA_PKG_SERVER=https://mirrors.ustc.edu.cn/julia
-
-# >>> juliaup initialize >>>
-
-# !! Contents within this block are managed by juliaup !!
-
-path=('/home/inm/.juliaup/bin' $path)
-export PATH
-
-# <<< juliaup initialize <<<

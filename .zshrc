@@ -54,6 +54,13 @@ function ya() {
 }
 
 export EDITOR="nvim"
+ 
+# Julia mirror
+export JULIA_PKG_SERVER=https://mirrors.ustc.edu.cn/julia
+
+# juliaup
+path=('$HOME/.juliaup/bin' $path)
+export PATH
 
 source ~/.zshrc_system
 
