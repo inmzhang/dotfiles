@@ -41,9 +41,13 @@ return {
     "NoahTheDuke/vim-just",
     lazy = false,
   },
-  -- {
-  --   "Pocco81/auto-save.nvim",
-  --     event = { "User AstroFile", "InsertEnter" },
-  --     opts = {},
-  -- },
+  {
+    "hrsh7th/nvim-cmp",
+    -- add cmp latex symbols for easier julia editing
+    dependencies = { "kdheepak/cmp-latex-symbols" },
+    opts = function(_, opts)
+      if not opts.sources then opts.sources = {} end
+      table.insert(opts.sources, { name = "latex_symbols", priority = 700 })
+    end,
+  },
 }

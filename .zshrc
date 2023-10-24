@@ -37,7 +37,7 @@ export PATH="$HOME/.cargo/bin:$PATH"
 eval "$(pyenv init -)"
 
 # copilot cli
-eval "$(github-copilot-cli alias -- "$0")"
+# eval "$(github-copilot-cli alias -- "$0")"
 
 # alias venv activate
 alias cvenv='python -m venv .venv'
