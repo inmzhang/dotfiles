@@ -17,11 +17,3 @@ alias frs="ls -d ~/Programming/RustProject/*/ | sk --preview 'ls {}' | xargs nvi
 # Select and open python project
 alias fpy="ls -d ~/Programming/PythonProject/*/ | sk --preview 'ls {}'  | xargs nvim"
  
-# >>> juliaup initialize >>>
-
-# !! Contents within this block are managed by juliaup !!
-
-path=('/Users/inm/.juliaup/bin' $path)
-export PATH
-
-# <<< juliaup initialize <<<

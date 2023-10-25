@@ -23,6 +23,7 @@ alias cat='bat'
 alias cl='clear'
 alias t='tmux'
 alias du='dust'
+alias s='kitten ssh'
 
 # starship
 eval $(starship init zsh)
@@ -54,6 +55,12 @@ function ya() {
 }
 
 export EDITOR="nvim"
+ 
+# Julia mirror
+export JULIA_PKG_SERVER=https://mirrors.ustc.edu.cn/julia
+
+# juliaup
+export PATH="$HOME/.juliaup/bin:$PATH"
 
 source ~/.zshrc_system
 
