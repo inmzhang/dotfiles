@@ -50,4 +50,14 @@ return {
       table.insert(opts.sources, { name = "latex_symbols", priority = 700 })
     end,
   },
+  {
+    "catppuccin/nvim",
+    optional = true,
+    opts = { integrations = { harpoon = true } },
+  },
+  {
+    'windwp/nvim-autopairs',
+    event = "InsertEnter",
+    opts = {}
+  },
 }

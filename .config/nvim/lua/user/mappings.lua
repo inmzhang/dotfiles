@@ -30,4 +30,11 @@ return {
     ["<esc>"] = { "<C-\\><C-n>", desc = "back to normal mode from vim terminal" },
     ["jk"] = { "<C-\\><C-n>", desc = "back to normal mode from vim terminal" },
   },
+  v = {
+    -- move text up and down
+    ["<M-j>"] = { ":m '>+1<cr>gv=gv", desc = "Move line down" },
+    ["<M-k>"] = { ":m '<-2<cr>gv=gv", desc = "Move line up" },
+    -- remeber yanked text, not overwrite by the substitute
+    ["p"] = {'"_dP', desc = "paste yanked text"},
+  }
 }
