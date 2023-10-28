@@ -56,8 +56,8 @@ return {
     opts = { integrations = { harpoon = true } },
   },
   {
-    'windwp/nvim-autopairs',
+    "windwp/nvim-autopairs",
     event = "InsertEnter",
-    opts = {}
+    opts = {},
   },
 }

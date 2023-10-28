@@ -1,16 +1,22 @@
+# Zap managed plugins
+[ -f "${XDG_DATA_HOME:-$HOME/.local/share}/zap/zap.zsh" ] && source "${XDG_DATA_HOME:-$HOME/.local/share}/zap/zap.zsh"
+plug "zsh-users/zsh-autosuggestions"
+plug "zsh-users/zsh-syntax-highlighting"
+plug "zsh-users/zsh-history-substring-search"
+
+# Load and initialise completion system
+autoload -Uz compinit
+compinit
+
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
 # oh-my-zsh theme
 ZSH_THEME="agnoster"
 
-plugins=(
-	git
-	zsh-syntax-highlighting
-	zsh-autosuggestions
-)
-
 source $ZSH/oh-my-zsh.sh
+
+plugins=( git )
 
 # alias
 alias v='nvim .'
