@@ -2,14 +2,12 @@ return {
 
   -- You can also add new plugins here as well:
   -- Add plugins, the lazy syntax
-  -- "andweeb/presence.nvim",
-  -- {
-  --   "ray-x/lsp_signature.nvim",
-  --   event = "BufRead",
-  --   config = function()
-  --     require("lsp_signature").setup()
-  --   end,
-  -- },
+  "andweeb/presence.nvim",
+  {
+    "ray-x/lsp_signature.nvim",
+    event = "BufRead",
+    config = function() require("lsp_signature").setup() end,
+  },
   {
     "ellisonleao/gruvbox.nvim",
     priority = 1000,
@@ -24,14 +22,9 @@ return {
   },
   {
     "iamcco/markdown-preview.nvim",
-    build = "cd app && npm install",
-    setup = function() vim.g.mkdp_filetypes = { "markdown" } end,
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
     ft = { "markdown" },
-  },
-  {
-    "kaarmu/typst.vim",
-    ft = "typst",
-    lazy = false,
+    build = function() vim.fn["mkdp#util#install"]() end,
   },
   {
     "christoomey/vim-tmux-navigator",
@@ -39,7 +32,8 @@ return {
   },
   {
     "NoahTheDuke/vim-just",
-    lazy = false,
+    event = { "BufReadPre", "BufNewFile" },
+    ft = { "\\cjustfile", "*.just", ".justfile" },
   },
   {
     "hrsh7th/nvim-cmp",
@@ -59,5 +53,11 @@ return {
     "windwp/nvim-autopairs",
     event = "InsertEnter",
     opts = {},
+  },
+  {
+    "mbbill/undotree",
+    keys = {
+      { "<leader>fu", "<cmd>UndotreeToggle<cr>", desc = "Toggle undotree" },
+    },
   },
 }

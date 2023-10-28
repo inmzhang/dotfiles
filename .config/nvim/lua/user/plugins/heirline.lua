@@ -6,8 +6,8 @@ return {
     -- custom heirline statusline component for harpoon
     status.component.harpoon_index = {
       provider = function()
-        if not is_available("harpoon") then return end
-        local marked = require("harpoon.mark")
+        if not is_available "harpoon" then return end
+        local marked = require "harpoon.mark"
         local filename = vim.api.nvim_buf_get_name(0)
         local ok, index = pcall(marked.get_index_of, filename)
         if ok and index and index > 0 then
@@ -21,7 +21,7 @@ return {
       hl = { fg = "fg", bg = "bg" },
       status.component.mode {
         mode_text = { icon = { kind = "VimIcon", padding = { right = 1, left = 1 } } },
-       -- surround the component with a separators
+        -- surround the component with a separators
         surround = {
           -- it's a left element, so use the left separator
           separator = "left",
@@ -63,7 +63,7 @@ return {
       -- add a component for the current diagnostics if it exists and use the right separator for the section
       status.component.diagnostics { surround = { separator = "right" } },
       -- add a component to display LSP clients, disable showing LSP progress, and use the right separator
-      status.component.lsp { lsp_progress = false, surround = { separator = "right" }, padding = {right = 1}},
+      status.component.lsp { lsp_progress = false, surround = { separator = "right" }, padding = { right = 1 } },
       -- NvChad has some nice icons to go along with information, so we can create a parent component to do this
       -- all of the children of this table will be treated together as a single component
       {
