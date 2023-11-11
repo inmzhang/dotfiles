@@ -63,4 +63,9 @@ return {
     -- Optional dependencies
     dependencies = { "nvim-tree/nvim-web-devicons" },
   },
+  {
+    "rose-pine/neovim",
+    name = "rose-pine",
+    opts = {},
+  },
 }

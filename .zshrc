@@ -68,5 +68,8 @@ export JULIA_PKG_SERVER=https://mirrors.ustc.edu.cn/julia
 # juliaup
 export PATH="$HOME/.juliaup/bin:$PATH"
 
+# haskell ghcup and cabal
+export PATH="$HOME/.cabal/bin:$HOME/.ghcup/bin:$PATH"
+
 source ~/.zshrc_system
 
