@@ -70,6 +70,8 @@ export PATH="$HOME/.juliaup/bin:$PATH"
 
 # haskell ghcup and cabal
 export PATH="$HOME/.cabal/bin:$HOME/.ghcup/bin:$PATH"
+[ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env" # ghcup-env
 
 source ~/.zshrc_system
+
 
