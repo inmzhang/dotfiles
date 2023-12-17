@@ -1,3 +1,10 @@
+# # proxy
+# export http_proxy=http://127.0.0.1:7890
+# export https_proxy=http://127.0.0.1:7890
+# export socks_proxy=socks://127.0.0.1:7891
+# export HTTP_PROXY=http://127.0.0.1:7890
+# export HTTPS_PROXY=http://127.0.0.1:7890
+# export SOCKS_PROXY=http://127.0.0.1:7891
 # nvm
 source /usr/share/nvm/init-nvm.sh
 
