@@ -29,14 +29,7 @@ alias cat='bat'
 alias cl='clear'
 alias t='tmux'
 alias du='dust'
-<<<<<<< HEAD
 alias s='kitten ssh'
-alias dn='nvim ~/workdir/daily_notes/README.md'
-
-# starship
-eval $(starship init zsh)
-=======
->>>>>>> refs/remotes/origin/master
 
 # autojump
 eval "$(zoxide init zsh)"
