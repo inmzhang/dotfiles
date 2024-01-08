@@ -8,13 +8,6 @@ return {
   config = function()
     require("neorg").setup {
       load = {
-        -- ["core.keybinds"] = {
-        --   config = {
-        --       hook = function(keybinds)
-        --             keybinds.remap_key("norg", "n", "<M-CR>", "<C-j>")
-        --       end,
-        --   }
-        -- },
         ["core.defaults"] = {}, -- Loads default behaviour
         ["core.summary"] = {},
         ["core.concealer"] = {
@@ -24,6 +17,13 @@ return {
         }, -- Adds pretty icons to your documents
         ["core.export"] = {},
         ["core.itero"] = {},
+        ["core.keybinds"] = {
+          config = {
+              hook = function(keybinds)
+                keybinds.remap_key("norg", "i", "<M-CR>", "<M-j>")
+              end,
+          }
+        },
         ["core.completion"] = {
           config = {
             engine = "nvim-cmp",
