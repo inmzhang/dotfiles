@@ -32,11 +32,17 @@ return {
         ["core.dirman"] = { -- Manages Neorg workspaces
           config = {
             workspaces = {
-              main = "~/neorg",
+              main = "~/neorg/main",
+              root = "~/neorg"
             },
             default_workspace = "main",
           },
         },
+        ["core.journal"] = {
+          config = {
+            workspace = "root",
+          }
+        }
       },
     }
   end,
