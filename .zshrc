@@ -29,6 +29,7 @@ alias cat='bat'
 alias cl='clear'
 alias t='tmux'
 alias du='dust'
+alias s='kitten ssh'
 
 # autojump
 eval "$(zoxide init zsh)"
