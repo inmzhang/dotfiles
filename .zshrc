@@ -30,6 +30,7 @@ alias cl='clear'
 alias t='tmux'
 alias du='dust'
 alias s='kitten ssh'
+alias dn='nvim ~/workdir/daily_notes/README.md'
 
 # starship
 eval $(starship init zsh)
