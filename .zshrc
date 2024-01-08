@@ -30,7 +30,7 @@ alias cl='clear'
 alias t='tmux'
 alias du='dust'
 alias s='kitten ssh'
-alias notes='nvim ~/neorg'
+alias notes='nvim ~/neorg/main/'
 alias journal="nvim -c 'Neorg journal today'"
 
 # autojump
