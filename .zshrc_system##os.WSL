@@ -12,14 +12,3 @@ source /usr/share/nvm/init-nvm.sh
 # and open the pdf in default pdf browser
 DEFAULT_PDF_BROWSER="firefox"
 alias fp="find ~/Zotero/storage -name '*.pdf' | sk -m --preview 'pdftotext {} - | less' | xargs -I {} ${DEFAULT_PDF_BROWSER} '{}' >/dev/null 2>&1"
-# alias fp='find ~/Zotero/storage -name "*.pdf" | sk -m --preview "pdftotext {} - | less" | xargs -I {} firefox "{}" >/dev/null 2>&1'
-# Select and open rust project
-alias frs="ls -d ~/WorkDir/RustProject/*/ | sk --preview 'cloc --exclude-dir=target --quiet --hide-rate {}'| xargs nvim"
-# Select and open python project
-alias fpy="ls -d ~/WorkDir/PythonProject/*/ | sk | xargs nvim"
-# Select and open python project
-alias fcc="ls -d ~/WorkDir/CppProject/*/ | sk | xargs nvim"
-# nautilus
-alias open="nautilus"
-# trans env variable
-export TARGET_LANG=zh-CN

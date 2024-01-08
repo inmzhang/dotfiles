@@ -29,11 +29,14 @@ alias cat='bat'
 alias cl='clear'
 alias t='tmux'
 alias du='dust'
+<<<<<<< HEAD
 alias s='kitten ssh'
 alias dn='nvim ~/workdir/daily_notes/README.md'
 
 # starship
 eval $(starship init zsh)
+=======
+>>>>>>> refs/remotes/origin/master
 
 # autojump
 eval "$(zoxide init zsh)"
@@ -42,6 +45,8 @@ eval "$(zoxide init zsh)"
 export PATH="$HOME/.cargo/bin:$PATH"
 
 # pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 
 # copilot cli
@@ -70,3 +75,7 @@ export JULIA_PKG_SERVER=https://mirrors.ustc.edu.cn/julia
 export PATH="$HOME/.juliaup/bin:$PATH"
 
 source ~/.zshrc_system
+
+# starship
+eval $(starship init zsh)
+
