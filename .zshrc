@@ -30,6 +30,8 @@ alias cl='clear'
 alias t='tmux'
 alias du='dust'
 alias s='kitten ssh'
+alias notes='nvim ~/neorg'
+alias journal="nvim -c 'Neorg journal today'"
 
 # autojump
 eval "$(zoxide init zsh)"

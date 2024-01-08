@@ -20,7 +20,7 @@ return {
         ["core.keybinds"] = {
           config = {
               hook = function(keybinds)
-                keybinds.remap_key("norg", "i", "<M-CR>", "<M-j>")
+                keybinds.remap_key("norg", "i", "<M-CR>", "<C-j>")
               end,
           }
         },
