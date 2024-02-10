@@ -4,20 +4,6 @@ plug "zsh-users/zsh-autosuggestions"
 plug "zsh-users/zsh-syntax-highlighting"
 plug "zsh-users/zsh-history-substring-search"
 
-# Load and initialise completion system
-autoload -Uz compinit
-compinit
-
-# Path to your oh-my-zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
-
-# oh-my-zsh theme
-ZSH_THEME="agnoster"
-
-source $ZSH/oh-my-zsh.sh
-
-plugins=( git )
-
 # alias
 alias v='nvim .'
 alias vi='nvim'
@@ -25,6 +11,8 @@ alias vim='nvim'
 alias zshrc='nvim ~/.zshrc'
 alias sc='source ~/.zshrc'
 alias ls='lsd'
+alias l='lsd -l'
+alias ll='lsd -latrh'
 alias cat='bat'
 alias cl='clear'
 alias t='tmux'
@@ -32,6 +20,23 @@ alias du='dust'
 alias s='kitten ssh'
 alias notes='nvim ~/neorg/main/'
 alias journal="nvim -c 'Neorg journal today'"
+# git alias
+alias gi='git init'
+alias gs='git status'
+alias ga='git add'
+alias gc='git commit'
+alias gcm='git commit -m'
+alias gco='git checkout'
+alias gb='git branch'
+alias gba='git branch -a'
+alias gbd='git branch -d'
+alias gbm='git branch -m'
+alias gcl='git clone'
+alias gp='git pull'
+alias gP='git push'
+alias gra='git remote add'
+alias grv='git remote -v'
+alias grr='git remote remove'
 
 # autojump
 eval "$(zoxide init zsh)"
@@ -71,6 +76,6 @@ export PATH="$HOME/.juliaup/bin:$PATH"
 
 source ~/.zshrc_system
 
-# starship
-eval $(starship init zsh)
+eval "$(atuin init zsh)"
 
+eval "$(starship init zsh)"
