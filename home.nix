@@ -34,6 +34,7 @@
     tree-sitter
     lazygit
     gdu
+    rm-improved
     (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
   ];
 
