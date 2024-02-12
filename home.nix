@@ -35,6 +35,10 @@
     lazygit
     gdu
     rm-improved
+    just
+    ruff
+    yt-dlp
+    hyperfine
     (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
   ];
 
@@ -105,6 +109,14 @@
     enableZshIntegration = true;
   };
   programs.starship = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+  programs.pyenv = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+  programs.yazi = {
     enable = true;
     enableZshIntegration = true;
   };
