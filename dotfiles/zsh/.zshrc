@@ -3,7 +3,6 @@ my_shdir=$(dirname "$0")
 my_configs=(
     envars.sh
     aliases.sh   
-    vendors.sh
     funcs.sh
 )
 
