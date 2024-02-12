@@ -19,7 +19,14 @@
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
-    python3
+    (python311.withPackages (p: with p; [
+      numpy
+      pandas
+      scipy
+      jupyter
+      ipython
+      matplotlib
+    ]))
     nodejs
     rustup
     libllvm
@@ -109,10 +116,6 @@
     enableZshIntegration = true;
   };
   programs.starship = {
-    enable = true;
-    enableZshIntegration = true;
-  };
-  programs.pyenv = {
     enable = true;
     enableZshIntegration = true;
   };
