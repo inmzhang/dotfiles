@@ -46,6 +46,7 @@
     ruff
     yt-dlp
     hyperfine
+    gh
     (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
   ];
 
