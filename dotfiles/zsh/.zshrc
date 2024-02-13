@@ -10,3 +10,7 @@ my_configs=(
 for f in $my_configs; do
     [[ -f $my_shdir/$f ]] && . $my_shdir/$f
 done
+
+if command -v atuin >/dev/null 2>&1; then
+  eval "$(atuin init zsh)"
+fi
