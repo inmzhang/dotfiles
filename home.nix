@@ -47,6 +47,7 @@
     yt-dlp
     hyperfine
     gh
+    onefetch
     (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
   ];
 
