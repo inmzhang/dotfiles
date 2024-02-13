@@ -48,6 +48,7 @@
     hyperfine
     gh
     onefetch
+    fastfetch
     (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
   ];
 
@@ -100,7 +101,7 @@
         source $HOME/.config/home-manager/dotfiles/zsh/.zshrc
       fi
       '';
-    };
+  };
   # Neovim
   programs.neovim = {
     enable = true;
