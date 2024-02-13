@@ -49,6 +49,7 @@
     gh
     onefetch
     fastfetch
+    tealdeer
     (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
   ];
 
