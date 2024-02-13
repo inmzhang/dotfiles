@@ -50,6 +50,9 @@
     onefetch
     fastfetch
     tealdeer
+    btop
+    fd
+    skim
     (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
   ];
 
@@ -60,6 +63,7 @@
     ".config/kitty".source = dotfiles/kitty;
     ".config/nvim/lua/user".source = dotfiles/nvim/user;
     ".config/starship.toml".source = dotfiles/starship/starship.toml;
+    ".config/atuin/config.toml".source = dotfiles/atuin/config.toml;
 
     # # You can also set the file content immediately.
     # ".gradle/gradle.properties".text = ''
@@ -127,13 +131,4 @@
     enable = true;
     enableZshIntegration = true;
   };
-  # programs.atuin = {
-  #   enable = true;
-  #   enableZshIntegration = true;
-  #   settings = {
-  #     ctrl_n_shortcuts = true;
-  #     enter_accept = false;
-  #     keymap_mode = "vim-normal";
-  #   };
-  # };
 }
