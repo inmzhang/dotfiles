@@ -5,7 +5,7 @@
   # manage.
   # TODO: Change these values to match your username and home directory.
   home.username = "inm";
-  home.homeDirectory = "/Users/inm";
+  home.homeDirectory = "/home/inm";
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -27,6 +27,7 @@
       ipython
       matplotlib
     ]))
+    clang
     nodejs
     rustup
     libllvm
@@ -63,7 +64,6 @@
     ".config/kitty".source = dotfiles/kitty;
     ".config/nvim/lua/user".source = dotfiles/nvim/user;
     ".config/starship.toml".source = dotfiles/starship/starship.toml;
-    ".config/atuin/config.toml".source = dotfiles/atuin/config.toml;
 
     # # You can also set the file content immediately.
     # ".gradle/gradle.properties".text = ''
@@ -130,5 +130,15 @@
   programs.yazi = {
     enable = true;
     enableZshIntegration = true;
+  };
+  programs.atuin = {
+    enable = true;
+    enableZshIntegration = true;
+    settings = {
+      auto_sync = true;
+      ctrl_n_shortcuts = true;
+      enter_accept = false;
+      keymap_mode = "vim-normal";
+    };
   };
 }
