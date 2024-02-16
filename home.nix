@@ -55,6 +55,7 @@
     btop
     fd
     skim
+    p7zip
     (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
   ];
 
