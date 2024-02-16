@@ -28,6 +28,7 @@
       matplotlib
     ]))
     clang
+    xclip
     nodejs
     rustup
     libllvm

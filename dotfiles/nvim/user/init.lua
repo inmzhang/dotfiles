@@ -118,5 +118,6 @@ return {
     --     ["~/%.config/foo/.*"] = "fooscript",
     --   },
     -- }
+    vim.opt.clipboard = 'unnamedplus'
   end,
 }

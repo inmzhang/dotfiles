@@ -1,7 +1,7 @@
 return {
   "nvim-treesitter/nvim-treesitter",
   opts = {
-    ensure_installed = { "julia", "lua", "rust", "toml", "python", "html", "css", "typescript", "cpp" },
+    ensure_installed = { "lua", "rust", "toml", "python", "html", "css", "typescript", "cpp" },
     auto_install = true,
     highlight = {
       enable = true,
