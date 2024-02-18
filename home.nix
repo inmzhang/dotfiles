@@ -1,5 +1,4 @@
 { config, pkgs, ... }:
-
 {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
@@ -27,11 +26,9 @@
       ipython
       matplotlib
     ]))
-    clang
     xclip
     nodejs
     rustup
-    libllvm
     cmake
     du-dust
     ripgrep
@@ -64,31 +61,10 @@
   home.file = {
     ".config/tmux/tmux.conf".source = dotfiles/tmux/tmux.conf;
     ".config/kitty".source = dotfiles/kitty;
-    ".config/nvim/lua/user".source = dotfiles/nvim/user;
+    ".config/astronvim/lua/user".source = dotfiles/nvim/user;
     ".config/starship.toml".source = dotfiles/starship/starship.toml;
-
-    # # You can also set the file content immediately.
-    # ".gradle/gradle.properties".text = ''
-    #   org.gradle.console=verbose
-    #   org.gradle.daemon.idletimeout=3600000
-    # '';
   };
 
-  # Home Manager can also manage your environment variables through
-  # 'home.sessionVariables'. If you don't want to manage your shell through Home
-  # Manager then you have to manually source 'hm-session-vars.sh' located at
-  # either
-  #
-  #  ~/.nix-profile/etc/profile.d/hm-session-vars.sh
-  #
-  # or
-  #
-  #  ~/.local/state/nix/profiles/profile/etc/profile.d/hm-session-vars.sh
-  #
-  # or
-  #
-  #  /etc/profiles/per-user/inm/etc/profile.d/hm-session-vars.sh
-  #
   home.sessionVariables = {
     EDITOR = "nvim";
   };
@@ -108,11 +84,6 @@
         source $HOME/.config/home-manager/dotfiles/zsh/.zshrc
       fi
       '';
-  };
-  # Neovim
-  programs.neovim = {
-    enable = true;
-    defaultEditor = true;
   };
   # Git
   programs.git = {
