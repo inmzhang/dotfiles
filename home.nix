@@ -18,14 +18,6 @@
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
-    (python311.withPackages (p: with p; [
-      numpy
-      pandas
-      scipy
-      jupyter
-      ipython
-      matplotlib
-    ]))
     xclip
     nodejs
     rustup
