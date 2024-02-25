@@ -106,4 +106,8 @@
       keymap_mode = "vim-normal";
     };
   };
+  programs.pyenv = {
+    enable = true;
+    enableZshIntegration = true;
+  };
 }
