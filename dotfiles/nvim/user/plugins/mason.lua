@@ -5,7 +5,7 @@ return {
     "williamboman/mason-lspconfig.nvim",
     -- overrides `require("mason-lspconfig").setup(...)`
     opts = {
-      ensure_installed = { "marksman", "lua_ls", "rust_analyzer", "pyright" },
+      ensure_installed = { "marksman", "lua_ls", "rust_analyzer", "ruff_lsp" },
     },
   },
   -- use mason-null-ls to configure Formatters/Linter installation for null-ls sources
