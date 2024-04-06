@@ -34,7 +34,6 @@
     gdu
     rm-improved
     just
-    ruff
     yt-dlp
     hyperfine
     gh
