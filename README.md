@@ -20,7 +20,6 @@ cd ~/.config/home-manager
 
 4. Setup [Astronvim](https://docs.astronvim.com) and complete bootstrap:
 ```shell
-chmod +x ./dotfiles/nvim/setup.sh
 chmod +x ./setup.sh
 
 ./setup.sh

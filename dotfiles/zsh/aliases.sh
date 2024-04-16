@@ -1,5 +1,8 @@
 # Home manager path
 hm_path="$HOME/.config/home-manager"
+
+alias python='python3'
+
 # Shell configuration
 alias zshrc='nvim ~/.zshrc'
 alias sc='source ~/.zshrc'

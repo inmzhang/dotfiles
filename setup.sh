@@ -1,8 +1,14 @@
 #! /usr/bin/env bash
 set -e
+
+# Make a backup of your current nvim and shared folder
+mv ~/.config/nvim ~/.config/nvim.bak
+mv ~/.local/share/nvim ~/.local/share/nvim.bak
+mv ~/.local/state/nvim ~/.local/state/nvim.bak
+mv ~/.cache/nvim ~/.cache/nvim.bak
+
 # Install Astronvim
-astronvim_setup_path="./dotfiles/nvim/setup.sh"
-chmod +x $astronvim_setup_path
-$astronvim_setup_path
+git clone https://github.com/inmzhang/astronvim_config ~/.config/nvim
+
 # Set up home-manager
 home-manager switch
