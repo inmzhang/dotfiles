@@ -4,7 +4,7 @@
   # manage.
   # TODO: Change these values to match your username and home directory.
   home.username = "inm";
-  home.homeDirectory = "/home/inm";
+  home.homeDirectory = "/Users/inm";
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -20,8 +20,6 @@
   home.packages = with pkgs; [
     xclip
     nodejs
-    rustup
-    cmake
     du-dust
     ripgrep
     lsd
@@ -44,6 +42,7 @@
     fd
     skim
     p7zip
+    parallel
     (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
   ];
 
@@ -52,7 +51,6 @@
   home.file = {
     ".config/tmux/tmux.conf".source = dotfiles/tmux/tmux.conf;
     ".config/kitty".source = dotfiles/kitty;
-    ".config/astronvim/lua/user".source = dotfiles/nvim/user;
     ".config/starship.toml".source = dotfiles/starship/starship.toml;
   };
 
@@ -95,16 +93,16 @@
     enable = true;
     enableZshIntegration = true;
   };
-  programs.atuin = {
-    enable = true;
-    enableZshIntegration = true;
-    settings = {
-      auto_sync = true;
-      ctrl_n_shortcuts = true;
-      enter_accept = false;
-      keymap_mode = "vim-normal";
-    };
-  };
+  # programs.atuin = {
+  #   enable = true;
+  #   enableZshIntegration = true;
+  #   settings = {
+  #     auto_sync = true;
+  #     ctrl_n_shortcuts = true;
+  #     enter_accept = false;
+  #     keymap_mode = "vim-normal";
+  #   };
+  # };
   programs.pyenv = {
     enable = true;
     enableZshIntegration = true;

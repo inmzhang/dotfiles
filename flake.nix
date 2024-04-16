@@ -13,7 +13,7 @@
   outputs = { nixpkgs, home-manager, ... }:
     let
       # TODO: Replace with the system you are using.
-      system = "x86_64-linux";
+      system = "aarch64-darwin";
       pkgs = nixpkgs.legacyPackages.${system};
     in {
       # TODO: Replace with your configuration name.
