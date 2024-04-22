@@ -49,7 +49,7 @@
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   home.file = {
-    ".config/tmux/tmux.conf".source = dotfiles/tmux/tmux.conf;
+    ".tmux.conf".source = dotfiles/tmux/tmux.conf;
     ".config/kitty".source = dotfiles/kitty;
     ".config/starship.toml".source = dotfiles/starship/starship.toml;
   };
