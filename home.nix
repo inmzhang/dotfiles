@@ -4,7 +4,7 @@
   # manage.
   # TODO: Change these values to match your username and home directory.
   home.username = "inm";
-  home.homeDirectory = "/Users/inm";
+  home.homeDirectory = "/home/inm";
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
