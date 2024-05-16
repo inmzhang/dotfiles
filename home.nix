@@ -43,6 +43,7 @@
     skim
     p7zip
     parallel
+    gitui
     (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
   ];
 
@@ -52,6 +53,7 @@
     ".tmux.conf".source = dotfiles/tmux/tmux.conf;
     ".config/kitty".source = dotfiles/kitty;
     ".config/starship.toml".source = dotfiles/starship/starship.toml;
+    ".config/gitui".source = dotfiles/gitui;
   };
 
   home.sessionVariables = {
@@ -106,5 +108,8 @@
   programs.pyenv = {
     enable = true;
     enableZshIntegration = true;
+  };
+  services.ssh-agent = {
+    enable = true;
   };
 }
