@@ -4,7 +4,7 @@
   # manage.
   # TODO: Change these values to match your username and home directory.
   home.username = "inm";
-  home.homeDirectory = "/home/inm";
+  home.homeDirectory = "/Users/inm";
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -108,8 +108,5 @@
   programs.pyenv = {
     enable = true;
     enableZshIntegration = true;
-  };
-  services.ssh-agent = {
-    enable = true;
   };
 }
