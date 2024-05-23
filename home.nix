@@ -4,7 +4,7 @@
   # manage.
   # TODO: Change these values to match your username and home directory.
   home.username = "inm";
-  home.homeDirectory = "/Users/inm";
+  home.homeDirectory = "/home/inm";
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -44,6 +44,7 @@
     p7zip
     parallel
     gitui
+    gtest
     (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
   ];
 
@@ -81,6 +82,7 @@
     enable = true;
     userName = "Yiming Zhang";
     userEmail = "zhangyiming21@mail.ustc.edu.cn";
+    diff-so-fancy.enable = true;
   };
   # others
   programs.zoxide = {
@@ -105,8 +107,8 @@
   #     keymap_mode = "vim-normal";
   #   };
   # };
-  programs.pyenv = {
-    enable = true;
-    enableZshIntegration = true;
-  };
+  # programs.pyenv = {
+  #   enable = true;
+  #   enableZshIntegration = true;
+  # };
 }
