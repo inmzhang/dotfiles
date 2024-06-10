@@ -52,3 +52,11 @@ alias gP='git push'
 alias gra='git remote add'
 alias grv='git remote -v'
 alias grr='git remote remove'
+
+# Open Zotero storage directory with yazi
+alias yz='yazi ~/Zotero/storage'
+
+# Kitty SSH
+alias ssharch='kitty +kitten ssh -p 6000 inm@47.115.200.184'
+alias sshcpu='kitty +kitten ssh -p 6001 inm@47.115.200.184'
+alias sshgpu='kitty +kitten ssh -p 6002 inm@47.115.200.184'
