@@ -45,6 +45,7 @@
     parallel
     gitui
     gtest
+    bacon
     (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
   ];
 
@@ -106,9 +107,5 @@
   #     enter_accept = false;
   #     keymap_mode = "vim-normal";
   #   };
-  # };
-  # programs.pyenv = {
-  #   enable = true;
-  #   enableZshIntegration = true;
   # };
 }
