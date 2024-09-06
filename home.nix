@@ -72,7 +72,7 @@
   programs.zsh = {
     enable = true;
     enableCompletion = true;
-    enableAutosuggestions = true;
+    autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
     initExtra = ''
       if [ -f $HOME/.config/home-manager/dotfiles/zsh/.zshrc ];
