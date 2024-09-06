@@ -4,7 +4,7 @@
   # manage.
   # TODO: Change these values to match your username and home directory.
   home.username = "inm";
-  home.homeDirectory = "/home/inm";
+  home.homeDirectory = "/Users/inm";
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -46,6 +46,7 @@
     gitui
     gtest
     bacon
+    rye
     (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
   ];
 
@@ -56,6 +57,7 @@
     ".config/kitty".source = dotfiles/kitty;
     ".config/starship.toml".source = dotfiles/starship/starship.toml;
     ".config/gitui".source = dotfiles/gitui;
+    ".rye/config.toml".source = dotfiles/rye/config.toml;
   };
 
   home.sessionVariables = {
