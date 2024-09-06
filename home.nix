@@ -32,6 +32,8 @@
     gdu
     rm-improved
     just
+    rustup
+    ruff
     yt-dlp
     hyperfine
     gh
@@ -41,7 +43,6 @@
     btop
     fd
     skim
-    p7zip
     parallel
     gitui
     gtest
