@@ -27,3 +27,9 @@ chmod +x ./setup.sh
 
 5. Whenever you changed `home.nix` or other configurations, you need to run `home-manager switch` to
 the change.
+
+6. To update the packages, run:
+```sh
+nix flake update
+home-manager switch
+```
