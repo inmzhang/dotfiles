@@ -4,7 +4,7 @@
   # manage.
   # TODO: Change these values to match your username and home directory.
   home.username = "inm";
-  home.homeDirectory = "/Users/inm";
+  home.homeDirectory = if pkgs.stdenv.isLinux then "/home/inm" else "/Users/inm";
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -23,7 +23,6 @@
     du-dust
     ripgrep
     lsd
-    bat
     bottom
     tmux
     kitty
@@ -100,6 +99,12 @@
   programs.yazi = {
     enable = true;
     enableZshIntegration = true;
+  };
+  programs.bat = {
+    enable = true;
+    config = {
+      theme = "gruvbox-dark";
+    };
   };
   # programs.atuin = {
   #   enable = true;
