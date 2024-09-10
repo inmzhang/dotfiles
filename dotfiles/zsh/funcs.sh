@@ -10,9 +10,9 @@ function ya() {
 
 # clash-verge defaults port to 7897
 function proxy_on() {
-    export http_proxy=http://127.0.0.1:7897
+    export http_proxy=http://127.0.0.1:7890
     export https_proxy=$http_proxy
-    export all_proxy=socks5://127.0.0.1:7897
+    export all_proxy=socks5://127.0.0.1:7891
     echo -e "Terminal proxy is on."
 }
 
