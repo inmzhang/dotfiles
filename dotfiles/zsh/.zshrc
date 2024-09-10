@@ -15,4 +15,7 @@ if command -v atuin >/dev/null 2>&1; then
   eval "$(atuin init zsh)"
 fi
 
-proxy_on
+if [ -f "$HOME/.rye/env" ]; then
+  source "$HOME/.rye/env"
+fi
+

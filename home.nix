@@ -4,7 +4,7 @@
   # manage.
   # TODO: Change these values to match your username and home directory.
   home.username = "inm";
-  home.homeDirectory = "/home/inm";
+  home.homeDirectory = if pkgs.stdenv.isLinux then "/home/inm" else "/Users/inm";
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -23,7 +23,6 @@
     du-dust
     ripgrep
     lsd
-    bat
     bottom
     tmux
     kitty
@@ -32,6 +31,8 @@
     gdu
     rm-improved
     just
+    rustup
+    ruff
     yt-dlp
     hyperfine
     gh
@@ -41,10 +42,11 @@
     btop
     fd
     skim
-    p7zip
     parallel
     gitui
     gtest
+    bacon
+    rye
     (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
   ];
 
@@ -55,6 +57,7 @@
     ".config/kitty".source = dotfiles/kitty;
     ".config/starship.toml".source = dotfiles/starship/starship.toml;
     ".config/gitui".source = dotfiles/gitui;
+    ".rye/config.toml".source = dotfiles/rye/config.toml;
   };
 
   home.sessionVariables = {
@@ -68,7 +71,7 @@
   programs.zsh = {
     enable = true;
     enableCompletion = true;
-    enableAutosuggestions = true;
+    autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
     initExtra = ''
       if [ -f $HOME/.config/home-manager/dotfiles/zsh/.zshrc ];
@@ -97,6 +100,12 @@
     enable = true;
     enableZshIntegration = true;
   };
+  programs.bat = {
+    enable = true;
+    config = {
+      theme = "gruvbox-dark";
+    };
+  };
   # programs.atuin = {
   #   enable = true;
   #   enableZshIntegration = true;
@@ -106,9 +115,5 @@
   #     enter_accept = false;
   #     keymap_mode = "vim-normal";
   #   };
-  # };
-  # programs.pyenv = {
-  #   enable = true;
-  #   enableZshIntegration = true;
   # };
 }

@@ -20,3 +20,12 @@ function proxy_off(){
     unset http_proxy https_proxy all_proxy
     echo -e "Terminal proxy is off."
 }
+
+# open the current directory with nvim
+# if there is virtual environment, activate it
+function vv() {
+  if [ -d "venv" ] || [ -d ".venv" ]; then
+    source "$( [ -d "venv" ] && echo "venv" || echo ".venv" )/bin/activate"
+  fi
+  nvim .
+}
