@@ -13,7 +13,7 @@ function proxy_on() {
     export http_proxy=http://127.0.0.1:7890
     export https_proxy=$http_proxy
     export all_proxy=socks5://127.0.0.1:7891
-    echo -e "Terminal proxy is on."
+    echo -e "Set http(s)_proxy=http://127.0.0.1:7890."
 }
 
 function proxy_off(){
