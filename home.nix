@@ -85,7 +85,7 @@
     enable = true;
     userName = "Yiming Zhang";
     userEmail = "zhangyiming21@mail.ustc.edu.cn";
-    diff-so-fancy.enable = true;
+    delta.enable = true;
   };
   # others
   programs.zoxide = {
