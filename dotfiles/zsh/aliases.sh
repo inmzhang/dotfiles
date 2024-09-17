@@ -31,8 +31,8 @@ alias cvenv='python -m venv .venv'
 alias avenv='source .venv/bin/activate'
 alias ~='cd ~'
 # neorg
-alias notes='nvim ~/neorg/main/'
-alias journal="nvim -c 'Neorg journal today'"
+alias notes='cd ~/neorg; nvim ~/neorg/main/'
+alias journal="cd ~/neorg; nvim -c 'Neorg journal today'"
 
 # Git
 alias gi='git init'
