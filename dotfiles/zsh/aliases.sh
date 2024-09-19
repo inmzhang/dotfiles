@@ -3,13 +3,16 @@ hm_path="$HOME/.config/home-manager"
 
 alias python='python3'
 
+# sudo with environment variables preserved
+alias sue='sudo -E'
+
 # Shell configuration
 alias zshrc='nvim ~/.zshrc'
 alias sc='source ~/.zshrc'
 alias aa="nvim $hm_path/dotfiles/zsh/aliases.sh"
 alias hm="cd $hm_path; nvim ."
 alias hms='home-manager switch'
-alias hmu='nix-channel --update; home-manager switch'
+alias hmu="cd $hm_path;nix-channel --update;nix flake update;home-manager switch"
 
 # Neovim
 alias v='nvim .'
