@@ -51,7 +51,17 @@ function fdp() {
     item_id=$(basename $(dirname "$selected_path"))
     # Create Zotero open link
     zotero_link="zotero://open-pdf/library/items/$item_id"
-    echo "* zotero link: {$zotero_link}[$paper_name]"
+    zotero_entry="{$zotero_link}[$paper_name]"
+    echo "* zotero link: $zotero_entry"
+
+    # Detect OS and copy to clipboard
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        echo -n "$zotero_entry" | xclip -selection clipboard
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+        echo -n "$zotero_entry" | pbcopy
+    else
+        echo "Unsupported OS: $OSTYPE"
+    fi
 
     # Open the selected paper in firefox
     firefox "$selected_path"
