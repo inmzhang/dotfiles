@@ -47,8 +47,6 @@
     gtest
     bacon
     rye
-    sysstat
-    lm_sensors
     (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
   ];
 
