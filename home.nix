@@ -86,6 +86,7 @@
     userName = "Yiming Zhang";
     userEmail = "zhangyiming21@mail.ustc.edu.cn";
     delta.enable = true;
+    extraConfig.credential.helper = "store";
   };
   # others
   programs.zoxide = {
