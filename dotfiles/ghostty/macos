@@ -1,5 +1,10 @@
-font-size = 16
+font-size = 18
 
 theme = "GruvboxDark"
 
 background-opacity = 0.9
+
+title = ""
+macos-titlebar-proxy-icon = hidden
+
+macos-option-as-alt = true
