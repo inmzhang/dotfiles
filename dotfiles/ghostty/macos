@@ -8,3 +8,5 @@ title = ""
 macos-titlebar-proxy-icon = hidden
 
 macos-option-as-alt = true
+
+fullscreen = true
