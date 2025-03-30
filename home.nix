@@ -38,13 +38,13 @@
     onefetch
     fastfetch
     tealdeer
-    btop
     fd
     skim
     parallel
     bacon
     uv
     serie
+    bottom
     nerd-fonts.jetbrains-mono
   ];
 
