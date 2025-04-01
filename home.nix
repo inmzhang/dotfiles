@@ -25,7 +25,6 @@
     lsd
     bottom
     tmux
-    kitty
     tree-sitter
     lazygit
     gdu
@@ -39,22 +38,21 @@
     onefetch
     fastfetch
     tealdeer
-    btop
     fd
     skim
     parallel
-    gitui
-    gtest
     bacon
-    rye
-    (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
+    uv
+    serie
+    bottom
+    nerd-fonts.jetbrains-mono
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   home.file = {
     ".tmux.conf".source = dotfiles/tmux/tmux.conf;
-    ".config/kitty".source = dotfiles/kitty;
+    ".config/ghostty/config".source = if pkgs.stdenv.isLinux then dotfiles/ghostty/linux else dotfiles/ghostty/macos;
     ".config/starship.toml".source = dotfiles/starship/starship.toml;
     ".config/gitui".source = dotfiles/gitui;
     ".rye/config.toml".source = dotfiles/rye/config.toml;

@@ -1,0 +1,7 @@
+font-size = 16
+
+theme = "GruvboxDark"
+
+window-decoration = false
+
+background-opacity = 0.7
