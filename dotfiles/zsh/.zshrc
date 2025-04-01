@@ -20,3 +20,5 @@ if [ -f "$HOME/.rye/env" ]; then
 fi
 
 proxy_on
+
+fastfetch
