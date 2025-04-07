@@ -45,6 +45,7 @@
     uv
     serie
     bottom
+    gitui
     nerd-fonts.jetbrains-mono
   ];
 
@@ -56,6 +57,7 @@
     ".config/starship.toml".source = dotfiles/starship/starship.toml;
     ".config/gitui".source = dotfiles/gitui;
     ".rye/config.toml".source = dotfiles/rye/config.toml;
+    ".config/uv".source = dotfiles/uv;
   };
 
   home.sessionVariables = {
