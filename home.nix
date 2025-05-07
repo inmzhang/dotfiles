@@ -46,7 +46,6 @@
     serie
     bottom
     gitui
-    atuin
     nerd-fonts.jetbrains-mono
   ];
 
@@ -115,14 +114,14 @@
       theme = "gruvbox-dark";
     };
   };
-  # programs.atuin = {
-  #   enable = true;
-  #   enableZshIntegration = true;
-  #   settings = {
-  #     auto_sync = true;
-  #     ctrl_n_shortcuts = true;
-  #     enter_accept = false;
-  #     keymap_mode = "vim-normal";
-  #   };
-  # };
+  programs.atuin = {
+    enable = true;
+    enableZshIntegration = true;
+    settings = {
+      auto_sync = true;
+      ctrl_n_shortcuts = true;
+      enter_accept = false;
+      keymap_mode = "vim-normal";
+    };
+  };
 }
