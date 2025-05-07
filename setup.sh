@@ -32,20 +32,6 @@ else
   echo "Nix experimental features already enabled."
 fi
 
-# Backup existing Neovim configuration
-backup_dir=~/.config/nvim_backup
-echo "Backing up existing Neovim configuration to $backup_dir..."
-mkdir -p $backup_dir
-for dir in ~/.config/nvim ~/.local/share/nvim ~/.local/state/nvim ~/.cache/nvim; do
-  if [ -d "$dir" ]; then
-    mv "$dir" "$backup_dir" || error_exit "Failed to move $dir to $backup_dir."
-  fi
-done
-
-# Install Astronvim
-echo "Installing Astronvim..."
-git clone https://github.com/inmzhang/astronvim_config ~/.config/nvim || error_exit "Failed to clone Astronvim config."
-
 # Set up Home Manager
 echo "Setting up Home Manager..."
 home-manager switch || error_exit "Failed to switch Home Manager configuration."

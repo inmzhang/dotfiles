@@ -1,6 +1,6 @@
 # My dotfiles
 
-This is the repository of my `zsh`, `tmux`, `kitty` and `neovim` configuration dotfiles. 
+This is the repository of my `zsh`, `tmux`, `neovim`, etc. configuration dotfiles. 
 The bootstrap procedure is managed by `nix`. The process should work well on linux, macos
 or even wsl.
 
@@ -18,7 +18,7 @@ cd ~/.config/home-manager
 
 3. Check out `flake.nix` and `home.nix`, replace the username/system with yours.
 
-4. Setup [Astronvim](https://docs.astronvim.com) and complete bootstrap:
+4. Setup:
 ```shell
 chmod +x ./setup.sh
 
