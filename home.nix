@@ -46,6 +46,7 @@
     serie
     bottom
     gitui
+    atuin
     nerd-fonts.jetbrains-mono
   ];
 
