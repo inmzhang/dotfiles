@@ -45,6 +45,7 @@
     uv
     serie
     bottom
+    gitui
     nerd-fonts.jetbrains-mono
   ];
 
@@ -57,6 +58,7 @@
     ".config/gitui".source = dotfiles/gitui;
     ".rye/config.toml".source = dotfiles/rye/config.toml;
     ".config/nvim".source = dotfiles/nvim;
+    ".config/uv".source = dotfiles/uv;
   };
 
   home.sessionVariables = {
