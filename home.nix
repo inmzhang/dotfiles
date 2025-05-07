@@ -55,8 +55,6 @@
     ".tmux.conf".source = dotfiles/tmux/tmux.conf;
     ".config/ghostty/config".source = if pkgs.stdenv.isLinux then dotfiles/ghostty/linux else dotfiles/ghostty/macos;
     ".config/starship.toml".source = dotfiles/starship/starship.toml;
-    ".config/gitui".source = dotfiles/gitui;
-    ".rye/config.toml".source = dotfiles/rye/config.toml;
     ".config/nvim".source = dotfiles/nvim;
     ".config/uv".source = dotfiles/uv;
   };
