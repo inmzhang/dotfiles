@@ -32,6 +32,9 @@ else
   echo "Nix experimental features already enabled."
 fi
 
+# symbolic link to nvim configuration
+ln -s $(pwd)/dotfiles/nvim ~/.config/nvim
+
 # Set up Home Manager
 echo "Setting up Home Manager..."
 home-manager switch || error_exit "Failed to switch Home Manager configuration."
