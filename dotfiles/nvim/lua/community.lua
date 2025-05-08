@@ -19,4 +19,5 @@ return {
   { import = "astrocommunity.color.transparent-nvim" },
   { import = "astrocommunity.completion.avante-nvim" },
   { import = "astrocommunity.completion.cmp-latex-symbols" },
+  { import = "astrocommunity.editing-support.auto-save-nvim" },
 }
