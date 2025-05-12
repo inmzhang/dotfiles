@@ -16,4 +16,15 @@ return {
 			},
 		}, opts or {}))
 	end,
+	note_taking = function(opts)
+		Snacks.picker.files(vim.tbl_deep_extend("force", {
+			title = "Note Taking",
+			dirs = { fs.normalize((vim.env.HOME or "") .. "/Documents/note-taking") },
+			ft = { "md", "typ" },
+			follow = true,
+			actions = {
+				confirm = Snacks.picker.actions.jump,
+			},
+		}, opts or {}))
+	end,
 }

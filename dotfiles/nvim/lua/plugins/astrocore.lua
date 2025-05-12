@@ -95,9 +95,15 @@ return {
 
         ["<Leader>zp"] = {
           function()
-            require("../utils/zotero").zotero_papers()
+            require("utils.snack_picker").zotero_papers()
           end,
           desc = "Find papers in Zotero storage",
+        },
+        ["<Leader>zn"] = {
+          function()
+            require("utils.snack_picker").note_taking()
+          end,
+          desc = "Find notes in note-taking directory",
         },
       },
       t = {

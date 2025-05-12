@@ -79,61 +79,6 @@ tp () {
     tmux attach -t "$session"
 }
 
-note() {
-    local dir=~/Documents/notes/
-
-    # Ensure the notes directory exists
-    mkdir -p "$dir"
-
-    # Show help if no arguments
-    if [[ $# -eq 0 ]]; then
-        echo "Usage: note <subcommand> [args]"
-        echo "Subcommands:"
-        echo "  new <name> [--format fmt]   Create or open a note (default format: typ)"
-        echo "  ls                          List all notes"
-        return 0
-    fi
-
-    local subcommand="$1"
-    shift
-
-    case "$subcommand" in
-        new)
-            local name=""
-            local format="typ"
-
-            # Parse arguments
-            while [[ $# -gt 0 ]]; do
-                case "$1" in
-                    --format)
-                        format="$2"
-                        shift 2
-                        ;;
-                    *)
-                        name="$1"
-                        shift
-                        ;;
-                esac
-            done
-
-            if [[ -z "$name" ]]; then
-                echo "Error: Note name is required."
-                return 1
-            fi
-
-            local file="${dir}${name}.${format}"
-
-            [[ -f "$file" ]] || touch "$file"
-            nvim "$file"
-            ;;
-        ls)
-            echo "Listing notes in $dir:"
-            ls "$dir"
-            ;;
-        *)
-            echo "Unknown subcommand: $subcommand"
-            echo "Run \`note\` for help."
-            return 1
-            ;;
-    esac
+n() {
+    cd ~/Documents/note-taking
 }
