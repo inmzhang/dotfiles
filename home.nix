@@ -54,6 +54,7 @@
   home.file = {
     ".tmux.conf".source = dotfiles/tmux/tmux.conf;
     ".config/ghostty/config".source = if pkgs.stdenv.isLinux then dotfiles/ghostty/linux else dotfiles/ghostty/macos;
+    ".config/sioyek".source = dotfiles/sioyek;
     ".config/starship.toml".source = dotfiles/starship/starship.toml;
     ".config/uv".source = dotfiles/uv;
   };
