@@ -1,5 +1,5 @@
 # provides the ability to change the current working directory when exiting Yazi
-function ya() {
+y() {
     tmp="$(mktemp -t "yazi-cwd.XXXXX")"
     yazi --cwd-file="$tmp"
     if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
@@ -9,7 +9,7 @@ function ya() {
 }
 
 # clash-verge defaults port to 7897
-function proxy_on() {
+proxy_on() {
     if command -v clash-verge >/dev/null 2>&1; then
         export http_proxy=http://127.0.0.1:7897
         export https_proxy=$http_proxy
@@ -23,14 +23,14 @@ function proxy_on() {
     fi
 }
 
-function proxy_off(){
+proxy_off(){
     unset http_proxy https_proxy all_proxy
     echo -e "Terminal proxy is off."
 }
 
 # open the current directory with nvim
 # if there is virtual environment, activate it
-function vv() {
+vv() {
   if [ -d "venv" ] || [ -d ".venv" ]; then
     source "$( [ -d "venv" ] && echo "venv" || echo ".venv" )/bin/activate"
   fi
@@ -79,6 +79,18 @@ tp () {
     tmux attach -t "$session"
 }
 
+# cd to note-taking directory
 n() {
     cd ~/Documents/note-taking
 }
+
+# open nvim and search notes in note-taking directory
+zn() {
+    nvim -c "Notes"
+}
+
+# open nvim and search paper in zotero database
+zp() {
+    nvim -c "ZoteroPaper"
+}
+
