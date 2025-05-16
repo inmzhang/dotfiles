@@ -10,6 +10,7 @@ return {
 			follow = true,
 			actions = {
 				confirm = function(picker, item)
+					vim.fn.setreg("+", fs.basename(item.file):gsub("%.%w+$", ""))
 					vim.ui.open(item.file)
 					picker:close()
 					vim.cmd("qa")
