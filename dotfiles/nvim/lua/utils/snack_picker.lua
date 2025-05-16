@@ -12,6 +12,7 @@ return {
 				confirm = function(picker, item)
 					vim.ui.open(item.file)
 					picker:close()
+					vim.cmd("qa")
 				end,
 			},
 		}, opts or {}))
