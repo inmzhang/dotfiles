@@ -10,10 +10,14 @@ return {
 			follow = true,
 			actions = {
 				confirm = function(picker, item)
-					vim.fn.setreg("+", fs.basename(item.file):gsub("%.%w+$", ""))
+					local name = fs.basename(item.file):gsub("%.%w+$", "")
+					vim.fn.setreg("+", name)
+					if opts and opts.copy_without_open then
+						vim.notify("Copy to clipboard: " .. string.format("%q", name))
+						picker:close()
+						return
+					end
 					vim.ui.open(item.file)
-					picker:close()
-					vim.cmd("qa")
 				end,
 			},
 		}, opts or {}))
