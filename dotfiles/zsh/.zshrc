@@ -4,6 +4,7 @@ my_configs=(
     envars.sh
     aliases.sh   
     funcs.sh
+    zsh-private.sh
 )
 
 # Source all the Zsh-specific and sh-generic files.
