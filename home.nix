@@ -46,7 +46,6 @@
     serie
     bottom
     gitui
-    ncspot
     nerd-fonts.jetbrains-mono
   ];
 
