@@ -1,5 +1,7 @@
+use_nerdfont = true
+notify = true
+
 [theme]
-#background = "default"
 background = "default"
 primary = "#EBDBB2"
 secondary = "#D5C4A1"
