@@ -134,6 +134,15 @@ return {
 							and vim.lsp.semantic_tokens ~= nil
 					end,
 				},
+				["<Leader>pp"] = {
+					function()
+						vim.cmd("TypstPreview")
+					end,
+					desc = "Run :TypstPreview",
+					cond = function(client)
+						return client.name == "tinymist"
+					end,
+				},
 			},
 		},
 		-- A custom `on_attach` function to be run after the default `on_attach` function
