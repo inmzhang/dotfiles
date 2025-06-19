@@ -35,9 +35,9 @@ return {
 	end,
 	zotero_cite_key = function(opts)
 		-- 1. locate the .bib file ─ search upward starting at CWD
-		local bib_path = vim.fs.find({ "zotero-all-references.bib" }, { upward = true })[1]
+		local bib_path = vim.fs.find({ "zotero.bib" }, { upward = true })[1]
 		if not bib_path then
-			error("zotero-all-references.bib not found in current or any parent directory")
+			error("zotero.bib not found in current or any parent directory")
 		end
 
 		-- 2. read whole file
