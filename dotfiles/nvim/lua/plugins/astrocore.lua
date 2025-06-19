@@ -111,6 +111,12 @@ return {
 					end,
 					desc = "Find notes in note-taking directory",
 				},
+				["<Leader>zk"] = {
+					function()
+						require("utils.snack_picker").zotero_cite_key()
+					end,
+					desc = "Search and copy citation key from zotero-all-references.bib",
+				},
 			},
 			t = {
 				-- setting a mapping to false will disable it
