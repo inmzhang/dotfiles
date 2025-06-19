@@ -126,4 +126,8 @@
       keymap_mode = "vim-normal";
     };
   };
+  programs.direnv = {
+    enable = true;
+    enableZshIntegration = true;
+  }
 }
