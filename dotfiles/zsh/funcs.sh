@@ -83,19 +83,3 @@ tp () {
     tmux send-keys -t "$session" "clear" C-m
     tmux attach -t "$session"
 }
-
-# cd to note-taking directory
-n() {
-    cd ~/Documents/note-taking
-}
-
-# open nvim and search notes in note-taking directory
-zn() {
-    nvim -c "Notes"
-}
-
-# open nvim and search paper in zotero database
-zp() {
-    nvim -c "ZoteroPaper"
-}
-

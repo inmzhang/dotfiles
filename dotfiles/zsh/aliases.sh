@@ -58,3 +58,9 @@ alias grr='git remote remove'
 
 # Open Zotero storage directory with yazi
 alias yz='yazi ~/Zotero/storage'
+
+# note taking
+alias n='cd ~/Documents/note-taking'
+alias td='nvim ~/Documents/note-taking/todos/notes.md'
+alias zn='nvim -c "Notes"'
+alias zn='nvim -c "ZoteroPaper"'
