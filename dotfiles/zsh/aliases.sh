@@ -1,6 +1,8 @@
 # Home manager path
 hm_path="$HOME/.config/home-manager"
 
+alias zen="zen-browser"
+
 alias python='python3'
 
 # sudo with environment variables preserved
