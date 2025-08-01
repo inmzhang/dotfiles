@@ -21,5 +21,6 @@ return {
 	{ import = "astrocommunity.completion.avante-nvim" },
 	{ import = "astrocommunity.completion.cmp-latex-symbols" },
 	{ import = "astrocommunity.editing-support.auto-save-nvim" },
+	{ import = "astrocommunity.editing-support.yanky-nvim" },
 	{ import = "astrocommunity.utility.noice-nvim" },
 }
