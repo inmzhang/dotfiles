@@ -58,6 +58,7 @@
     ".config/starship.toml".source = dotfiles/starship/starship.toml;
     ".config/ncspot/config.toml".source = dotfiles/ncspot/config.toml;
     ".config/uv".source = dotfiles/uv;
+    ".config/fastfetch".source = dotfiles/fastfetch;
   };
 
   home.sessionVariables = {
