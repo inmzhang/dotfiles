@@ -1,4 +1,30 @@
 { config, pkgs, ... }:
+let
+commonFiles = {
+  ".tmux.conf".source = dotfiles/tmux/tmux.conf;
+  ".config/ghostty/config".source = if pkgs.stdenv.isLinux then dotfiles/ghostty/linux else dotfiles/ghostty/macos;
+  ".config/sioyek".source = dotfiles/sioyek;
+  ".config/starship.toml".source = dotfiles/starship/starship.toml;
+  ".config/ncspot/config.toml".source = dotfiles/ncspot/config.toml;
+  ".config/uv".source = dotfiles/uv;
+  ".config/fastfetch".source = dotfiles/fastfetch;
+};
+linuxFiles = {
+  ".config/hypr".source = dotfiles/hyprland/config;
+  ".config/waybar".source = dotfiles/waybar;
+  ".config/Kvantum".source = dotfiles/Kvantum;
+  ".config/ags".source = dotfiles/ags;
+  ".config/cava".source = dotfiles/cava;
+  ".config/qt5ct".source = dotfiles/qt5ct;
+  ".config/qt6ct".source = dotfiles/qt6ct;
+  ".config/rofi".source = dotfiles/rofi;
+  ".config/wallust".source = dotfiles/wallust;
+  ".config/wlogout".source = dotfiles/wlogout;
+  "Pictures/wallpapers".source = dotfiles/wallpapers;
+};
+macosFiles = {};
+platformFiles = if pkgs.stdenv.isLinux then linuxFiles else macosFiles;
+in
 {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
@@ -51,26 +77,7 @@
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
-  home.file = {
-    ".tmux.conf".source = dotfiles/tmux/tmux.conf;
-    ".config/ghostty/config".source = if pkgs.stdenv.isLinux then dotfiles/ghostty/linux else dotfiles/ghostty/macos;
-    ".config/sioyek".source = dotfiles/sioyek;
-    ".config/starship.toml".source = dotfiles/starship/starship.toml;
-    ".config/ncspot/config.toml".source = dotfiles/ncspot/config.toml;
-    ".config/uv".source = dotfiles/uv;
-    ".config/fastfetch".source = dotfiles/fastfetch;
-    ".config/hypr".source = dotfiles/hyprland/config;
-    ".config/waybar".source = dotfiles/waybar;
-    ".config/Kvantum".source = dotfiles/Kvantum;
-    ".config/ags".source = dotfiles/ags;
-    ".config/cava".source = dotfiles/cava;
-    ".config/qt5ct".source = dotfiles/qt5ct;
-    ".config/qt6ct".source = dotfiles/qt6ct;
-    ".config/rofi".source = dotfiles/rofi;
-    ".config/wallust".source = dotfiles/wallust;
-    ".config/wlogout".source = dotfiles/wlogout;
-    "Pictures/wallpapers".source = dotfiles/wallpapers;
-  };
+  home.file = commonFiles // platformFiles;
 
   home.sessionVariables = {
     EDITOR = "nvim";
