@@ -45,7 +45,6 @@ in
   # environment.
   home.packages = with pkgs; [
     xclip
-    nodejs
     du-dust
     ripgrep
     lsd
