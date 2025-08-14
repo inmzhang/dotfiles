@@ -32,8 +32,11 @@ else
   echo "Nix experimental features already enabled."
 fi
 
-# symbolic link to nvim configuration
+# symbolic links
 ln -s $(pwd)/dotfiles/nvim ~/.config/nvim
+ln -s $(pwd)/dotfiles/hyprland/config ~/.config/hypr
+ln -s $(pwd)/dotfiles/waybar ~/.config/waybar
+ln -s $(pwd)/dotfiles/rofi ~/.config/rofi
 
 # Set up Home Manager
 echo "Setting up Home Manager..."

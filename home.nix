@@ -10,14 +10,10 @@ commonFiles = {
   ".config/fastfetch".source = dotfiles/fastfetch;
 };
 linuxFiles = {
-  ".config/hypr".source = dotfiles/hyprland/config;
-  ".config/waybar".source = dotfiles/waybar;
-  ".config/Kvantum".source = dotfiles/Kvantum;
   ".config/ags".source = dotfiles/ags;
   ".config/cava".source = dotfiles/cava;
   ".config/qt5ct".source = dotfiles/qt5ct;
   ".config/qt6ct".source = dotfiles/qt6ct;
-  ".config/rofi".source = dotfiles/rofi;
   ".config/wallust".source = dotfiles/wallust;
   ".config/wlogout".source = dotfiles/wlogout;
   "Pictures/wallpapers".source = dotfiles/wallpapers;
