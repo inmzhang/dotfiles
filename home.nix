@@ -8,6 +8,7 @@ commonFiles = {
   ".config/ncspot/config.toml".source = dotfiles/ncspot/config.toml;
   ".config/uv".source = dotfiles/uv;
   ".config/fastfetch".source = dotfiles/fastfetch;
+  ".config/goose".source = dotfiles/goose;
 };
 linuxFiles = {
   ".config/ags".source = dotfiles/ags;

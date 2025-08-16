@@ -8,9 +8,3 @@ export PATH="$HOME/.juliaup/bin:$PATH"
 
 # pypy
 export PATH="$HOME/pypy3.10-v7.3.16-linux64/bin:$PATH"
-
-# goose
-export GOOSE_PROVIDER=anthropic
-export GOOSE_MODEL=claude-sonnet-4
-export GOOSE_PLANNER_PROVIDER=openai
-export GOOSE_PLANNER_MODEL=gpt-4.1
