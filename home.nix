@@ -5,7 +5,6 @@ commonFiles = {
   ".config/ghostty/config".source = if pkgs.stdenv.isLinux then dotfiles/ghostty/linux else dotfiles/ghostty/macos;
   ".config/sioyek".source = dotfiles/sioyek;
   ".config/starship.toml".source = dotfiles/starship/starship.toml;
-  ".config/ncspot/config.toml".source = dotfiles/ncspot/config.toml;
   ".config/uv".source = dotfiles/uv;
   ".config/fastfetch".source = dotfiles/fastfetch;
 };
