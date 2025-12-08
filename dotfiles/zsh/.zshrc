@@ -5,6 +5,7 @@ my_configs=(
     aliases.sh   
     funcs.sh
     zsh-private.sh
+    fzf-zsh-completion.sh
 )
 
 # Source all the Zsh-specific and sh-generic files.
@@ -16,9 +17,7 @@ if command -v atuin >/dev/null 2>&1; then
   eval "$(atuin init zsh)"
 fi
 
-if [ -f "$HOME/.rye/env" ]; then
-  source "$HOME/.rye/env"
-fi
+bindkey '^I' fzf_completion
 
 proxy_on
 
