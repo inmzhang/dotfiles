@@ -87,12 +87,29 @@ tp () {
 # Create a coding tmux session with 2 windows: Code and Term
 tcode() {
     local session="coding"
+    local query="$1"
+    local dir=""
+
+    if [[ -n "$query" ]]; then
+        if command -v zoxide >/dev/null 2>&1; then
+            dir="$(zoxide query "$query" 2>/dev/null || echo "$query")"
+        else
+            dir="$query"
+        fi
+    fi
+
     if tmux has-session -t "$session" 2>/dev/null; then
         tmux attach -t "$session"
         return
     fi
-    tmux new-session -d -s "$session" -n Code
-    tmux new-window -t "$session" -n Term
+
+    if [[ -n "$dir" && -d "$dir" ]]; then
+        tmux new-session -d -s "$session" -n Code -c "$dir"
+        tmux new-window -t "$session" -n Term -c "$dir"
+    else
+        tmux new-session -d -s "$session" -n Code
+        tmux new-window -t "$session" -n Term
+    fi
     tmux select-window -t "$session":1
     tmux attach -t "$session"
 }
@@ -100,12 +117,29 @@ tcode() {
 # Create a note taking tmux session with 2 windows: Notes and Term
 tnote() {
     local session="notes"
+    local query="$1"
+    local dir=""
+
+    if [[ -n "$query" ]]; then
+        if command -v zoxide >/dev/null 2>&1; then
+            dir="$(zoxide query "$query" 2>/dev/null || echo "$query")"
+        else
+            dir="$query"
+        fi
+    fi
+
     if tmux has-session -t "$session" 2>/dev/null; then
         tmux attach -t "$session"
         return
     fi
-    tmux new-session -d -s "$session" -n Notes
-    tmux new-window -t "$session" -n Term
+
+    if [[ -n "$dir" && -d "$dir" ]]; then
+        tmux new-session -d -s "$session" -n Notes -c "$dir"
+        tmux new-window -t "$session" -n Term -c "$dir"
+    else
+        tmux new-session -d -s "$session" -n Notes
+        tmux new-window -t "$session" -n Term
+    fi
     tmux select-window -t "$session":1
     tmux attach -t "$session"
 }
