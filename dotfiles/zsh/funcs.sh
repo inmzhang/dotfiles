@@ -1,6 +1,6 @@
 # provides the ability to change the current working directory when exiting Yazi
 y() {
-    tmp="$(mktemp -t "yazi-cwd.XXXXX")"
+    tmp="$(mktemp -t \"yazi-cwd.XXXXX\")"
     yazi --cwd-file="$tmp"
     if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
         cd -- "$cwd"
@@ -81,5 +81,31 @@ tp () {
 
     # Step 5 – give a clean prompt
     tmux send-keys -t "$session" "clear" C-m
+    tmux attach -t "$session"
+}
+
+# Create a coding tmux session with 2 windows: Code and Term
+tcode() {
+    local session="coding"
+    if tmux has-session -t "$session" 2>/dev/null; then
+        tmux attach -t "$session"
+        return
+    fi
+    tmux new-session -d -s "$session" -n Code
+    tmux new-window -t "$session" -n Term
+    tmux select-window -t "$session":1
+    tmux attach -t "$session"
+}
+
+# Create a note taking tmux session with 2 windows: Notes and Term
+tnote() {
+    local session="notes"
+    if tmux has-session -t "$session" 2>/dev/null; then
+        tmux attach -t "$session"
+        return
+    fi
+    tmux new-session -d -s "$session" -n Notes
+    tmux new-window -t "$session" -n Term
+    tmux select-window -t "$session":1
     tmux attach -t "$session"
 }
