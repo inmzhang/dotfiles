@@ -84,10 +84,10 @@ tp () {
     tmux attach -t "$session"
 }
 
-# Create a coding tmux session with 2 windows: Code and Term
-tcode() {
-    local session="coding"
-    local query="$1"
+_launch_tmux_layout() {
+    local session="$1"
+    local window_name="$2"
+    local query="$3"
     local dir=""
 
     if [[ -n "$query" ]]; then
@@ -104,42 +104,28 @@ tcode() {
     fi
 
     if [[ -n "$dir" && -d "$dir" ]]; then
-        tmux new-session -d -s "$session" -n Code -c "$dir"
+        tmux new-session -d -s "$session" -n "$window_name" -c "$dir"
         tmux new-window -t "$session" -n Term -c "$dir"
+        tmux new-window -t "$session" -n Agent -c "$dir"
     else
-        tmux new-session -d -s "$session" -n Code
+        tmux new-session -d -s "$session" -n "$window_name"
         tmux new-window -t "$session" -n Term
+        tmux new-window -t "$session" -n Agent
     fi
+
+    # Launch gemini in the Agent window
+    tmux send-keys -t "$session":Agent "gemini" C-m
+
     tmux select-window -t "$session":1
     tmux attach -t "$session"
 }
 
-# Create a note taking tmux session with 2 windows: Notes and Term
+# Create a coding tmux session with 3 windows: Code, Term and Agent
+tcode() {
+    _launch_tmux_layout "coding" "Code" "$1"
+}
+
+# Create a note taking tmux session with 3 windows: Notes, Term and Agent
 tnote() {
-    local session="notes"
-    local query="$1"
-    local dir=""
-
-    if [[ -n "$query" ]]; then
-        if command -v zoxide >/dev/null 2>&1; then
-            dir="$(zoxide query "$query" 2>/dev/null || echo "$query")"
-        else
-            dir="$query"
-        fi
-    fi
-
-    if tmux has-session -t "$session" 2>/dev/null; then
-        tmux attach -t "$session"
-        return
-    fi
-
-    if [[ -n "$dir" && -d "$dir" ]]; then
-        tmux new-session -d -s "$session" -n Notes -c "$dir"
-        tmux new-window -t "$session" -n Term -c "$dir"
-    else
-        tmux new-session -d -s "$session" -n Notes
-        tmux new-window -t "$session" -n Term
-    fi
-    tmux select-window -t "$session":1
-    tmux attach -t "$session"
+    _launch_tmux_layout "notes" "Notes" "$1"
 }
