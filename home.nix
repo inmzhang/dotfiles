@@ -100,7 +100,7 @@ in
     settings = {
       user.Name = "Yiming Zhang";
       user.Email = "zhangyiming21@mail.ustc.edu.cn";
-      aliases = {
+      alias = {
         lg = "lg1";
         lg1 = "lg1-specific --all";
         lg2 = "lg2-specific --all";
