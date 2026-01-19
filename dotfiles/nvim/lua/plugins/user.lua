@@ -142,4 +142,7 @@ return {
 			},
 		},
 	},
+	{
+		"openqasm/openqasm.vim",
+	},
 }
