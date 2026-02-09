@@ -102,7 +102,7 @@ ifeq ($(UNAME_S),Linux)
 	yay -S --needed $$(grep -vE '^\s*(#|$$)' packages/arch.txt)
 else ifeq ($(UNAME_S),Darwin)
 	@echo "Installing Homebrew packages..."
-	xargs brew install < packages/brew.txt
+	grep -vE '^\s*(#|$$)' packages/brew.txt | xargs brew install
 endif
 
 # ── Special targets ─────────────────────────────────────────────────────────

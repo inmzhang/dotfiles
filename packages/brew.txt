@@ -24,8 +24,12 @@ bacon
 uv
 serie
 gitui
+neovim
 
 # Shell & integrations
+fzf
+gawk
+grep
 git
 git-delta
 zoxide
