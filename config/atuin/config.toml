@@ -1,0 +1,4 @@
+auto_sync = true
+ctrl_n_shortcuts = true
+enter_accept = false
+keymap_mode = "vim-normal"

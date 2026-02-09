@@ -1,0 +1,42 @@
+# Core CLI tools
+dust
+ripgrep
+lsd
+bottom
+tmux
+tree-sitter
+lazygit
+gdu
+rm-improved
+just
+rustup
+ruff
+yt-dlp
+hyperfine
+gh
+onefetch
+fastfetch
+tealdeer
+fd
+skim
+parallel
+bacon
+uv
+serie
+gitui
+
+# Shell & integrations
+git
+git-delta
+zoxide
+starship
+yazi
+bat
+atuin
+direnv
+zsh
+zsh-autosuggestions
+zsh-syntax-highlighting
+
+# Fonts (cask)
+font-jetbrains-mono-nerd-font

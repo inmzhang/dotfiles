@@ -1,0 +1,43 @@
+# Core CLI tools
+xclip
+dust
+ripgrep
+lsd
+bottom
+tmux
+tree-sitter-cli
+lazygit
+gdu
+rm-improved-bin
+just
+rustup
+ruff
+yt-dlp
+hyperfine
+github-cli
+onefetch
+fastfetch
+tealdeer
+fd
+skim
+parallel
+bacon
+uv
+serie
+gitui
+
+# Fonts
+ttf-jetbrains-mono-nerd
+
+# Shell & integrations
+git
+git-delta
+zoxide
+starship
+yazi
+bat
+atuin
+direnv
+zsh
+zsh-autosuggestions
+zsh-syntax-highlighting

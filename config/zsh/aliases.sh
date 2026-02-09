@@ -1,5 +1,5 @@
-# Home manager path
-hm_path="$HOME/.config/home-manager"
+# Dotfiles path
+dotfiles_path="$HOME/dotfiles"
 
 alias zen="zen-browser"
 
@@ -11,10 +11,9 @@ alias sue='sudo -E'
 # Shell configuration
 alias zshrc='nvim ~/.zshrc'
 alias sc='source ~/.zshrc'
-alias aa="nvim $hm_path/dotfiles/zsh/aliases.sh"
-alias hm="cd $hm_path; nvim ."
-alias hms='home-manager switch'
-alias hmu="cd $hm_path;nix-channel --update;nix flake update;home-manager switch"
+alias aa="nvim $dotfiles_path/config/zsh/aliases.sh"
+alias dot="cd $dotfiles_path && nvim ."
+alias dots='cd $dotfiles_path && make relink'
 
 # Neovim
 alias v='nvim .'
