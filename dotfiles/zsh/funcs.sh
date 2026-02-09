@@ -114,7 +114,7 @@ _launch_tmux_layout() {
     fi
 
     # Launch gemini in the Agent window
-    tmux send-keys -t "$session":Agent "gemini" C-m
+    tmux send-keys -t "$session":Agent "claude" C-m
 
     tmux select-window -t "$session":1
     tmux attach -t "$session"
