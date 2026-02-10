@@ -35,6 +35,10 @@ link: ## Create all symlinks for current platform
 	$(call ln_sf,$(DOTDIR)/config/atuin/config.toml,$(HOME)/.config/atuin/config.toml)
 	@echo "Linking Claude Code configs..."
 	$(call ln_sf,$(DOTDIR)/config/claude/settings.json,$(HOME)/.claude/settings.json)
+	$(call ln_sf,$(DOTDIR)/config/claude/agents,$(HOME)/.claude/agents)
+	$(call ln_sf,$(DOTDIR)/config/claude/commands,$(HOME)/.claude/commands)
+	$(call ln_sf,$(DOTDIR)/config/claude/hooks,$(HOME)/.claude/hooks)
+	$(call ln_sf,$(DOTDIR)/config/claude/rules,$(HOME)/.claude/rules)
 	$(call ln_sf,$(DOTDIR)/config/claude/scripts,$(HOME)/.claude/scripts)
 	$(call ln_sf,$(DOTDIR)/config/claude/skills,$(HOME)/.claude/skills)
 ifeq ($(UNAME_S),Linux)
@@ -71,6 +75,10 @@ unlink: ## Remove all symlinks
 	rm -f $(HOME)/.config/bat/config
 	rm -f $(HOME)/.config/atuin/config.toml
 	rm -f $(HOME)/.claude/settings.json
+	rm -f $(HOME)/.claude/agents
+	rm -f $(HOME)/.claude/commands
+	rm -f $(HOME)/.claude/hooks
+	rm -f $(HOME)/.claude/rules
 	rm -f $(HOME)/.claude/scripts
 	rm -f $(HOME)/.claude/skills
 ifeq ($(UNAME_S),Linux)
