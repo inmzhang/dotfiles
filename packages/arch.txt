@@ -27,6 +27,7 @@ nvm
 bun-bin
 serie
 gitui
+shellcheck-bin
 
 # Fonts
 ttf-jetbrains-mono-nerd

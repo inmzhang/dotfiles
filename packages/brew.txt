@@ -27,6 +27,7 @@ bun
 serie
 gitui
 neovim
+shellcheck
 
 # Shell & integrations
 fzf
