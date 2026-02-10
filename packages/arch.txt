@@ -23,6 +23,8 @@ skim
 parallel
 bacon
 uv
+nvm
+bun-bin
 serie
 gitui
 

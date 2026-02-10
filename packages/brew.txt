@@ -22,6 +22,8 @@ skim
 parallel
 bacon
 uv
+nvm
+bun
 serie
 gitui
 neovim
