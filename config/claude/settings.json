@@ -3,7 +3,21 @@
     "ENABLE_LSP_TOOL": "true",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
-  "model": "opus",
+  "permissions": {
+    "allow": [
+      "Read",
+      "Edit",
+      "Write",
+      "Glob",
+      "Grep",
+      "WebFetch",
+      "WebSearch",
+      "NotebookEdit",
+      "LSP",
+      "Task"
+    ]
+  },
+  "model": "opus[1m]",
   "statusLine": {
     "type": "command",
     "command": "~/.claude/scripts/context-bar.sh"
