@@ -14,16 +14,16 @@
       "WebSearch",
       "NotebookEdit",
       "LSP",
-      "Task"
+      "Task",
+      "Bash(agent-browser *)"
     ]
   },
-  "model": "opus[1m]",
+  "model": "opus",
   "statusLine": {
     "type": "command",
     "command": "~/.claude/scripts/context-bar.sh"
   },
   "enabledPlugins": {
-    "superpowers@superpowers-marketplace": false,
     "rust-analyzer-lsp@claude-plugins-official": true,
     "frontend-design@claude-plugins-official": true,
     "context7@claude-plugins-official": true,
@@ -32,7 +32,9 @@
     "code-simplifier@claude-plugins-official": true,
     "commit-commands@claude-plugins-official": true,
     "claude-md-management@claude-plugins-official": true,
-    "claude-code-setup@claude-plugins-official": true
+    "claude-code-setup@claude-plugins-official": true,
+    "mgrep@Mixedbread-Grep": true,
+    "hookify@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": true,
   "fastMode": true
