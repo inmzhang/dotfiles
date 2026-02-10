@@ -46,7 +46,7 @@ Personal configuration files for Arch Linux and macOS, managed with a Makefile a
 - All config symlinks are defined in `Makefile` via the `ln_sf` helper macro
 - Common configs (zsh, tmux, nvim, git, starship, etc.) are linked on all platforms
 - Platform-specific configs are inside `ifeq ($(UNAME_S),Linux)` / `Darwin` blocks
-- Claude Code configs (`settings.json`, `scripts/`, `skills/`) are symlinked to `~/.claude/`
+- Claude Code configs (`settings.json`, `agents/`, `commands/`, `hooks/`, `rules/`, `scripts/`, `skills/`) are symlinked to `~/.claude/`
 
 ### Adding a New Config
 1. Create directory: `config/<appname>/`
@@ -72,7 +72,7 @@ Personal configuration files for Arch Linux and macOS, managed with a Makefile a
 - **Multiplexer**: tmux (C-a prefix, vi mode, TPM, Catppuccin Mocha colors)
 - **Git**: delta pager, pretty log aliases (`git lg`/`lg1`/`lg2`/`lg3`)
 - **File manager**: yazi (with `y()` shell wrapper for cwd tracking)
-- **Proxy**: clash-verge on port 7897, auto-enabled on shell start via `proxy_on`
+- **Proxy**: clash-verge on port 7897, auto-enabled on shell start via `proxy_on` (falls back to 7890/7891 without clash-verge)
 - **Package managers**: yay (Arch), Homebrew (macOS), uv (Python), cargo (Rust), bun/nvm (JS)
 - **WM (Linux)**: Hyprland with waybar, rofi, wallust, wlogout, AGS, swappy
 
@@ -87,7 +87,7 @@ Key functions in `config/zsh/funcs.sh`:
 - `proxy_on` / `proxy_off` - toggle terminal proxy
 
 Key aliases in `config/zsh/aliases.sh`:
-- `v`/`vi`/`vim` -> nvim, `ls` -> lsd, `cat` -> bat, `du` -> dust
+- `v` -> nvim . (opens cwd), `vi`/`vim` -> nvim, `ls` -> lsd, `cat` -> bat, `du` -> dust
 - `gs`/`ga`/`gc`/`gcm`/`gco`/`gb`/`gp`/`gP` - git shortcuts
 - `dots` - cd to dotfiles + relink
 - `dot` - cd to dotfiles + open in nvim
@@ -98,14 +98,23 @@ Settings are in `config/claude/settings.json`:
 - Default model: opus, fast mode enabled, always-thinking enabled
 - LSP tool enabled, agent teams enabled (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`)
 - Package manager: bun (`CLAUDE_PACKAGE_MANAGER=bun` in envars.sh)
-- Auto-allowed tools: Read, Edit, Write, Glob, Grep, WebFetch, WebSearch, NotebookEdit, LSP, Task
+- Auto-allowed tools: Read, Edit, Write, Glob, Grep, WebFetch, WebSearch, NotebookEdit, LSP, Task, Bash(agent-browser *)
+- Custom statusLine via `~/.claude/scripts/context-bar.sh`
 - Plugins: context7, rust-analyzer-lsp, frontend-design, code-review, feature-dev, code-simplifier, commit-commands, claude-md-management, claude-code-setup, mgrep, hookify
 
 ### Claude Hooks (`config/claude/hooks/hooks.json`)
-- **PreToolUse**: git push reminder, block random .md file creation, suggest compaction
+- **PreToolUse**: git push reminder, block random .md file creation, suggest compaction at logical intervals
 - **PostToolUse**: log PR URL after `gh pr create`
-- **SessionStart/End**: persist and restore session state
+- **SessionStart**: load previous context and detect package manager
+- **SessionEnd**: persist session state + evaluate session for extractable patterns (continuous-learning)
 - **PreCompact**: save state before context compaction
+
+### Custom Commands (`config/claude/commands/`)
+Slash commands: `/checkpoint`, `/eval`, `/evolve`, `/learn`, `/tdd`, `/sessions`, `/skill-create`, `/instinct-status`, `/instinct-export`, `/instinct-import`
+
+### Custom Agents & Rules
+- Agent: `config/claude/agents/tdd-guide.md` - TDD workflow enforcement
+- Rule: `config/claude/rules/hooks.md` - hooks system guidelines
 
 ## Editing Guidelines
 
