@@ -20,7 +20,7 @@
 [delta]
     navigate = true
     dark = true
-    line-number = true
+    line-numbers = true
 
 [merge]
     conflictstyle = diff3
