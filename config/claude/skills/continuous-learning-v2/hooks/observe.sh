@@ -4,32 +4,17 @@
 # Captures tool use events for pattern analysis.
 # Claude Code passes hook data via stdin as JSON.
 #
-# Hook config (in ~/.claude/settings.json):
+# Hook config (in ~/.claude/hooks/hooks.json):
 #
-# If installed as a plugin, use ${CLAUDE_PLUGIN_ROOT}:
 # {
 #   "hooks": {
 #     "PreToolUse": [{
 #       "matcher": "*",
-#       "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/hooks/observe.sh pre" }]
+#       "hooks": [{ "type": "command", "command": "$HOME/.claude/skills/continuous-learning-v2/hooks/observe.sh pre" }]
 #     }],
 #     "PostToolUse": [{
 #       "matcher": "*",
-#       "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/hooks/observe.sh post" }]
-#     }]
-#   }
-# }
-#
-# If installed manually to ~/.claude/skills:
-# {
-#   "hooks": {
-#     "PreToolUse": [{
-#       "matcher": "*",
-#       "hooks": [{ "type": "command", "command": "~/.claude/skills/continuous-learning-v2/hooks/observe.sh pre" }]
-#     }],
-#     "PostToolUse": [{
-#       "matcher": "*",
-#       "hooks": [{ "type": "command", "command": "~/.claude/skills/continuous-learning-v2/hooks/observe.sh post" }]
+#       "hooks": [{ "type": "command", "command": "$HOME/.claude/skills/continuous-learning-v2/hooks/observe.sh post" }]
 #     }]
 #   }
 # }

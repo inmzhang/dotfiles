@@ -1,5 +1,8 @@
 ## General best practices
 
+- Always ask the user clarifying questions to resolve any confusion or
+  ambiguity **before** planning or implementation. Do not guess at
+  requirements or make assumptions when you can ask instead.
 - Run shell scripts through shellcheck.
 - Use `tmp/` (project-local) for intermediate files and comparison
   artifacts, not `/tmp`. This keeps outputs discoverable and

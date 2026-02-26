@@ -10,13 +10,7 @@ Shows all learned instincts with their confidence scores, grouped by domain.
 
 ## Implementation
 
-Run the instinct CLI using the plugin root path:
-
-```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py" status
-```
-
-Or if `CLAUDE_PLUGIN_ROOT` is not set (manual installation), use:
+Run the instinct CLI:
 
 ```bash
 python3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py status

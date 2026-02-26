@@ -18,7 +18,9 @@ Personal configuration files for Arch Linux and macOS, managed with a Makefile a
 │   ├── rofi/         # Rofi launcher (Linux only)
 │   ├── claude/       # Claude Code (settings, hooks, skills, scripts)
 │   ├── atuin/        # Atuin shell history (vim-normal keymap)
-│   └── ...           # bat, cava, wallust, sioyek, uv, etc.
+│   ├── fastfetch/    # Fastfetch system info
+│   ├── ags/          # AGS widgets (Linux only)
+│   └── ...           # bat, cava, wallust, sioyek, uv, firefox, Kvantum, qt5ct/qt6ct, swappy, wlogout, wallpapers
 ├── packages/         # Package lists
 │   ├── arch.txt      # Arch Linux packages (yay)
 │   └── brew.txt      # macOS packages (Homebrew)
@@ -95,12 +97,12 @@ Key aliases in `config/zsh/aliases.sh`:
 ## Claude Code Configuration
 
 Settings are in `config/claude/settings.json`:
-- Default model: opus, fast mode enabled, always-thinking enabled
+- Default model: opus, fast mode enabled, always-thinking enabled, effort level: high
 - LSP tool enabled, agent teams enabled (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`)
 - Package manager: bun (`CLAUDE_PACKAGE_MANAGER=bun` in envars.sh)
 - Auto-allowed tools: Read, Edit, Write, Glob, Grep, WebFetch, WebSearch, NotebookEdit, LSP, Task, Bash(agent-browser *)
 - Custom statusLine via `~/.claude/scripts/context-bar.sh`
-- Plugins: context7, rust-analyzer-lsp, frontend-design, code-review, feature-dev, code-simplifier, commit-commands, claude-md-management, claude-code-setup, mgrep, hookify
+- Plugins: context7, rust-analyzer-lsp, clangd-lsp, frontend-design, code-review, feature-dev, code-simplifier, commit-commands, claude-md-management, claude-code-setup, hookify
 
 ### Claude Hooks (`config/claude/hooks/hooks.json`)
 - **PreToolUse**: git push reminder, block random .md file creation, suggest compaction at logical intervals
@@ -114,6 +116,7 @@ Slash commands: `/checkpoint`, `/eval`, `/evolve`, `/learn`, `/tdd`, `/sessions`
 
 ### Custom Agents & Rules
 - Agent: `config/claude/agents/tdd-guide.md` - TDD workflow enforcement
+- Rule: `config/claude/rules/general.md` - general best practices (Rust, git, docs, code style, sandbox workarounds)
 - Rule: `config/claude/rules/hooks.md` - hooks system guidelines
 
 ## Editing Guidelines
