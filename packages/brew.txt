@@ -23,7 +23,7 @@ parallel
 bacon
 uv
 nvm
-bun
+oven-sh/bun/bun
 serie
 gitui
 neovim
