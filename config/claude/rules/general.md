@@ -7,6 +7,10 @@
 - Use `tmp/` (project-local) for intermediate files and comparison
   artifacts, not `/tmp`. This keeps outputs discoverable and
   project-scoped, and avoids requesting permissions for `/tmp`.
+- Use agent teams to parallelize independent subtasks whenever
+  possible (e.g., researching multiple files, running tests while
+  editing, exploring separate modules). Limit teams to at most
+  **three teammates** to avoid running out of memory.
 
 ### SESSION.md
 

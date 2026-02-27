@@ -18,7 +18,6 @@
       "Bash(agent-browser *)"
     ]
   },
-  "model": "opus",
   "statusLine": {
     "type": "command",
     "command": "~/.claude/scripts/context-bar.sh"
@@ -37,5 +36,6 @@
     "clangd-lsp@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": true,
-  "fastMode": true
+  "fastMode": true,
+  "model": "opus"
 }
