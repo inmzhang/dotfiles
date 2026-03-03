@@ -42,6 +42,19 @@ link: ## Create all symlinks for current platform
 	$(call ln_sf,$(DOTDIR)/config/claude/rules,$(HOME)/.claude/rules)
 	$(call ln_sf,$(DOTDIR)/config/claude/scripts,$(HOME)/.claude/scripts)
 	$(call ln_sf,$(DOTDIR)/config/claude/skills,$(HOME)/.claude/skills)
+	@echo "Linking Codex configs..."
+	$(call ln_sf,$(DOTDIR)/config/codex/config.toml,$(HOME)/.codex/config.toml)
+	$(call ln_sf,$(DOTDIR)/config/codex/rules/default.rules,$(HOME)/.codex/rules/default.rules)
+	$(call ln_sf,$(DOTDIR)/config/codex/memories,$(HOME)/.codex/memories)
+	@mkdir -p $(HOME)/.codex/skills
+	@for skill_dir in $(DOTDIR)/config/codex/skills/*; do \
+		if [ -d "$$skill_dir" ]; then \
+			skill_name=$$(basename "$$skill_dir"); \
+			rm -rf "$(HOME)/.codex/skills/$$skill_name"; \
+			ln -sfn "$$skill_dir" "$(HOME)/.codex/skills/$$skill_name"; \
+			printf "  %s → %s\n" "$(HOME)/.codex/skills/$$skill_name" "$$skill_dir"; \
+		fi; \
+	done
 ifeq ($(UNAME_S),Linux)
 	@echo "Linking Linux configs..."
 	$(call ln_sf,$(DOTDIR)/config/hyprland/config,$(HOME)/.config/hypr)
@@ -83,6 +96,17 @@ unlink: ## Remove all symlinks
 	rm -f $(HOME)/.claude/rules
 	rm -f $(HOME)/.claude/scripts
 	rm -f $(HOME)/.claude/skills
+	rm -f $(HOME)/.codex/config.toml
+	rm -f $(HOME)/.codex/rules/default.rules
+	rm -f $(HOME)/.codex/memories
+	@if [ -d "$(DOTDIR)/config/codex/skills" ]; then \
+		for skill_dir in $(DOTDIR)/config/codex/skills/*; do \
+			if [ -d "$$skill_dir" ]; then \
+				skill_name=$$(basename "$$skill_dir"); \
+				rm -f "$(HOME)/.codex/skills/$$skill_name"; \
+			fi; \
+		done; \
+	fi
 ifeq ($(UNAME_S),Linux)
 	rm -f $(HOME)/.config/hypr
 	rm -f $(HOME)/.config/waybar

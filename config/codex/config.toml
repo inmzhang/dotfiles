@@ -1,0 +1,26 @@
+model_provider = "rightcode"
+model = "gpt-5.2-codex"
+model_reasoning_effort = "medium"
+network_access = "enabled"
+disable_response_storage = true
+windows_wsl_setup_acknowledged = true
+model_verbosity = "high"
+suppress_unstable_features_warning = true
+
+[model_providers.rightcode]
+name = "rightcode"
+base_url = "https://right.codes/codex/v1"
+wire_api = "responses"
+requires_openai_auth = true
+
+[projects."/home/inm/workspace/bloc"]
+trust_level = "trusted"
+
+[projects."/home/inm/.codex"]
+trust_level = "trusted"
+
+[projects."/home/inm/dotfiles"]
+trust_level = "trusted"
+
+[features]
+memories = true
