@@ -17,6 +17,7 @@ Personal configuration files for Arch Linux and macOS, managed with a Makefile a
 │   ├── waybar/       # Waybar status bar (Linux only)
 │   ├── rofi/         # Rofi launcher (Linux only)
 │   ├── claude/       # Claude Code (settings, hooks, skills, scripts)
+│   ├── codex/        # Codex CLI (config, rules, memories, skills)
 │   ├── atuin/        # Atuin shell history (vim-normal keymap)
 │   ├── fastfetch/    # Fastfetch system info
 │   ├── ags/          # AGS widgets (Linux only)
@@ -49,6 +50,13 @@ Personal configuration files for Arch Linux and macOS, managed with a Makefile a
 - Common configs (zsh, tmux, nvim, git, starship, etc.) are linked on all platforms
 - Platform-specific configs are inside `ifeq ($(UNAME_S),Linux)` / `Darwin` blocks
 - Claude Code configs (`settings.json`, `agents/`, `commands/`, `hooks/`, `rules/`, `scripts/`, `skills/`) are symlinked to `~/.claude/`
+- Codex configs (`config.toml`, `rules/`, `memories/`) are symlinked to `~/.codex/`, and each directory in `config/codex/skills/` is linked into `~/.codex/skills/`
+
+### Codex Skills
+- `ask-user-question`: Structured requirement interview flow with one question at a time
+- `gh-fix-ci`: Investigate failing GitHub Actions PR checks and drive a fix workflow
+- `pdf`: Read/create/review PDF files with rendering-aware checks
+- `tuicr`: Open tuicr in a tmux split pane to review local git changes
 
 ### Adding a New Config
 1. Create directory: `config/<appname>/`

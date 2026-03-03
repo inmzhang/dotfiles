@@ -13,7 +13,8 @@ Makefile and explicit symlinks.
 │   ├── git/           #   Git (config)
 │   ├── hyprland/      #   Hyprland (Linux only)
 │   ├── ...
-│   └── claude/        #   Claude Code (settings, scripts, skills)
+│   ├── claude/        #   Claude Code (settings, scripts, skills)
+│   └── codex/         #   Codex CLI (config, rules, memories, skills)
 ├── packages/          # Package lists
 │   ├── arch.txt       #   Arch Linux (yay)
 │   └── brew.txt       #   macOS (Homebrew)
@@ -51,6 +52,19 @@ chmod +x setup.sh
 | `make packages` | Install packages for current platform |
 | `make firefox` | Symlink Firefox userChrome.css (Linux) |
 | `make hyprland-setup` | Bootstrap Hyprland via JaKooLit installer |
+| `make codex-skills-link` | Sync Codex skills from this repo into `~/.codex/skills` |
+| `make codex-skills-unlink` | Remove Codex skill symlinks that came from this repo |
+
+## Codex skills
+
+`make link` automatically runs `make codex-skills-link`, which symlinks every
+skill directory in `config/codex/skills/` into `~/.codex/skills/`.
+
+Current local Codex skills:
+- `ask-user-question`: Structured requirement interviews using option-based questions.
+- `gh-fix-ci`: Diagnose and fix failing GitHub Actions PR checks with `gh`.
+- `pdf`: Read/create/review PDFs with layout-aware validation.
+- `tuicr`: Review local git changes with tuicr in a tmux split pane.
 
 ## Adding a new application config
 

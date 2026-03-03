@@ -11,7 +11,7 @@ define ln_sf
 	mkdir -p $(dir $(2)) && rm -rf $(2) && ln -sfn $(1) $(2) && printf "  %s → %s\n" "$(2)" "$(1)"
 endef
 
-.PHONY: help install link unlink relink packages firefox hyprland-setup
+.PHONY: help install link unlink relink packages firefox hyprland-setup codex-skills-link codex-skills-unlink
 
 help: ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
@@ -46,15 +46,7 @@ link: ## Create all symlinks for current platform
 	$(call ln_sf,$(DOTDIR)/config/codex/config.toml,$(HOME)/.codex/config.toml)
 	$(call ln_sf,$(DOTDIR)/config/codex/rules/default.rules,$(HOME)/.codex/rules/default.rules)
 	$(call ln_sf,$(DOTDIR)/config/codex/memories,$(HOME)/.codex/memories)
-	@mkdir -p $(HOME)/.codex/skills
-	@for skill_dir in $(DOTDIR)/config/codex/skills/*; do \
-		if [ -d "$$skill_dir" ]; then \
-			skill_name=$$(basename "$$skill_dir"); \
-			rm -rf "$(HOME)/.codex/skills/$$skill_name"; \
-			ln -sfn "$$skill_dir" "$(HOME)/.codex/skills/$$skill_name"; \
-			printf "  %s → %s\n" "$(HOME)/.codex/skills/$$skill_name" "$$skill_dir"; \
-		fi; \
-	done
+	@$(MAKE) --no-print-directory codex-skills-link
 ifeq ($(UNAME_S),Linux)
 	@echo "Linking Linux configs..."
 	$(call ln_sf,$(DOTDIR)/config/hyprland/config,$(HOME)/.config/hypr)
@@ -99,14 +91,7 @@ unlink: ## Remove all symlinks
 	rm -f $(HOME)/.codex/config.toml
 	rm -f $(HOME)/.codex/rules/default.rules
 	rm -f $(HOME)/.codex/memories
-	@if [ -d "$(DOTDIR)/config/codex/skills" ]; then \
-		for skill_dir in $(DOTDIR)/config/codex/skills/*; do \
-			if [ -d "$$skill_dir" ]; then \
-				skill_name=$$(basename "$$skill_dir"); \
-				rm -f "$(HOME)/.codex/skills/$$skill_name"; \
-			fi; \
-		done; \
-	fi
+	@$(MAKE) --no-print-directory codex-skills-unlink
 ifeq ($(UNAME_S),Linux)
 	rm -f $(HOME)/.config/hypr
 	rm -f $(HOME)/.config/waybar
@@ -127,6 +112,29 @@ endif
 	@echo "Done."
 
 relink: unlink link ## Remove and recreate all symlinks
+
+codex-skills-link: ## Link all Codex skills from this repo
+	@echo "Linking Codex skills..."
+	@mkdir -p $(HOME)/.codex/skills
+	@for skill_dir in $(DOTDIR)/config/codex/skills/*; do \
+		if [ -d "$$skill_dir" ] && [ -f "$$skill_dir/SKILL.md" ]; then \
+			skill_name=$$(basename "$$skill_dir"); \
+			rm -rf "$(HOME)/.codex/skills/$$skill_name"; \
+			ln -sfn "$$skill_dir" "$(HOME)/.codex/skills/$$skill_name"; \
+			printf "  %s → %s\n" "$(HOME)/.codex/skills/$$skill_name" "$$skill_dir"; \
+		fi; \
+	done
+
+codex-skills-unlink: ## Remove Codex skill symlinks from this repo
+	@echo "Removing Codex skills..."
+	@if [ -d "$(DOTDIR)/config/codex/skills" ]; then \
+		for skill_dir in $(DOTDIR)/config/codex/skills/*; do \
+			if [ -d "$$skill_dir" ] && [ -f "$$skill_dir/SKILL.md" ]; then \
+				skill_name=$$(basename "$$skill_dir"); \
+				rm -f "$(HOME)/.codex/skills/$$skill_name"; \
+			fi; \
+		done; \
+	fi
 
 # ── Package management ──────────────────────────────────────────────────────
 
