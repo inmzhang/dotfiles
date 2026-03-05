@@ -1,17 +1,42 @@
-model_provider = "rightcode"
+# model_provider = "rightcode"
+# model = "gpt-5.2-codex"
+# model_reasoning_effort = "high"
+# network_access = "enabled"
+# disable_response_storage = true
+# windows_wsl_setup_acknowledged = true
+# model_verbosity = "high"
+# suppress_unstable_features_warning = true
+#
+# [model_providers.rightcode]
+# name = "rightcode"
+# base_url = "https://right.codes/codex/v1"
+# wire_api = "responses"
+
+model_provider = "IkunCoding"
 model = "gpt-5.2-codex"
-model_reasoning_effort = "medium"
+model_reasoning_effort = "xhigh"
 network_access = "enabled"
 disable_response_storage = true
-windows_wsl_setup_acknowledged = true
-model_verbosity = "high"
-suppress_unstable_features_warning = true
+approval_policy = "on-request"
+web_search = "live"
+sandbox_mode = "danger-full-access"
+collaboration_mode = true
+model_supports_reasoning_summaries = true
 
-[model_providers.rightcode]
-name = "rightcode"
-base_url = "https://right.codes/codex/v1"
+[model_providers.IkunCoding]
+name = "IkunCoding"
+base_url = "https://api.ikuncode.cc/v1"
 wire_api = "responses"
 requires_openai_auth = true
+
+[features]
+shell_snapshot = true
+collaboration_modes = false
+steer = false
+unified_exec = false
+requires_openai_auth = true
+voice_transcription = true
+suppress_unstable_features_warning = true
 
 [projects."/home/inm/workspace/bloc"]
 trust_level = "trusted"
@@ -22,5 +47,7 @@ trust_level = "trusted"
 [projects."/home/inm/dotfiles"]
 trust_level = "trusted"
 
-[features]
-memories = true
+[mcp_servers.context7]
+args = ["-y", "@upstash/context7-mcp", "--api-key", "ctx7sk-97b036eb-fec9-4616-8392-8c46bba62104"]
+command = "npx"
+startup_timeout_ms = 20_000
