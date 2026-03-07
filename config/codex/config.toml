@@ -13,7 +13,7 @@
 # wire_api = "responses"
 
 model_provider = "IkunCoding"
-model = "gpt-5.2-codex"
+model = "gpt-5.4"
 model_reasoning_effort = "xhigh"
 network_access = "enabled"
 disable_response_storage = true
@@ -22,6 +22,7 @@ web_search = "live"
 sandbox_mode = "danger-full-access"
 collaboration_mode = true
 model_supports_reasoning_summaries = true
+suppress_unstable_features_warning = true
 
 [model_providers.IkunCoding]
 name = "IkunCoding"
@@ -36,7 +37,6 @@ steer = false
 unified_exec = false
 requires_openai_auth = true
 voice_transcription = true
-suppress_unstable_features_warning = true
 
 [projects."/home/inm/workspace/bloc"]
 trust_level = "trusted"
