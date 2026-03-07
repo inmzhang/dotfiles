@@ -4,7 +4,7 @@ dotfiles_path="$HOME/dotfiles"
 alias zen="zen-browser"
 
 alias python='python3'
-alias codex='codex -m gpt-5.3-codex -c model_reasoning_effort="xhigh"'
+alias codex='codex -m gpt-5.4 -c model_reasoning_effort="xhigh"'
 
 # sudo with environment variables preserved
 alias sue='sudo -E'
