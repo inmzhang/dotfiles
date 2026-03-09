@@ -131,7 +131,7 @@ codex-skills-unlink: ## Remove Codex skill symlinks from this repo
 		for skill_dir in $(DOTDIR)/config/codex/skills/*; do \
 			if [ -d "$$skill_dir" ] && [ -f "$$skill_dir/SKILL.md" ]; then \
 				skill_name=$$(basename "$$skill_dir"); \
-				rm -f "$(HOME)/.codex/skills/$$skill_name"; \
+				rm -rf "$(HOME)/.codex/skills/$$skill_name"; \
 			fi; \
 		done; \
 	fi

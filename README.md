@@ -63,8 +63,25 @@ skill directory in `config/codex/skills/` into `~/.codex/skills/`.
 Current local Codex skills:
 - `ask-user-question`: Structured requirement interviews using option-based questions.
 - `gh-fix-ci`: Diagnose and fix failing GitHub Actions PR checks with `gh`.
+- `ideas`: Research brainstorming conversations from the `sci-brain` project.
 - `pdf`: Read/create/review PDFs with layout-aware validation.
+- `quicknote`: Save the last substantial research exchange as a markdown note.
+- `researchstyle`: Build a research profile from Zotero or Google Scholar context.
+- `survey`: Map literature and adjacent work before brainstorming.
 - `tuicr`: Review local git changes with tuicr in a tmux split pane.
+- `writer`: Turn prior brainstorming sessions into a structured write-up.
+
+## Codex MCP servers
+
+`config/codex/config.toml` is symlinked into `~/.codex/config.toml` and tracks
+the Codex MCP server configuration for this machine.
+
+Current tracked MCP servers:
+- `context7`: Library and framework documentation lookup.
+- `arxiv`: Search arXiv papers and download paper PDFs into a dedicated cache.
+- `paper_search`: Search multiple academic sources including PubMed and preprint servers.
+- `semantic_scholar`: Query citation graphs, related work, and recommendations.
+- `zotero`: Search the local Zotero library through Zotero's local API.
 
 ## Adding a new application config
 
