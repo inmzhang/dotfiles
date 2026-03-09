@@ -1,17 +1,22 @@
 model_provider = "OpenAI"
 model = "gpt-5.4"
 review_model = "gpt-5.4"
-model_reasoning_effort = "xhigh"
+project_doc_fallback_filenames = ["CLAUDE.md"] # agents.md找不到，则找claude.md
+approval_policy = "on-request"
+sandbox_mode = "danger-full-access"
+model_context_window = 1000000 # 模型上下文窗口大小，默认1000000（1M）; gpt-5.4
+model_auto_compact_token_limit = 350000 # for gpt-5.4⭐️虽然是1M ，但是有效注意力不够，可以自己网上查，不建议开的太高
+tool_output_token_limit = 40000 # 工具输出最大token; default: 10000 for gpt-5.2-codex
+model_reasoning_effort = "xhigh" # 推理努力程度: minimal | low | medium | high | xhigh (默认: medium; gpt-5.2-codex和gpt-5.2上默认xhigh)
+model_reasoning_summary = "detailed" # 模型输出思维链的summary风格，可以是auto | concise | detailed | none (default: auto)
+model_verbosity = "high"
+model_supports_reasoning_summaries = true # Force reasoning
 disable_response_storage = true
 network_access = "enabled"
-model_context_window = 1000000
-model_auto_compact_token_limit = 900000
-approval_policy = "on-request"
 web_search = "live"
-sandbox_mode = "danger-full-access"
 collaboration_mode = true
-model_supports_reasoning_summaries = true
 suppress_unstable_features_warning = true
+service_tier = "fast"
 
 [model_providers.OpenAI]
 name = "OpenAI"
@@ -19,31 +24,121 @@ base_url = "https://sub2.dmid.cc"
 wire_api = "responses"
 requires_openai_auth = true
 
-# model_provider = "IkunCoding"
-# model = "gpt-5.4"
-# model_reasoning_effort = "xhigh"
-# network_access = "enabled"
-# disable_response_storage = true
-# approval_policy = "on-request"
-# web_search = "live"
-# sandbox_mode = "danger-full-access"
-# collaboration_mode = true
-# model_supports_reasoning_summaries = true
-# suppress_unstable_features_warning = true
-#
-# [model_providers.IkunCoding]
-# name = "IkunCoding"
-# base_url = "https://api.ikuncode.cc/v1"
-# wire_api = "responses"
-# requires_openai_auth = true
-
+# Common Codex config
+# Add your common TOML configuration here
+################################################################################
+# Centralized Feature Flags (preferred)
+################################################################################
 [features]
-shell_snapshot = true
-collaboration_modes = false
-steer = false
+shell_tool = true # 启用 shell 工具。默认: true
+apply_patch_freeform = true # 通过自由格式编辑路径包含apply_patch（影响默认工具集）。默认: false
+shell_snapshot = true # 启用shell快照功能。默认: false
+undo = true # 启用undo功能。默认: true
+multi_agent = true
+steer = true
+prevent_idle_sleep = true
+child_agents_md = true
 unified_exec = false
 requires_openai_auth = true
-voice_transcription = true
+memories = true
+fast_mode = true # 必开 -- 当然会让gpt-5.4用量2倍
+
+[memories] # ⭐️⭐️⭐️，强烈建议用新模型来总结memories
+consolidation_model = "gpt-5.4"
+extract_model = "gpt-5.4"
+# generate_memories = true # 默认true
+# use_memories = true # 默认true，表示把 memory_summary.md 注入 developer instructions
+max_raw_memories_for_consolidation = 512
+max_unused_days = 30 # 默认 30
+max_rollout_age_days = 45 # 默认 30
+# max_rollouts_per_startup = 16 # 默认 16
+# min_rollout_idle_hours = 6 # 默认 6
+
+[agents]
+max_threads = 12
+max_depth = 2
+
+[agents.default]
+description = "General-purpose helper."
+model = "gpt-5.3-codex"
+model_reasoning_effort = "xhigh"
+
+[agents.worker]
+description = "Do not use this agent, it's silly named and not optimized for any particular role."
+model = "gpt-5.2"
+model_reasoning_effort = "high"
+
+[agents.explorer]
+description = "Fast codebase explorer for read-heavy tasks."
+model = "gpt-5.3-codex"
+model_reasoning_effort = "xhigh"
+sandbox_mode = "read-only"
+
+[agents.awaiter]
+description = "Long-running command and task monitoring role."
+model = "gpt-5.4"
+model_reasoning_effort = "high"
+
+[agents.reviewer]
+description = "Reviewer agent for code reviews and feedback."
+model = "gpt-5.4"
+model_reasoning_effort = "high"
+
+
+################################################################################
+# Shell Environment Policy for spawned processes (table)
+################################################################################
+[shell_environment_policy] # Shell环境配置
+# 环境变量继承策略inherit: all (default) | core | none 
+inherit = "all" # 可以全给他看
+# 是否忽略默认的 KEY/SECRET/TOKEN Skip default excludes for names containing KEY/SECRET/TOKEN (case-insensitive). Default: true
+ignore_default_excludes = true # 意思是可以给他看
+# Case-insensitive glob patterns to remove (e.g., "AWS_*", "AZURE_*"). Default: []
+# exclude = []
+# Explicit key/value overrides (always win). Default: {}
+# set = {}
+# Whitelist; if non-empty, keep only matching vars. Default: []
+# include_only = []
+# Experimental: run via user shell profile. Default: false
+# experimental_use_profile = false
+
+################################################################################
+# Sandbox settings (tables)
+################################################################################
+[sandbox_workspace_write]
+# Additional writable roots beyond the workspace (cwd). Default: [] 例如在/root/paddlejob/RLHF 启动，但需要让他访问 /root/paddlejob 下的其他文件夹，可以在这里加上 /root/paddlejob
+# writable_roots = [] 
+network_access = true # # Allow outbound network access inside the sandbox. Default: false
+
+################################################################################
+# Notifications
+################################################################################
+# External notifier program (argv array). When unset: disabled.
+# Example: notify = ["notify-send", "Codex"]
+
+
+[tui]
+# Send desktop notifications when approvals are required or a turn completes. # Defaults to false.
+notifications = true
+
+# 使用包装脚本以集中配置通知偏好（声音/图标/分组等）
+# notify = [ ] # linux机器不开 wrapper.sh
+
+################################################################################
+# Project Controls
+################################################################################
+# Max bytes from AGENTS.md to embed into first-turn instructions. Default: 32768
+# project_doc_max_bytes = 32768
+
+
+status_line = ["model-with-reasoning", "current-dir", "git-branch", "context-remaining", "five-hour-limit", "codex-version", "context-window-size", "used-tokens", "session-id"]
+
+[notice]
+hide_rate_limit_model_nudge = true
+
+[notice.model_migrations]
+"gpt-5.2" = "gpt-5.3-codex"
+"gpt-5.2-codex" = "gpt-5.3-codex"
 
 [projects."/home/inm/workspace/bloc"]
 trust_level = "trusted"
@@ -55,29 +150,7 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [mcp_servers.context7]
-args = ["-y", "@upstash/context7-mcp", "--api-key", "ctx7sk-97b036eb-fec9-4616-8392-8c46bba62104"]
+type = "stdio"
 command = "npx"
-startup_timeout_ms = 20_000
-
-[mcp_servers.arxiv]
-args = ["tool", "run", "arxiv-mcp-server", "--storage-path", "/home/inm/.codex/mcp-data/arxiv/papers"]
-command = "uv"
-startup_timeout_ms = 60_000
-
-[mcp_servers.paper_search]
-args = ["--from", "paper-search-mcp", "python", "-m", "paper_search_mcp.server"]
-command = "uvx"
-startup_timeout_ms = 60_000
-
-[mcp_servers.semantic_scholar]
-args = ["--from", "fastmcp<3", "--with", "httpx", "--with", "python-dotenv", "--with", "fastapi>=0.115.0", "--with", "uvicorn>=0.32.0", "fastmcp", "run", "/home/inm/.codex/vendor/semantic-scholar-fastmcp-mcp-server/run.py"]
-command = "uvx"
-startup_timeout_ms = 60_000
-
-[mcp_servers.zotero]
-args = ["--from", "zotero-mcp", "zotero-mcp", "--transport", "stdio"]
-command = "uvx"
-startup_timeout_ms = 60_000
-
-[mcp_servers.zotero.env]
-ZOTERO_LOCAL = "true"
+args = ["-y", "@upstash/context7-mcp", "--api-key", "ctx7sk-97b036eb-fec9-4616-8392-8c46bba62104"]
+startup_timeout_ms = 20000
