@@ -1,4 +1,5 @@
 model_provider = "OpenAI"
+# model_provider = "IkunCoding"
 model = "gpt-5.4"
 review_model = "gpt-5.4"
 project_doc_fallback_filenames = ["CLAUDE.md"] # agents.md找不到，则找claude.md
@@ -19,10 +20,15 @@ suppress_unstable_features_warning = true
 
 [model_providers.OpenAI]
 name = "OpenAI"
-# base_url = "https://sub2.dmid.cc"
 base_url = "https://fastagent.dpdns.org/v1"
 wire_api = "responses"
 requires_openai_auth = true
+
+# [model_providers.IkunCoding]
+# name = "IkunCoding"
+# base_url = "https://api.ikuncode.cc/v1"
+# wire_api = "responses"
+# requires_openai_auth = true
 
 # Common Codex config
 # Add your common TOML configuration here
