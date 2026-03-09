@@ -16,11 +16,11 @@ network_access = "enabled"
 web_search = "live"
 collaboration_mode = true
 suppress_unstable_features_warning = true
-service_tier = "fast"
 
 [model_providers.OpenAI]
 name = "OpenAI"
-base_url = "https://sub2.dmid.cc"
+# base_url = "https://sub2.dmid.cc"
+base_url = "https://fastagent.dpdns.org/v1"
 wire_api = "responses"
 requires_openai_auth = true
 
