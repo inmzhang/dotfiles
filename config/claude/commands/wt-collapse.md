@@ -1,3 +1,7 @@
+---
+description: Merge work from the current worktree into a target branch, then remove it
+---
+
 # Worktree Collapse
 
 Merge work from the current worktree into a target branch, then remove

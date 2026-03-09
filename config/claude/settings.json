@@ -18,6 +18,7 @@
       "Bash(agent-browser *)"
     ]
   },
+  "model": "opus",
   "statusLine": {
     "type": "command",
     "command": "~/.claude/scripts/context-bar.sh"
@@ -33,9 +34,19 @@
     "claude-md-management@claude-plugins-official": true,
     "claude-code-setup@claude-plugins-official": true,
     "hookify@claude-plugins-official": true,
-    "clangd-lsp@claude-plugins-official": true
+    "clangd-lsp@claude-plugins-official": true,
+    "sci-brain@sci-brain": true
+  },
+  "extraKnownMarketplaces": {
+    "sci-brain": {
+      "source": {
+        "source": "github",
+        "repo": "QuantumBFS/sci-brain"
+      }
+    }
   },
   "alwaysThinkingEnabled": true,
   "fastMode": true,
-  "model": "opus"
+  "skipDangerousModePermissionPrompt": true,
+  "effortLevel": "high"
 }

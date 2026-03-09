@@ -1,3 +1,7 @@
+---
+description: Create a new git worktree for a task branch
+---
+
 # Worktree Create
 
 Create a new git worktree for a task branch, then switch the working

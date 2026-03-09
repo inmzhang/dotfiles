@@ -1,3 +1,7 @@
+---
+description: Clean up uncommitted changes — trim verbose comments, remove obvious ones, tighten prose
+---
+
 # /refactor - Clean Up Uncommitted Changes
 
 Review and refactor all uncommitted changes in the working tree. Focus on making comments concise and removing verbosity.
