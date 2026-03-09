@@ -4,6 +4,9 @@
 
 DOTDIR  := $(shell cd "$(dir $(lastword $(MAKEFILE_LIST)))" && pwd)
 UNAME_S := $(shell uname -s)
+CODEX_HOME := $(HOME)/.codex
+CODEX_MEMORY_SEED_DIR := $(DOTDIR)/config/codex/memories/seed
+CODEX_MEMORY_STATE_DIR := $(HOME)/.local/state/codex/memories
 
 # Symlink helper: ln_sf(source, target)
 #   Creates parent dirs, removes existing target, creates symlink
@@ -11,7 +14,7 @@ define ln_sf
 	mkdir -p $(dir $(2)) && rm -rf $(2) && ln -sfn $(1) $(2) && printf "  %s → %s\n" "$(2)" "$(1)"
 endef
 
-.PHONY: help install link unlink relink packages firefox hyprland-setup codex-skills-link codex-skills-unlink
+.PHONY: help install link unlink relink packages firefox hyprland-setup codex-memories-link codex-skills-link codex-skills-unlink
 
 help: ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
@@ -43,9 +46,9 @@ link: ## Create all symlinks for current platform
 	$(call ln_sf,$(DOTDIR)/config/claude/scripts,$(HOME)/.claude/scripts)
 	$(call ln_sf,$(DOTDIR)/config/claude/skills,$(HOME)/.claude/skills)
 	@echo "Linking Codex configs..."
-	$(call ln_sf,$(DOTDIR)/config/codex/config.toml,$(HOME)/.codex/config.toml)
-	$(call ln_sf,$(DOTDIR)/config/codex/rules/default.rules,$(HOME)/.codex/rules/default.rules)
-	$(call ln_sf,$(DOTDIR)/config/codex/memories,$(HOME)/.codex/memories)
+	$(call ln_sf,$(DOTDIR)/config/codex/config.toml,$(CODEX_HOME)/config.toml)
+	$(call ln_sf,$(DOTDIR)/config/codex/rules/default.rules,$(CODEX_HOME)/rules/default.rules)
+	@$(MAKE) --no-print-directory codex-memories-link
 	@$(MAKE) --no-print-directory codex-skills-link
 ifeq ($(UNAME_S),Linux)
 	@echo "Linking Linux configs..."
@@ -88,9 +91,9 @@ unlink: ## Remove all symlinks
 	rm -f $(HOME)/.claude/rules
 	rm -f $(HOME)/.claude/scripts
 	rm -f $(HOME)/.claude/skills
-	rm -f $(HOME)/.codex/config.toml
-	rm -f $(HOME)/.codex/rules/default.rules
-	rm -f $(HOME)/.codex/memories
+	rm -f $(CODEX_HOME)/config.toml
+	rm -f $(CODEX_HOME)/rules/default.rules
+	rm -f $(CODEX_HOME)/memories
 	@$(MAKE) --no-print-directory codex-skills-unlink
 ifeq ($(UNAME_S),Linux)
 	rm -f $(HOME)/.config/hypr
@@ -113,15 +116,35 @@ endif
 
 relink: unlink link ## Remove and recreate all symlinks
 
+codex-memories-link: ## Seed live Codex memories into state and link runtime path
+	@echo "Linking Codex memories..."
+	@mkdir -p "$(CODEX_HOME)" "$(CODEX_MEMORY_STATE_DIR)" "$(CODEX_MEMORY_STATE_DIR)/rollout_summaries"
+	@if [ -e "$(CODEX_HOME)/memories" ] && [ ! -L "$(CODEX_HOME)/memories" ] && [ -z "$$(find "$(CODEX_MEMORY_STATE_DIR)" -mindepth 1 -maxdepth 1 -print -quit)" ]; then \
+		cp -a "$(CODEX_HOME)/memories"/. "$(CODEX_MEMORY_STATE_DIR)"/; \
+		printf "  migrated %s -> %s\n" "$(CODEX_HOME)/memories" "$(CODEX_MEMORY_STATE_DIR)"; \
+	fi
+	@for seed in "$(CODEX_MEMORY_SEED_DIR)"/*; do \
+		if [ -f "$$seed" ]; then \
+			name=$$(basename "$$seed"); \
+			if [ ! -e "$(CODEX_MEMORY_STATE_DIR)/$$name" ]; then \
+				cp "$$seed" "$(CODEX_MEMORY_STATE_DIR)/$$name"; \
+				printf "  seeded %s\n" "$(CODEX_MEMORY_STATE_DIR)/$$name"; \
+			fi; \
+		fi; \
+	done
+	@rm -rf "$(CODEX_HOME)/memories"
+	@ln -sfn "$(CODEX_MEMORY_STATE_DIR)" "$(CODEX_HOME)/memories"
+	@printf "  %s → %s\n" "$(CODEX_HOME)/memories" "$(CODEX_MEMORY_STATE_DIR)"
+
 codex-skills-link: ## Link all Codex skills from this repo
 	@echo "Linking Codex skills..."
-	@mkdir -p $(HOME)/.codex/skills
+	@mkdir -p $(CODEX_HOME)/skills
 	@for skill_dir in $(DOTDIR)/config/codex/skills/*; do \
 		if [ -d "$$skill_dir" ] && [ -f "$$skill_dir/SKILL.md" ]; then \
 			skill_name=$$(basename "$$skill_dir"); \
-			rm -rf "$(HOME)/.codex/skills/$$skill_name"; \
-			ln -sfn "$$skill_dir" "$(HOME)/.codex/skills/$$skill_name"; \
-			printf "  %s → %s\n" "$(HOME)/.codex/skills/$$skill_name" "$$skill_dir"; \
+			rm -rf "$(CODEX_HOME)/skills/$$skill_name"; \
+			ln -sfn "$$skill_dir" "$(CODEX_HOME)/skills/$$skill_name"; \
+			printf "  %s → %s\n" "$(CODEX_HOME)/skills/$$skill_name" "$$skill_dir"; \
 		fi; \
 	done
 
@@ -131,7 +154,7 @@ codex-skills-unlink: ## Remove Codex skill symlinks from this repo
 		for skill_dir in $(DOTDIR)/config/codex/skills/*; do \
 			if [ -d "$$skill_dir" ] && [ -f "$$skill_dir/SKILL.md" ]; then \
 				skill_name=$$(basename "$$skill_dir"); \
-				rm -rf "$(HOME)/.codex/skills/$$skill_name"; \
+				rm -rf "$(CODEX_HOME)/skills/$$skill_name"; \
 			fi; \
 		done; \
 	fi

@@ -1,0 +1,6 @@
+# Keep only tracked seed content here.
+*
+!.gitignore
+!README.md
+!seed/
+!seed/**
