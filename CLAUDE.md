@@ -22,6 +22,7 @@ Personal configuration files for Arch Linux and macOS, managed with a Makefile a
 │   ├── fastfetch/    # Fastfetch system info
 │   ├── ags/          # AGS widgets (Linux only)
 │   └── ...           # bat, cava, wallust, sioyek, uv, firefox, Kvantum, qt5ct/qt6ct, swappy, wlogout, wallpapers
+├── scripts/          # Project-agnostic local automation
 ├── packages/         # Package lists
 │   ├── arch.txt      # Arch Linux packages (yay)
 │   └── brew.txt      # macOS packages (Homebrew)
@@ -51,6 +52,7 @@ Personal configuration files for Arch Linux and macOS, managed with a Makefile a
 - Platform-specific configs are inside `ifeq ($(UNAME_S),Linux)` / `Darwin` blocks
 - Claude Code configs (`settings.json`, `agents/`, `commands/`, `hooks/`, `rules/`, `scripts/`, `skills/`) are symlinked to `~/.claude/`
 - Codex configs (`config.toml`, `rules/`, `memories/`) are symlinked to `~/.codex/`, and each directory in `config/codex/skills/` is linked into `~/.codex/skills/`
+- Root-level `scripts/` contains repo-agnostic local automation that is meant to be run in place, not symlinked into `$HOME`
 
 ### Codex Skills
 - `ask-user-question`: Structured requirement interview flow with one question at a time
