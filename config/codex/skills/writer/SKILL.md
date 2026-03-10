@@ -9,9 +9,9 @@ description: Use when writing the final ideas report after the user picks a rese
 
 Check whether the current session already has ideas context (from a preceding `/ideas` session). If not — e.g., the user invoked `/writer` in a fresh session — locate the materials:
 
-1. **Conversation log:** Search for files matching `docs/discussion/*-ideas-log.md`. If multiple exist, list them and ask the user which one to use. If one exists, read it. This is the primary source — it contains the full brainstorming history: questions asked, options presented, user choices, ideas explored, and directions taken. If none exist, ask the user: "I don't see a conversation log from a brainstorming session. Run `/ideas` first, or describe the research direction and I'll write from scratch."
+1. **Conversation log:** Search for files matching `~/.local/state/codex/discussion/*-ideas-log.md`. If multiple exist, list them and ask the user which one to use. If one exists, read it. This is the primary source — it contains the full brainstorming history: questions asked, options presented, user choices, ideas explored, and directions taken. If none exist, ask the user: "I don't see a conversation log from a brainstorming session. Run `/ideas` first, or describe the research direction and I'll write from scratch."
 2. **Survey registry:** Check global and project registry paths (e.g., `~/.claude/survey/`, `.claude/survey/`). If registries exist, list them and ask which to load. Read the selected `summary.md` and `references.bib`.
-3. **User profile:** Check `docs/discussion/user-profile.md`. If found, read it for background context (name, skills, interests).
+3. **User profile:** Check `~/.local/state/codex/discussion/user-profile.md`. If found, read it for background context (name, skills, interests).
 4. **Personal registry:** Check `~/.claude/survey/personal/`. If found, read `summary.md` for publication history.
 
 Read all selected files before proceeding. The conversation log provides the reasoning trail, explored directions, and chosen ideas that structure the document.

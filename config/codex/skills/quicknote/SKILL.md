@@ -29,8 +29,8 @@ No rewriting, no added context. Keep it raw.
 
 ### Step 3 — Save and copy
 
-1. Create `docs/discussion/notes/` if it doesn't exist.
-2. Save to `docs/discussion/notes/YYYY-MM-DD-HHMMSS-quicknote.md`.
+1. Create `~/.local/state/codex/discussion/notes/` if it doesn't exist.
+2. Save to `~/.local/state/codex/discussion/notes/YYYY-MM-DD-HHMMSS-quicknote.md`.
 3. Copy the note content to clipboard:
    - macOS: `pbcopy`
    - Linux: `xclip -selection clipboard` (fall back to `xsel --clipboard` if xclip unavailable)

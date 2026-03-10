@@ -65,7 +65,9 @@ The goal is to make the user *curious*, not obligated. Show the beauty of the th
 
 ### Conversation Log
 
-Maintain a running log at `docs/discussion/YYYY-MM-DD-HHMMSS-ideas-log.md` (timestamp from session start). Create the `docs/discussion/` directory if it doesn't exist.
+Persist brainstorming state under `~/.local/state/codex/discussion/`, not in the current repo.
+
+Maintain a running log at `~/.local/state/codex/discussion/YYYY-MM-DD-HHMMSS-ideas-log.md` (timestamp from session start). Create the directory if it doesn't exist.
 
 **Append-only logging.** Save progress by appending to the log at checkpoints. Each append captures the **full conversation content** since the last save — all options presented (with descriptions), reasoning shared, user responses, search results, and key ideas. Not a summary — a readable record of what was actually said.
 
@@ -93,7 +95,7 @@ These logs accumulate across sessions as separate files, building a record of th
 
 **Skip if chaining from survey.** If the current session already has survey context (user has been working on a topic, background is known), skip Phase 0 and go straight to Phase 1.
 
-**First, check for history.** Read `docs/discussion/user-profile.md` if it exists — this contains the user's persisted profile from previous sessions. Also check for a personal registry at `~/.claude/survey/personal/` — this contains indexed publication data from the `researchstyle` skill. Also read `docs/discussion/*-ideas-log.md` if they exist — they contain past brainstorming sessions and reveal the user's evolving interests, thinking patterns, and which directions they've explored before. Use this to inform the conversation: reference past sessions, avoid re-treading ground, and pick up threads they left open.
+**First, check for history.** Read `~/.local/state/codex/discussion/user-profile.md` if it exists — this contains the user's persisted profile from previous sessions. Also check for a personal registry at `~/.claude/survey/personal/` — this contains indexed publication data from the `researchstyle` skill. Also read `~/.local/state/codex/discussion/*-ideas-log.md` if they exist — they contain past brainstorming sessions and reveal the user's evolving interests, thinking patterns, and which directions they've explored before. Use this to inform the conversation: reference past sessions, avoid re-treading ground, and pick up threads they left open.
 
 **Check for incomplete sessions.** If the most recent log has no Phase 3 wrap-up (no reflection, no final recommendation), the previous session ended mid-conversation. Open by delivering what Phase 3 would have said — a reflection, a connection, or a recommendation — as a casual callback before starting today's session:
 
@@ -132,7 +134,7 @@ If the user's self-introduction already reveals their experience level (e.g., th
 
 (Skip this for (b)/(c) — infer experience from the indexed data instead.)
 
-**Save the user profile** to `docs/discussion/user-profile.md` — this persists across sessions so later conversations can reference it. Include: name, field, experience level, key skills/tools, research interests, and notable papers/projects. If the file already exists, update it rather than overwriting (the user's profile evolves over time).
+**Save the user profile** to `~/.local/state/codex/discussion/user-profile.md` — this persists across sessions so later conversations can reference it. Include: name, field, experience level, key skills/tools, research interests, and notable papers/projects. If the file already exists, update it rather than overwriting (the user's profile evolves over time).
 
 **Then listen.** The user may already describe what they want to explore, share an idea, or ask a question. Either way, always proceed to Phase 1 — there's usually more to discover around any starting point. Phase 1 helps contextualize and ground whatever the user brings (or helps them find a direction if they don't have one yet).
 
@@ -243,7 +245,7 @@ When the user is done, the mentor does two special things before ending:
 
 **1. Reflect on the conversation and share a better way to dig in.**
 
-Look back at how the conversation went — and read `docs/discussion/*-ideas-log.md` for cross-session patterns. What themes keep coming up? What directions has the user circled back to? What was most interesting today vs. past sessions? Then share a thought:
+Look back at how the conversation went — and read `~/.local/state/codex/discussion/*-ideas-log.md` for cross-session patterns. What themes keep coming up? What directions has the user circled back to? What was most interesting today vs. past sessions? Then share a thought:
 
 > "I really enjoyed this conversation. I'd love to dig deeper with you about [specific matter that came up]. One way you could ask about it is: '[a better-framed version of a question they asked during the session]' — that kind of question opens up more interesting directions.
 
