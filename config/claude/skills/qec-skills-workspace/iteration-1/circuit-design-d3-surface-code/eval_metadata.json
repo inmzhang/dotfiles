@@ -1,0 +1,12 @@
+{
+  "eval_id": 1,
+  "eval_name": "circuit-design-d3-surface-code",
+  "prompt": "Build a d=3 rotated surface code circuit from scratch with 3 rounds of syndrome extraction, verify fault distance is 3, use uniform depolarizing noise at p=0.001.",
+  "assertions": [
+    {"name": "script_runs_successfully", "description": "The Python script exits without errors"},
+    {"name": "correct_qubit_count", "description": "d=3 rotated surface code uses 17 qubits (9 data + 8 ancilla)"},
+    {"name": "dem_builds_successfully", "description": "detector_error_model() succeeds without nondeterministic errors"},
+    {"name": "fault_distance_is_3", "description": "shortest_graphlike_error returns exactly 3 errors"},
+    {"name": "noise_inserted", "description": "Script applies depolarizing noise at p=0.001 before DEM/distance checks"}
+  ]
+}

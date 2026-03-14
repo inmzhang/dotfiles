@@ -1,0 +1,17 @@
+{
+  "skill_name": "qec-visualization",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I have a surface code circuit at out/circuits/surface_d5.stim. I want to generate: (1) a timeline SVG diagram, (2) detector slice diagrams at ticks 0, 3, and 6, and (3) a crumble URL so I can open it in the browser. Can you write the script?",
+      "expected_output": "A Python script that loads the circuit and generates all three types of outputs: timeline-svg saved to file, detslice-svg at specific ticks, and to_crumble_url() for browser viewing. Should use uv run --with stim.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I'm debugging a circuit and want to understand the detector structure. Can you show me how to generate a detslice-with-ops-svg diagram and also a matchgraph-svg from the DEM? The circuit is at out/circuits/color_d3.stim.",
+      "expected_output": "A Python script that generates detslice-with-ops-svg and matchgraph-svg diagrams. Should include DEM extraction for the matchgraph. May also suggest opening in crumble for interactive debugging.",
+      "files": []
+    }
+  ]
+}

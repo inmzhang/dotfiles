@@ -1,4 +1,0 @@
-interface:
-  display_name: "Skill Workbench"
-  short_description: "Create and benchmark skills"
-  default_prompt: "Use $skill-workbench to turn this workflow into a tested Codex skill with evals and review artifacts."

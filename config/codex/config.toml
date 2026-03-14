@@ -1,5 +1,6 @@
-model_provider = "OpenAI"
+# model_provider = "OpenAI"
 # model_provider = "IkunCoding"
+model_provider = "codex-for-me"
 model = "gpt-5.4"
 review_model = "gpt-5.4"
 project_doc_fallback_filenames = ["CLAUDE.md"] # agents.md找不到，则找claude.md
@@ -8,7 +9,7 @@ sandbox_mode = "danger-full-access"
 model_context_window = 1000000 # 模型上下文窗口大小，默认1000000（1M）; gpt-5.4
 model_auto_compact_token_limit = 350000 # for gpt-5.4⭐️虽然是1M ，但是有效注意力不够，可以自己网上查，不建议开的太高
 tool_output_token_limit = 40000 # 工具输出最大token; default: 10000 for gpt-5.2-codex
-model_reasoning_effort = "xhigh" # 推理努力程度: minimal | low | medium | high | xhigh (默认: medium; gpt-5.2-codex和gpt-5.2上默认xhigh)
+model_reasoning_effort = "high" # 推理努力程度: minimal | low | medium | high | xhigh (默认: medium; gpt-5.2-codex和gpt-5.2上默认xhigh)
 model_reasoning_summary = "detailed" # 模型输出思维链的summary风格，可以是auto | concise | detailed | none (default: auto)
 model_verbosity = "high"
 model_supports_reasoning_summaries = true # Force reasoning
@@ -18,9 +19,15 @@ web_search = "live"
 collaboration_mode = true
 suppress_unstable_features_warning = true
 
-[model_providers.OpenAI]
-name = "OpenAI"
-base_url = "https://fastagent.dpdns.org/v1"
+# [model_providers.OpenAI]
+# name = "OpenAI"
+# base_url = "https://fastagent.dpdns.org/v1"
+# wire_api = "responses"
+# requires_openai_auth = true
+
+[model_providers.codex-for-me]
+name = "codex-for-me"
+base_url = "https://api-vip.codex-for.me/v1"
 wire_api = "responses"
 requires_openai_auth = true
 
@@ -153,6 +160,21 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/home/inm/dotfiles"]
+trust_level = "trusted"
+
+[projects."/home/inm/workspace/cotext"]
+trust_level = "trusted"
+
+[projects."/home/inm/open-source-project/qrippy"]
+trust_level = "trusted"
+
+[projects."/home/inm/open-source-project/tuicr"]
+trust_level = "trusted"
+
+[projects."/home/inm/open-source-project/copanion"]
+trust_level = "trusted"
+
+[projects."/home/inm/open-source-project/Stim"]
 trust_level = "trusted"
 
 [mcp_servers.context7]

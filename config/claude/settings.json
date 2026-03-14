@@ -18,7 +18,7 @@
       "Bash(agent-browser *)"
     ]
   },
-  "model": "opus",
+  "model": "opus[1m]",
   "statusLine": {
     "type": "command",
     "command": "~/.claude/scripts/context-bar.sh"
@@ -35,7 +35,8 @@
     "claude-code-setup@claude-plugins-official": true,
     "hookify@claude-plugins-official": true,
     "clangd-lsp@claude-plugins-official": true,
-    "sci-brain@sci-brain": true
+    "sci-brain@sci-brain": true,
+    "skill-creator@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "sci-brain": {
@@ -43,10 +44,16 @@
         "source": "github",
         "repo": "QuantumBFS/sci-brain"
       }
+    },
+    "anthropic-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/skills"
+      }
     }
   },
   "alwaysThinkingEnabled": true,
+  "effortLevel": "high",
   "fastMode": true,
-  "skipDangerousModePermissionPrompt": true,
-  "effortLevel": "high"
+  "skipDangerousModePermissionPrompt": true
 }

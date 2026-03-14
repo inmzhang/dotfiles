@@ -1,0 +1,23 @@
+{
+  "skill_name": "qec-circuit-design",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to build a d=3 rotated surface code circuit from scratch (not using stim's generated method) with 3 rounds of syndrome extraction, then verify the fault distance is 3. Can you write the Python code? Use uniform depolarizing noise at p=0.001.",
+      "expected_output": "A Python script that programmatically constructs a d=3 rotated surface code circuit with QUBIT_COORDS, proper CX ordering for X and Z stabilizers, DETECTOR and OBSERVABLE_INCLUDE annotations, noise insertion, and fault distance verification using shortest_graphlike_error. The code should run successfully with uv.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I have a noiseless stim circuit for my custom color code at d=5 saved at out/circuits/color_code_d5.stim. I want to verify it's correct before simulation. Can you write a verification script that checks: (1) all detectors are deterministic (DEM builds without error), (2) no detectors are missing, and (3) the fault distance? Use uniform depolarizing noise at p=0.001 for the noisy checks.",
+      "expected_output": "A Python script that loads the circuit, inserts noise, builds DEM (catching any nondeterministic errors), checks missing_detectors(), and runs shortest_graphlike_error with appropriate parameters. Should print clear diagnostic output at each step.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "I'm designing a new syndrome extraction round for a surface code. I have the stabilizers X0*X1*X3*X4 and Z1*Z2*Z4*Z5 on a 2x3 grid of data qubits (0-5) with ancilla qubits 6 and 7. Can you help me write the circuit and verify the stabilizer flows are correct?",
+      "expected_output": "A Python script that constructs the extraction circuit with proper CX layers, then uses has_all_flows() to verify the stabilizer flows (preparation flows from reset, measurement flows, and preserved logical flows). Should demonstrate the flow verification pattern.",
+      "files": []
+    }
+  ]
+}

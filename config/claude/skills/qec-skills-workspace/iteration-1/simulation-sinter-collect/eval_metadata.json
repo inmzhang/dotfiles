@@ -1,0 +1,12 @@
+{
+  "eval_id": 2,
+  "eval_name": "simulation-sinter-collect",
+  "prompt": "Write sinter collect command and plot script for circuits in out/circuits/ with pymatching, 100 errors, 10M shots.",
+  "assertions": [
+    {"name": "scripts_run_successfully", "description": "Circuit generation, collect, and plot scripts all execute without errors"},
+    {"name": "correct_sinter_flags", "description": "Uses --metadata_func auto, --save_resume_filepath, --decoders pymatching"},
+    {"name": "stats_csv_created", "description": "Output CSV file exists with sampling data"},
+    {"name": "plot_generated", "description": "A plot file (PNG/SVG) is generated from the stats"},
+    {"name": "launch_script_provided", "description": "Provides a reusable launch/shell script rather than just inline commands"}
+  ]
+}
