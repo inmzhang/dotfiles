@@ -47,7 +47,27 @@ continuous_run_repo_fingerprint() {
   {
     printf '%s\n' "$head_ref"
     git -C "$repo_root" status --short
-  } | shasum | awk '{print $1}'
+  } | continuous_run_hash_stdin
+}
+
+continuous_run_hash_stdin() {
+  if command -v sha256sum >/dev/null 2>&1; then
+    sha256sum | awk '{print $1}'
+    return 0
+  fi
+
+  if command -v shasum >/dev/null 2>&1; then
+    shasum -a 256 | awk '{print $1}'
+    return 0
+  fi
+
+  if command -v openssl >/dev/null 2>&1; then
+    openssl dgst -sha256 -r | awk '{print $1}'
+    return 0
+  fi
+
+  printf 'No supported SHA-256 command found (tried: sha256sum, shasum, openssl)\n' >&2
+  return 1
 }
 
 continuous_run_require_option_value() {
