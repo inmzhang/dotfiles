@@ -144,7 +144,7 @@ notifications = true
 # project_doc_max_bytes = 32768
 
 
-status_line = ["model-with-reasoning", "current-dir", "git-branch", "context-remaining", "five-hour-limit", "codex-version", "context-window-size", "used-tokens", "session-id"]
+status_line = ["model-with-reasoning", "current-dir", "git-branch", "context-remaining", "five-hour-limit", "context-window-size", "used-tokens", "context-used", "fast-mode"]
 
 [notice]
 hide_rate_limit_model_nudge = true
@@ -177,8 +177,13 @@ trust_level = "trusted"
 [projects."/home/inm/open-source-project/Stim"]
 trust_level = "trusted"
 
+[projects."/home/inm/open-source-project/ppr"]
+trust_level = "trusted"
+
 [mcp_servers.context7]
-type = "stdio"
 command = "npx"
 args = ["-y", "@upstash/context7-mcp", "--api-key", "ctx7sk-97b036eb-fec9-4616-8392-8c46bba62104"]
-startup_timeout_ms = 20000
+startup_timeout_sec = 20.0
+
+[mcp_servers.fff]
+command = "fff-mcp"
