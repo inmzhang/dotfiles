@@ -5,9 +5,10 @@
 # A portable CLI for running structured, multi-round code reviews between
 # different AI coding agents (Claude Code, Codex, Gemini CLI, OpenCode, etc.)
 #
-# Agents communicate through files in a .ppr/ directory. Each review round
-# produces a diff, reviewer comments, and an author response. Rounds continue
-# until all reviewers signal LGTM or a round limit is hit.
+# Agents communicate through files in a .ppr/ directory. Each independent
+# review session lives under .ppr/sessions/<id>/, and each round produces a
+# diff, reviewer comments, and an author response. Rounds continue until all
+# reviewers signal LGTM or a round limit is hit.
 #
 # Dependencies: bash 4+, jq, git
 # ==============================================================================
@@ -26,10 +27,14 @@ while [ -L "$SCRIPT_SOURCE" ]; do
 done
 SCRIPT_DIR="$(cd -P "$(dirname "$SCRIPT_SOURCE")" && pwd)"
 
-PPR_DIR=".ppr"
-PPR_CONFIG="$PPR_DIR/config.json"
-PPR_STATUS="$PPR_DIR/status.json"
+PPR_ROOT=".ppr"
+PPR_SESSIONS_DIR="$PPR_ROOT/sessions"
+PPR_ROOT_AGENTS_CONFIG="$PPR_ROOT/agents.json"
 PPR_AGENTS_CONFIG="${PPR_AGENTS_CONFIG:-$SCRIPT_DIR/agents.json}"
+PPR_SESSION_ID="${PPR_SESSION_ID:-}"
+PPR_DIR=""
+PPR_CONFIG=""
+PPR_STATUS=""
 
 # ==============================================================================
 # Helpers
@@ -40,8 +45,10 @@ info() { echo "ppr: $*"; }
 wants_help() { [ "${1:-}" = "--help" ] || [ "${1:-}" = "-h" ]; }
 
 require_ppr() {
-  [ -d "$PPR_DIR" ] || die "not in a ppr session — run 'ppr init' first"
-  [ -f "$PPR_STATUS" ] || die "status.json missing — .ppr/ may be corrupt"
+  local session_id=""
+  session_id=$(resolve_active_session_id)
+  activate_session_id "$session_id"
+  [ -f "$PPR_STATUS" ] || die "status.json missing — $PPR_DIR may be corrupt"
 }
 
 current_round() {
@@ -50,6 +57,127 @@ current_round() {
 
 round_dir() {
   echo "$PPR_DIR/round-$1"
+}
+
+validate_session_id() {
+  case "${1:-}" in
+    ''|*[!0-9]*) die "session id must be a non-negative integer" ;;
+  esac
+}
+
+session_dir_for_id() {
+  echo "$PPR_SESSIONS_DIR/$1"
+}
+
+activate_session_id() {
+  PPR_SESSION_ID="$1"
+  PPR_DIR=$(session_dir_for_id "$PPR_SESSION_ID")
+  PPR_CONFIG="$PPR_DIR/config.json"
+  PPR_STATUS="$PPR_DIR/status.json"
+}
+
+list_session_ids() {
+  [ -d "$PPR_SESSIONS_DIR" ] || return 0
+
+  local entries=()
+  local path=""
+  local name=""
+  shopt -s nullglob
+  for path in "$PPR_SESSIONS_DIR"/*; do
+    [ -d "$path" ] || continue
+    name="${path##*/}"
+    case "$name" in
+      ''|*[!0-9]*) continue ;;
+      *) entries+=("$name") ;;
+    esac
+  done
+  shopt -u nullglob
+
+  if [ "${#entries[@]}" -gt 0 ]; then
+    printf '%s\n' "${entries[@]}" | sort -n
+  fi
+}
+
+latest_session_id() {
+  list_session_ids | tail -n 1
+}
+
+migrate_legacy_layout_if_needed() {
+  [ -d "$PPR_ROOT" ] || return 0
+  [ -d "$PPR_SESSIONS_DIR" ] && return 0
+
+  local legacy_rounds=()
+  local has_legacy=false
+  shopt -s nullglob
+  legacy_rounds=("$PPR_ROOT"/round-*)
+  shopt -u nullglob
+
+  [ -f "$PPR_ROOT/config.json" ] && has_legacy=true
+  [ -f "$PPR_ROOT/status.json" ] && has_legacy=true
+  [ -f "$PPR_ROOT/summary.md" ] && has_legacy=true
+  [ "${#legacy_rounds[@]}" -gt 0 ] && has_legacy=true
+  $has_legacy || return 0
+
+  mkdir -p "$PPR_SESSIONS_DIR"
+  local legacy_dir="$PPR_SESSIONS_DIR/0"
+  [ ! -e "$legacy_dir" ] || die "cannot migrate legacy .ppr layout: $legacy_dir already exists"
+  mkdir "$legacy_dir"
+
+  local entry=""
+  for entry in "$PPR_ROOT"/config.json "$PPR_ROOT"/status.json "$PPR_ROOT"/summary.md "${legacy_rounds[@]}"; do
+    [ -e "$entry" ] || continue
+    mv "$entry" "$legacy_dir"/
+  done
+
+  echo "ppr: migrated legacy .ppr layout into $legacy_dir" >&2
+}
+
+resolve_active_session_id() {
+  migrate_legacy_layout_if_needed
+
+  if [ -n "$PPR_SESSION_ID" ]; then
+    validate_session_id "$PPR_SESSION_ID"
+    [ -d "$(session_dir_for_id "$PPR_SESSION_ID")" ] || die "session $PPR_SESSION_ID not found under $PPR_SESSIONS_DIR"
+    echo "$PPR_SESSION_ID"
+    return 0
+  fi
+
+  local latest=""
+  latest=$(latest_session_id)
+  [ -n "$latest" ] || die "not in a ppr session — run 'ppr init' first"
+  echo "$latest"
+}
+
+create_next_session_dir() {
+  mkdir -p "$PPR_SESSIONS_DIR"
+
+  local latest=""
+  local next=0
+  local candidate=""
+  while true; do
+    latest=$(latest_session_id)
+    if [ -n "$latest" ]; then
+      next=$((latest + 1))
+    else
+      next=0
+    fi
+
+    candidate=$(session_dir_for_id "$next")
+    if mkdir "$candidate" 2>/dev/null; then
+      activate_session_id "$next"
+      return 0
+    fi
+  done
+}
+
+cleanup_empty_ppr_root() {
+  if [ -d "$PPR_SESSIONS_DIR" ] && [ -z "$(latest_session_id)" ]; then
+    rmdir "$PPR_SESSIONS_DIR" 2>/dev/null || true
+  fi
+
+  if [ -d "$PPR_ROOT" ] && [ ! -d "$PPR_SESSIONS_DIR" ] && [ ! -e "$PPR_ROOT/agents.json" ]; then
+    rmdir "$PPR_ROOT" 2>/dev/null || true
+  fi
 }
 
 get_reviewers() {
@@ -66,7 +194,7 @@ update_status() {
   jq "$1" "$PPR_STATUS" > "$tmp" && mv "$tmp" "$PPR_STATUS"
 }
 
-generate_session_id() {
+generate_reviewer_session_id() {
   if command -v uuidgen > /dev/null 2>&1; then
     uuidgen | tr '[:upper:]' '[:lower:]'
     return
@@ -103,12 +231,12 @@ review_verdict() {
 }
 
 agent_config_file() {
-  if [ -f "$PPR_DIR/agents.json" ]; then
-    echo "$PPR_DIR/agents.json"
+  if [ -f "$PPR_ROOT_AGENTS_CONFIG" ]; then
+    echo "$PPR_ROOT_AGENTS_CONFIG"
   elif [ -f "$PPR_AGENTS_CONFIG" ]; then
     echo "$PPR_AGENTS_CONFIG"
   else
-    die "no agents.json found — create one at .ppr/agents.json or $PPR_AGENTS_CONFIG
+    die "no agents.json found — create one at $PPR_ROOT_AGENTS_CONFIG or $PPR_AGENTS_CONFIG
 See 'ppr help' for the expected format."
   fi
 }
@@ -164,15 +292,16 @@ run_agent_command() {
 # ==============================================================================
 # ppr init — start a new review session
 #
-# Creates the .ppr/ directory structure, captures the current git diff as
-# the initial changeset, and writes config and status files.
+# Creates a new .ppr/sessions/<id>/ directory, captures the current git diff
+# as the initial changeset, and writes config and status files.
 #
 # Usage: ppr init [--reviewers type:name,...] [--max-rounds N] [--context "msg"]
 # ==============================================================================
 
 cmd_init() {
-  [ ! -d "$PPR_DIR" ] || die ".ppr/ already exists — run 'ppr clean' first if starting over"
+  migrate_legacy_layout_if_needed
   git rev-parse --is-inside-work-tree > /dev/null 2>&1 || die "not in a git repository"
+  [ -z "$PPR_SESSION_ID" ] || die "'ppr init' assigns session ids automatically; omit --session-id"
 
   local reviewers=""
   local max_rounds=3
@@ -189,7 +318,7 @@ cmd_init() {
 
   [ -n "$reviewers" ] || die "specify reviewers with --reviewers type1:name1,type2:name2"
 
-  # Create directory structure
+  create_next_session_dir
   mkdir -p "$PPR_DIR/round-1/reviews"
 
   # Capture changes to review. Prefer staged changes; fall back to unstaged;
@@ -226,7 +355,7 @@ cmd_init() {
     local agent_type="${pair%%:*}"
     local agent_name="${pair##*:}"
     local session_id=""
-    session_id=$(generate_session_id)
+    session_id=$(generate_reviewer_session_id)
     reviewer_config=$(echo "$reviewer_config" | jq \
       --arg name "$agent_name" --arg type "$agent_type" --arg session_id "$session_id" \
       '. + {($name): {"type": $type, "session_id": $session_id}}')
@@ -236,18 +365,20 @@ cmd_init() {
   done
 
   jq -n \
+    --arg session_id "$PPR_SESSION_ID" \
     --argjson reviewers "$reviewer_config" \
     --argjson max_rounds "$max_rounds" \
-    '{reviewers: $reviewers, max_rounds: $max_rounds}' \
+    '{session_id: $session_id, reviewers: $reviewers, max_rounds: $max_rounds}' \
     > "$PPR_CONFIG"
 
   jq -n \
+    --arg session_id "$PPR_SESSION_ID" \
     --argjson reviewers "$reviewer_status" \
     --argjson max_rounds "$max_rounds" \
-    '{current_round: 1, max_rounds: $max_rounds, reviewers: $reviewers, state: "awaiting_reviews"}' \
+    '{session_id: $session_id, current_round: 1, max_rounds: $max_rounds, reviewers: $reviewers, state: "awaiting_reviews"}' \
     > "$PPR_STATUS"
 
-  info "initialized review session in .ppr/"
+  info "initialized review session $PPR_SESSION_ID in $PPR_DIR/"
   info "round 1 ready — run 'ppr launch' to start reviewers"
 }
 
@@ -425,6 +556,7 @@ cmd_status() {
   rdir=$(round_dir "$round")
 
   echo "=== PPR Status ==="
+  echo "Session: $PPR_SESSION_ID"
   echo "Round: $round / $max_rounds"
   echo "State: $state"
   echo ""
@@ -697,6 +829,7 @@ cmd_finish() {
   {
     echo "# PPR Review Summary"
     echo ""
+    echo "- **Session**: $PPR_SESSION_ID"
     echo "- **Rounds**: $round"
     echo "- **Final state**: $state"
     echo "- **Reviewers**: $(get_reviewers | tr '\n' ', ' | sed 's/,$//')"
@@ -739,16 +872,34 @@ cmd_finish() {
 }
 
 # ==============================================================================
-# ppr clean — remove the .ppr/ directory
+# ppr clean — remove one session or the entire .ppr/ directory
 # ==============================================================================
 
 cmd_clean() {
-  if [ -d "$PPR_DIR" ]; then
-    rm -rf "$PPR_DIR"
-    info "removed $PPR_DIR"
-  else
-    info "nothing to clean"
+  local remove_all=false
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --all) remove_all=true; shift ;;
+      *) die "unknown option: $1" ;;
+    esac
+  done
+
+  migrate_legacy_layout_if_needed
+
+  if $remove_all; then
+    if [ -d "$PPR_ROOT" ]; then
+      rm -rf "$PPR_ROOT"
+      info "removed $PPR_ROOT"
+    else
+      info "nothing to clean"
+    fi
+    return 0
   fi
+
+  require_ppr
+  rm -rf "$PPR_DIR"
+  info "removed $PPR_DIR"
+  cleanup_empty_ppr_root
 }
 
 # ==============================================================================
@@ -759,7 +910,7 @@ help_main() {
   cat <<'HELP'
 ppr — Ping-Pong Review: multi-agent code review orchestration
 
-Usage: ppr <command> [options]
+Usage: ppr [--session-id N] <command> [options]
 
 Commands:
   init      Start a new review session
@@ -784,7 +935,8 @@ Commands:
               --commit           Create a git commit
               --message "msg"    Custom commit message
 
-  clean     Remove the .ppr/ directory
+  clean     Remove the selected review session
+              --all             Remove every session plus .ppr/agents.json
 
 Agent Configuration:
   ppr reads agent launch commands from agents.json. It checks:
@@ -815,6 +967,12 @@ Agent Configuration:
 
 Environment:
   PPR_AGENTS_CONFIG  Path to agents.json (default: agents.json next to ppr)
+  PPR_SESSION_ID     Active review session id (defaults to the highest id)
+
+Session Selection:
+  Every 'ppr init' allocates the next numeric session id under .ppr/sessions/.
+  Commands default to the highest existing session id unless you pass
+  --session-id N (or set PPR_SESSION_ID) to target an older session.
 
 HELP
 }
@@ -823,7 +981,7 @@ help_init() {
   cat <<'HELP'
 Usage: ppr init --reviewers type1:name1,type2:name2 [--max-rounds N] [--context "description of changes"]
 
-Start a new review session in .ppr/.
+Start a new review session in .ppr/sessions/<next-id>/.
 
 Options:
   --reviewers   Required reviewer list in agent-type:name format
@@ -838,9 +996,9 @@ HELP
 
 help_launch() {
   cat <<'HELP'
-Usage: ppr launch [reviewer-name]
+Usage: ppr [--session-id N] launch [reviewer-name]
 
-Launch reviewer agents for the current round.
+Launch reviewer agents for the current round of the selected session.
 
 Arguments:
   reviewer-name  Optional reviewer to launch. If omitted, launches all pending reviewers.
@@ -849,15 +1007,16 @@ HELP
 
 help_status() {
   cat <<'HELP'
-Usage: ppr status
+Usage: ppr [--session-id N] status
 
 Show the current round, per-reviewer status, and consensus state.
+If no session is specified, ppr uses the highest session id.
 HELP
 }
 
 help_wait() {
   cat <<'HELP'
-Usage: ppr wait [--timeout SECONDS]
+Usage: ppr [--session-id N] wait [--timeout SECONDS]
 
 Block until all reviews for the current round are present.
 
@@ -868,7 +1027,7 @@ HELP
 
 help_collect() {
   cat <<'HELP'
-Usage: ppr collect
+Usage: ppr [--session-id N] collect
 
 Print all reviews for the current round.
 HELP
@@ -876,7 +1035,7 @@ HELP
 
 help_respond() {
   cat <<'HELP'
-Usage: ppr respond [--message "response text"]
+Usage: ppr [--session-id N] respond [--message "response text"]
 
 Advance to the next round after addressing reviewer feedback.
 
@@ -887,21 +1046,22 @@ HELP
 
 help_finish() {
   cat <<'HELP'
-Usage: ppr finish [--commit] [--message "commit message"]
+Usage: ppr [--session-id N] finish [--commit] [--message "commit message"]
 
 Generate a markdown review summary and optionally create a git commit.
 
 Options:
-  --commit   Create a git commit after writing .ppr/summary.md
+  --commit   Create a git commit after writing .ppr/sessions/<id>/summary.md
   --message  Custom commit message
 HELP
 }
 
 help_clean() {
   cat <<'HELP'
-Usage: ppr clean
+Usage: ppr [--session-id N] clean [--all]
 
-Remove the .ppr/ directory for the current review session.
+Remove the selected review session. Use --all to remove the entire .ppr/
+directory, including the project-local agents.json override.
 HELP
 }
 
@@ -919,6 +1079,35 @@ cmd_help() {
     *) die "unknown help topic: $1 — run 'ppr help'" ;;
   esac
 }
+
+# ==============================================================================
+# Global flag parsing
+# ==============================================================================
+
+parse_global_flags() {
+  local remaining=()
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --session-id)
+        [ $# -ge 2 ] || die "missing value for --session-id"
+        PPR_SESSION_ID="$2"
+        shift 2
+        ;;
+      --session-id=*)
+        PPR_SESSION_ID="${1#*=}"
+        shift
+        ;;
+      *)
+        remaining+=("$1")
+        shift
+        ;;
+    esac
+  done
+  PARSED_ARGS=("${remaining[@]}")
+}
+
+parse_global_flags "$@"
+set -- "${PARSED_ARGS[@]}"
 
 # ==============================================================================
 # Main dispatch

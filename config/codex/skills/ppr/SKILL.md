@@ -19,7 +19,8 @@ Claude Code.
 - Script: `<skill-dir>/ppr`
 - Default agent config: `<skill-dir>/agents.json`
 - Per-project override: `.ppr/agents.json`
-- Review state: `.ppr/`
+- Session state: `.ppr/sessions/<id>/`
+- Default session selection: highest existing numeric id unless `--session-id N` is passed
 
 ## Command Help
 
@@ -45,6 +46,10 @@ When running PPR as the author:
 <skill-dir>/ppr launch
 ```
 
+Every new `init` allocates the next session id (`0`, `1`, `2`, ...). A second
+review in the same repo therefore creates a sibling session instead of
+overwriting the first one.
+
 3. Wait and collect:
 
 ```bash
@@ -68,6 +73,13 @@ When running PPR as the author:
 
 ```bash
 <skill-dir>/ppr finish --commit --message "feat: description"
+```
+
+To revisit an older session, prefix commands with `--session-id N`:
+
+```bash
+<skill-dir>/ppr --session-id 0 status
+<skill-dir>/ppr --session-id 0 collect
 ```
 
 ## Reviewer Workflow
@@ -115,5 +127,6 @@ Rules:
 ## Troubleshooting
 
 - `agent type not found`: add or fix the entry in `agents.json`.
-- Empty or missing review: inspect `.ppr/round-N/reviews/.stderr-NAME.log`.
+- Empty or missing review: inspect `.ppr/sessions/<id>/round-N/reviews/.stderr-NAME.log`.
 - Need repo-specific behavior: add `.ppr/agents.json` in the project.
+- Want to delete only the newest session: run `ppr clean`. To remove every session and `.ppr/agents.json`, run `ppr clean --all`.
