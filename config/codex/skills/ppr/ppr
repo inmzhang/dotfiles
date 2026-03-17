@@ -37,6 +37,7 @@ PPR_AGENTS_CONFIG="${PPR_AGENTS_CONFIG:-$SCRIPT_DIR/agents.json}"
 
 die() { echo "ppr: error: $*" >&2; exit 1; }
 info() { echo "ppr: $*"; }
+wants_help() { [ "${1:-}" = "--help" ] || [ "${1:-}" = "-h" ]; }
 
 require_ppr() {
   [ -d "$PPR_DIR" ] || die "not in a ppr session — run 'ppr init' first"
@@ -741,7 +742,7 @@ cmd_clean() {
 # ppr help
 # ==============================================================================
 
-cmd_help() {
+help_main() {
   cat <<'HELP'
 ppr — Ping-Pong Review: multi-agent code review orchestration
 
@@ -805,19 +806,184 @@ Environment:
 HELP
 }
 
+help_init() {
+  cat <<'HELP'
+Usage: ppr init --reviewers type1:name1,type2:name2 [--max-rounds N] [--context "description of changes"]
+
+Start a new review session in .ppr/.
+
+Options:
+  --reviewers   Required reviewer list in agent-type:name format
+  --max-rounds  Maximum review rounds before stopping (default: 3)
+  --context     Short author context saved into round 1
+
+Examples:
+  ppr init --reviewers "claude-code:alice,codex:bob"
+  ppr init --reviewers "codex:bob" --max-rounds 2 --context "Refactor parser error handling"
+HELP
+}
+
+help_launch() {
+  cat <<'HELP'
+Usage: ppr launch [reviewer-name]
+
+Launch reviewer agents for the current round.
+
+Arguments:
+  reviewer-name  Optional reviewer to launch. If omitted, launches all pending reviewers.
+HELP
+}
+
+help_status() {
+  cat <<'HELP'
+Usage: ppr status
+
+Show the current round, per-reviewer status, and consensus state.
+HELP
+}
+
+help_wait() {
+  cat <<'HELP'
+Usage: ppr wait [--timeout SECONDS]
+
+Block until all reviews for the current round are present.
+
+Options:
+  --timeout  Maximum wait time in seconds (default: 600)
+HELP
+}
+
+help_collect() {
+  cat <<'HELP'
+Usage: ppr collect
+
+Print all reviews for the current round.
+HELP
+}
+
+help_respond() {
+  cat <<'HELP'
+Usage: ppr respond [--message "response text"]
+
+Advance to the next round after addressing reviewer feedback.
+
+Options:
+  --message  Optional author response recorded for the round
+HELP
+}
+
+help_finish() {
+  cat <<'HELP'
+Usage: ppr finish [--commit] [--message "commit message"]
+
+Generate a markdown review summary and optionally create a git commit.
+
+Options:
+  --commit   Create a git commit after writing .ppr/summary.md
+  --message  Custom commit message
+HELP
+}
+
+help_clean() {
+  cat <<'HELP'
+Usage: ppr clean
+
+Remove the .ppr/ directory for the current review session.
+HELP
+}
+
+cmd_help() {
+  case "${1:-}" in
+    ""|main|overview) help_main ;;
+    init) help_init ;;
+    launch) help_launch ;;
+    status) help_status ;;
+    wait) help_wait ;;
+    collect) help_collect ;;
+    respond) help_respond ;;
+    finish) help_finish ;;
+    clean) help_clean ;;
+    *) die "unknown help topic: $1 — run 'ppr help'" ;;
+  esac
+}
+
 # ==============================================================================
 # Main dispatch
 # ==============================================================================
 
 case "${1:-help}" in
-  init)    shift; cmd_init "$@" ;;
-  launch)  shift; cmd_launch "$@" ;;
-  status)  shift; cmd_status "$@" ;;
-  wait)    shift; cmd_wait "$@" ;;
-  collect) shift; cmd_collect "$@" ;;
-  respond) shift; cmd_respond "$@" ;;
-  finish)  shift; cmd_finish "$@" ;;
-  clean)   shift; cmd_clean "$@" ;;
-  help|--help|-h) cmd_help ;;
+  init)
+    if wants_help "${2:-}"; then
+      cmd_help init
+    else
+      shift
+      cmd_init "$@"
+    fi
+    ;;
+  launch)
+    if wants_help "${2:-}"; then
+      cmd_help launch
+    else
+      shift
+      cmd_launch "$@"
+    fi
+    ;;
+  status)
+    if wants_help "${2:-}"; then
+      cmd_help status
+    else
+      shift
+      cmd_status "$@"
+    fi
+    ;;
+  wait)
+    if wants_help "${2:-}"; then
+      cmd_help wait
+    else
+      shift
+      cmd_wait "$@"
+    fi
+    ;;
+  collect)
+    if wants_help "${2:-}"; then
+      cmd_help collect
+    else
+      shift
+      cmd_collect "$@"
+    fi
+    ;;
+  respond)
+    if wants_help "${2:-}"; then
+      cmd_help respond
+    else
+      shift
+      cmd_respond "$@"
+    fi
+    ;;
+  finish)
+    if wants_help "${2:-}"; then
+      cmd_help finish
+    else
+      shift
+      cmd_finish "$@"
+    fi
+    ;;
+  clean)
+    if wants_help "${2:-}"; then
+      cmd_help clean
+    else
+      shift
+      cmd_clean "$@"
+    fi
+    ;;
+  help)
+    shift
+    if wants_help "${1:-}"; then
+      cmd_help
+    else
+      cmd_help "${1:-}"
+    fi
+    ;;
+  --help|-h) cmd_help ;;
   *) die "unknown command: $1 — run 'ppr help'" ;;
 esac

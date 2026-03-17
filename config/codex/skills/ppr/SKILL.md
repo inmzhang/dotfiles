@@ -21,6 +21,17 @@ Claude Code.
 - Per-project override: `.ppr/agents.json`
 - Review state: `.ppr/`
 
+## Command Help
+
+The common workflow is documented below, so you should not need a help probe
+just to discover the normal syntax. When you do need the CLI reference, use:
+
+```bash
+<skill-dir>/ppr --help
+<skill-dir>/ppr help init
+<skill-dir>/ppr init --help
+```
+
 ## Author Workflow
 
 When running PPR as the author:
