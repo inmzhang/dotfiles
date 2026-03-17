@@ -118,8 +118,9 @@ See 'ppr help' for the expected format."
 #
 # ppr reads agent launch commands from a JSON config file. Each agent entry
 # specifies how to invoke it in non-interactive (print/pipe) mode. The special
-# placeholders $PROMPT and $REVIEW_FILE are replaced with the prompt path and
-# the destination review path.
+# environment variables $PROMPT, $REVIEW_FILE, and $SESSION_ID are set for the
+# launched shell so commands can read the generated prompt, write to a review
+# path, or resume a stable reviewer session.
 #
 # Example agents.json:
 # {
@@ -146,6 +147,18 @@ load_agent_cmd() {
   cmd=$(load_agent_field "$agent_type" "cmd")
   [ -n "$cmd" ] || die "agent type '$agent_type' not found in $config_file"
   echo "$cmd"
+}
+
+run_agent_command() {
+  local cmd_template="$1"
+  local prompt_file="$2"
+  local review_file="$3"
+  local session_id="$4"
+
+  PROMPT="$prompt_file" \
+  REVIEW_FILE="$review_file" \
+  SESSION_ID="$session_id" \
+    bash -c "$cmd_template"
 }
 
 # ==============================================================================
@@ -280,13 +293,12 @@ cmd_launch() {
     local prompt_file="$rdir/reviews/.prompt-$name.md"
     generate_reviewer_prompt "$name" "$round" > "$prompt_file"
 
-    # Replace placeholders and launch in background
+    # Launch via a fresh shell with prompt/session paths in the environment.
+    # Avoid interpolating prompt contents into an eval string; markdown fences
+    # and quotes in the generated prompt can otherwise be reinterpreted.
     local review_file="$rdir/reviews/$name.md"
     local session_id=""
     session_id=$(jq -r --arg n "$name" '.reviewers[$n].session_id // empty' "$PPR_CONFIG")
-    local cmd="${active_template//\$PROMPT/$prompt_file}"
-    cmd="${cmd//\$REVIEW_FILE/$review_file}"
-    cmd="${cmd//\$SESSION_ID/$session_id}"
     local stdout_target="$review_file"
     # shellcheck disable=SC2016 — we intentionally match the literal placeholder
     if [[ "$active_template" == *'$REVIEW_FILE'* ]]; then
@@ -294,7 +306,8 @@ cmd_launch() {
     fi
 
     info "launching $name ($agent_type) for round $round..."
-    eval "$cmd" > "$stdout_target" 2>"$rdir/reviews/.stderr-$name.log" &
+    run_agent_command "$active_template" "$prompt_file" "$review_file" "$session_id" \
+      > "$stdout_target" 2>"$rdir/reviews/.stderr-$name.log" &
     local pid=$!
 
     # Record PID so we can track completion
@@ -792,13 +805,13 @@ Agent Configuration:
     }
   }
 
-  The $PROMPT placeholder is replaced with the path to a temporary file
-  containing the reviewer's prompt. The optional $REVIEW_FILE placeholder is
-  replaced with the destination markdown file for CLIs that support writing
-  only the final answer to a path. The optional $SESSION_ID placeholder is a
-  stable per-reviewer session identifier. If a session_cmd template is
-  provided, ppr uses it from round 2 onward. If $REVIEW_FILE is not used, ppr
-  captures stdout into the per-reviewer markdown file.
+  The launched shell receives $PROMPT as the path to a temporary file
+  containing the reviewer's prompt. The optional $REVIEW_FILE variable points
+  at the destination markdown file for CLIs that support writing only the
+  final answer to a path. The optional $SESSION_ID variable is a stable
+  per-reviewer session identifier. If a session_cmd template is provided, ppr
+  uses it from round 2 onward. If $REVIEW_FILE is not used, ppr captures
+  stdout into the per-reviewer markdown file.
 
 Environment:
   PPR_AGENTS_CONFIG  Path to agents.json (default: agents.json next to ppr)

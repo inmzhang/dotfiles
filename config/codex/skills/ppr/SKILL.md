@@ -28,8 +28,6 @@ just to discover the normal syntax. When you do need the CLI reference, use:
 
 ```bash
 <skill-dir>/ppr --help
-<skill-dir>/ppr help init
-<skill-dir>/ppr init --help
 ```
 
 ## Author Workflow
@@ -107,7 +105,7 @@ Current default examples:
 
 Rules:
 
-- `$PROMPT` is the generated prompt file.
+- `$PROMPT`, `$REVIEW_FILE`, and `$SESSION_ID` are exposed to the launched shell as environment variables.
 - `$REVIEW_FILE` is optional and should be used only for CLIs that can write just the final answer there.
 - `$SESSION_ID` is a stable per-reviewer session identifier.
 - `session_cmd` is optional and should be used for round 2+ when an agent can resume a prior session.

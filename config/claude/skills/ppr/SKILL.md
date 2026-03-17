@@ -21,6 +21,15 @@ Claude Code.
 - Per-project override: `.ppr/agents.json`
 - Review state: `.ppr/`
 
+## Command Help
+
+The common workflow is documented below, so you should not need a help probe
+just to discover the normal syntax. When you do need the CLI reference, use:
+
+```bash
+<skill-dir>/ppr --help
+```
+
 ## Author Workflow
 
 When running PPR as the author:
@@ -96,7 +105,7 @@ Current default examples:
 
 Rules:
 
-- `$PROMPT` is the generated prompt file.
+- `$PROMPT`, `$REVIEW_FILE`, and `$SESSION_ID` are exposed to the launched shell as environment variables.
 - `$REVIEW_FILE` is optional and should be used only for CLIs that can write just the final answer there.
 - `$SESSION_ID` is a stable per-reviewer session identifier.
 - `session_cmd` is optional and should be used for round 2+ when an agent can resume a prior session.
