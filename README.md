@@ -18,7 +18,6 @@ Makefile and explicit symlinks.
 ├── packages/          # Package lists
 │   ├── arch.txt       #   Arch Linux (yay)
 │   └── brew.txt       #   macOS (Homebrew)
-├── scripts/           # Project-agnostic local automation
 ├── Makefile           # Symlink & package orchestration
 ├── setup.sh           # Fresh machine bootstrap
 └── README.md
@@ -55,18 +54,6 @@ chmod +x setup.sh
 | `make hyprland-setup` | Bootstrap Hyprland via JaKooLit installer |
 | `make codex-skills-link` | Sync Codex skills from this repo into `~/.codex/skills` |
 | `make codex-skills-unlink` | Remove Codex skill symlinks that came from this repo |
-
-## Local automation
-
-Project-agnostic helper scripts live under `scripts/`.
-
-- `scripts/continuous-run/continuous-codex.sh` runs Codex continuously against
-  the repo in your current working tree or a `--repo` target.
-- `scripts/continuous-run/continuous-claude.sh` does the same for Claude Code.
-- `--parallel` or `CONTINUOUS_RUN_ENABLE_PARALLEL=1` enables the opt-in
-  parallel-agent prompt guidance.
-- In zsh, `continuous-codex` and `continuous-claude` call those launchers
-  directly from your shell config.
 
 ## Codex skills
 

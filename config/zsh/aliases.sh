@@ -15,8 +15,6 @@ alias sc='source ~/.zshrc'
 alias aa="nvim $dotfiles_path/config/zsh/aliases.sh"
 alias dot="cd $dotfiles_path && nvim ."
 alias dots='cd $dotfiles_path && make relink'
-alias continuous-codex='continuous_codex'
-alias continuous-claude='continuous_claude'
 
 # Neovim
 alias v='nvim .'

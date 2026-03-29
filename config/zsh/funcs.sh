@@ -42,14 +42,6 @@ vv() {
   nvim .
 }
 
-continuous_codex() {
-    "$HOME/dotfiles/scripts/continuous-run/continuous-codex.sh" "$@"
-}
-
-continuous_claude() {
-    "$HOME/dotfiles/scripts/continuous-run/continuous-claude.sh" "$@"
-}
-
 # Attach tmux session at some directory and activate venv if possible 
 tp () {
     local query="$1"                             # what the user typed
