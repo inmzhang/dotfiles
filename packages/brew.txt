@@ -9,6 +9,7 @@ lazygit
 gdu
 rm-improved
 just
+jj
 rustup
 ruff
 yt-dlp

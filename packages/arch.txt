@@ -10,6 +10,7 @@ lazygit
 gdu
 rm-improved-bin
 just
+jujutsu
 rustup
 ruff
 yt-dlp
