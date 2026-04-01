@@ -14,7 +14,7 @@ define ln_sf
 	mkdir -p $(dir $(2)) && rm -rf $(2) && ln -sfn $(1) $(2) && printf "  %s → %s\n" "$(2)" "$(1)"
 endef
 
-.PHONY: help install link unlink relink packages firefox hyprland-setup codex-memories-link codex-skills-link codex-skills-unlink
+.PHONY: help install link unlink relink packages firefox hyprland-setup codex-agents-link codex-agents-unlink codex-memories-link codex-skills-link codex-skills-unlink
 
 help: ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
@@ -49,6 +49,7 @@ link: ## Create all symlinks for current platform
 	$(call ln_sf,$(DOTDIR)/config/codex/config.toml,$(CODEX_HOME)/config.toml)
 	$(call ln_sf,$(DOTDIR)/config/codex/rules/default.rules,$(CODEX_HOME)/rules/default.rules)
 	@$(MAKE) --no-print-directory codex-memories-link
+	@$(MAKE) --no-print-directory codex-agents-link
 	@$(MAKE) --no-print-directory codex-skills-link
 ifeq ($(UNAME_S),Linux)
 	@echo "Linking Linux configs..."
@@ -94,6 +95,7 @@ unlink: ## Remove all symlinks
 	rm -f $(CODEX_HOME)/config.toml
 	rm -f $(CODEX_HOME)/rules/default.rules
 	rm -f $(CODEX_HOME)/memories
+	@$(MAKE) --no-print-directory codex-agents-unlink
 	@$(MAKE) --no-print-directory codex-skills-unlink
 ifeq ($(UNAME_S),Linux)
 	rm -f $(HOME)/.config/hypr
@@ -115,6 +117,31 @@ endif
 	@echo "Done."
 
 relink: unlink link ## Remove and recreate all symlinks
+
+codex-agents-link: ## Link all Codex custom agents from this repo
+	@echo "Linking Codex agents..."
+	@mkdir -p $(CODEX_HOME)/agents
+	@if [ -d "$(DOTDIR)/config/codex/agents" ]; then \
+		for agent_file in $(DOTDIR)/config/codex/agents/*.toml; do \
+			if [ -f "$$agent_file" ]; then \
+				agent_name=$$(basename "$$agent_file"); \
+				rm -rf "$(CODEX_HOME)/agents/$$agent_name"; \
+				ln -sfn "$$agent_file" "$(CODEX_HOME)/agents/$$agent_name"; \
+				printf "  %s → %s\n" "$(CODEX_HOME)/agents/$$agent_name" "$$agent_file"; \
+			fi; \
+		done; \
+	fi
+
+codex-agents-unlink: ## Remove Codex agent symlinks that came from this repo
+	@echo "Removing Codex agents..."
+	@if [ -d "$(DOTDIR)/config/codex/agents" ]; then \
+		for agent_file in $(DOTDIR)/config/codex/agents/*.toml; do \
+			if [ -f "$$agent_file" ]; then \
+				agent_name=$$(basename "$$agent_file"); \
+				rm -f "$(CODEX_HOME)/agents/$$agent_name"; \
+			fi; \
+		done; \
+	fi
 
 codex-memories-link: ## Seed live Codex memories into state and link runtime path
 	@echo "Linking Codex memories..."

@@ -14,7 +14,7 @@ Makefile and explicit symlinks.
 │   ├── hyprland/      #   Hyprland (Linux only)
 │   ├── ...
 │   ├── claude/        #   Claude Code (settings, scripts, skills)
-│   └── codex/         #   Codex CLI (config, rules, memories, skills)
+│   └── codex/         #   Codex CLI (config, agents, rules, memories, skills)
 ├── packages/          # Package lists
 │   ├── arch.txt       #   Arch Linux (yay)
 │   └── brew.txt       #   macOS (Homebrew)
@@ -52,8 +52,18 @@ chmod +x setup.sh
 | `make packages` | Install packages for current platform |
 | `make firefox` | Symlink Firefox userChrome.css (Linux) |
 | `make hyprland-setup` | Bootstrap Hyprland via JaKooLit installer |
+| `make codex-agents-link` | Sync Codex custom agents from this repo into `~/.codex/agents` |
 | `make codex-skills-link` | Sync Codex skills from this repo into `~/.codex/skills` |
+| `make codex-agents-unlink` | Remove Codex agent symlinks that came from this repo |
 | `make codex-skills-unlink` | Remove Codex skill symlinks that came from this repo |
+
+## Codex custom agents
+
+`make link` automatically runs `make codex-agents-link`, which symlinks every
+TOML file in `config/codex/agents/` into `~/.codex/agents/`.
+
+Current local Codex agents:
+- `rust-code-reviewer`: Rust-focused review agent with `gpt-5.4`, `xhigh` reasoning, and `sandbox_mode = "read-only"`.
 
 ## Codex skills
 
@@ -73,8 +83,9 @@ Current local Codex skills:
 
 ## Codex MCP servers
 
-`config/codex/config.toml` is symlinked into `~/.codex/config.toml` and tracks
-the Codex MCP server configuration for this machine.
+`config/codex/config.toml` is symlinked into `~/.codex/config.toml`, agent TOML
+files in `config/codex/agents/` are symlinked into `~/.codex/agents/`, and the
+file tracks the Codex MCP server configuration for this machine.
 
 Current tracked MCP servers:
 - `context7`: Library and framework documentation lookup.
