@@ -5,12 +5,6 @@
 [credential]
     helper = store
 
-[http]
-    proxy = http://127.0.0.1:7897
-
-[https]
-    proxy = http://127.0.0.1:7897
-
 [core]
     pager = delta
 
