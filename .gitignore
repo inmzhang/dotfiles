@@ -10,5 +10,5 @@ zsh-private.sh
 monitors.conf
 workspaces.conf
 
-# Nix artifacts (if leftover)
-result
+# agent
+.omx
