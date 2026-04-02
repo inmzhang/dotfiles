@@ -1,7 +1,3 @@
-# oh-my-codex top-level settings (must be before any [table])
-notify = ["node", "/home/inm/.npm-global/lib/node_modules/oh-my-codex/dist/scripts/notify-hook.js"]
-model_reasoning_effort = "xhigh"
-developer_instructions = "You have oh-my-codex installed. AGENTS.md is your orchestration brain and the main orchestration surface. Use skill/keyword routing like $name plus spawned role-specialized subagents for specialized work. Codex native subagents are available via .codex/agents and may be used for independent parallel subtasks within a single session or team pane. Skills are loaded from installed SKILL.md files under .codex/skills, not from native agent TOMLs. Use workflow skills via $name when explicitly invoked or clearly routed by AGENTS.md. Treat installed prompts as narrower internal execution surfaces under AGENTS.md authority, even when user-facing docs prefer $name keywords."
 
 
 # model_provider = "OpenAI"
@@ -45,10 +41,8 @@ shell_tool = true # 启用 shell 工具。默认: true
 apply_patch_freeform = true # 通过自由格式编辑路径包含apply_patch（影响默认工具集）。默认: false
 shell_snapshot = true # 启用shell快照功能。默认: false
 undo = true # 启用undo功能。默认: true
-multi_agent = true
 steer = true
 prevent_idle_sleep = true
-child_agents_md = true
 unified_exec = false
 requires_openai_auth = true
 memories = false
@@ -147,6 +141,9 @@ trust_level = "trusted"
 [projects."/home/inm/open-source-project/ppr"]
 trust_level = "trusted"
 
+[projects."/home/inm/open-source-project/codex"]
+trust_level = "trusted"
+
 [mcp_servers.context7]
 command = "npx"
 args = ["-y", "@upstash/context7-mcp", "--api-key", "ctx7sk-97b036eb-fec9-4616-8392-8c46bba62104"]
@@ -155,51 +152,12 @@ startup_timeout_sec = 20.0
 [mcp_servers.fff]
 command = "fff-mcp"
 
-[env]
-USE_OMX_EXPLORE_CMD = "1"
+[mcp_servers.openaiDeveloperDocs]
+url = "https://developers.openai.com/mcp"
+
+[mcp_servers.openaiDeveloperDocs.tools.search_openai_docs]
+approval_mode = "approve"
 
 [agents]
 max_threads = 6
 max_depth = 2
-
-# ============================================================
-# oh-my-codex (OMX) Configuration
-# Managed by omx setup - manual edits preserved on next setup
-# ============================================================
-
-# OMX State Management MCP Server
-[mcp_servers.omx_state]
-command = "node"
-args = ["/home/inm/.npm-global/lib/node_modules/oh-my-codex/dist/mcp/state-server.js"]
-enabled = true
-startup_timeout_sec = 5
-
-# OMX Project Memory MCP Server
-[mcp_servers.omx_memory]
-command = "node"
-args = ["/home/inm/.npm-global/lib/node_modules/oh-my-codex/dist/mcp/memory-server.js"]
-enabled = true
-startup_timeout_sec = 5
-
-# OMX Code Intelligence MCP Server (LSP diagnostics, AST search)
-[mcp_servers.omx_code_intel]
-command = "node"
-args = ["/home/inm/.npm-global/lib/node_modules/oh-my-codex/dist/mcp/code-intel-server.js"]
-enabled = true
-startup_timeout_sec = 10
-
-# OMX Trace MCP Server (agent flow timeline & statistics)
-[mcp_servers.omx_trace]
-command = "node"
-args = ["/home/inm/.npm-global/lib/node_modules/oh-my-codex/dist/mcp/trace-server.js"]
-enabled = true
-startup_timeout_sec = 5
-
-# OMX Team MCP Server (team job lifecycle: start, status, wait, cleanup)
-[mcp_servers.omx_team_run]
-command = "node"
-args = ["/home/inm/.npm-global/lib/node_modules/oh-my-codex/dist/mcp/team-server.js"]
-enabled = true
-startup_timeout_sec = 5
-# ============================================================
-# End oh-my-codex
