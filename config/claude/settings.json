@@ -39,7 +39,8 @@
     "skill-creator@claude-plugins-official": true,
     "playwright@claude-plugins-official": true,
     "superpowers@superpowers-marketplace": true,
-    "superpowers@claude-plugins-official": true
+    "superpowers@claude-plugins-official": true,
+    "codex@openai-codex": true
   },
   "extraKnownMarketplaces": {
     "sci-brain": {
@@ -58,6 +59,12 @@
       "source": {
         "source": "github",
         "repo": "obra/superpowers-marketplace"
+      }
+    },
+    "openai-codex": {
+      "source": {
+        "source": "github",
+        "repo": "openai/codex-plugin-cc"
       }
     }
   },
