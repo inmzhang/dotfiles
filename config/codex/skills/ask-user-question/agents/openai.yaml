@@ -1,4 +1,0 @@
-interface:
-  display_name: "Ask User Question"
-  short_description: "Interview for requirements"
-  default_prompt: "Ask me one structured question at a time to clarify requirements before coding."

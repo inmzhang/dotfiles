@@ -1,4 +1,0 @@
-interface:
-  display_name: "Ping-Pong Review"
-  short_description: "Run multi-agent ping-pong code reviews"
-  default_prompt: "Use $ppr to run a ping-pong review on my current changes."
