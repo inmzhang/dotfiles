@@ -1,4 +1,4 @@
-model = "gpt-5.3-codex-spark"
+model = "gpt-5.4"
 review_model = "gpt-5.4"
 project_doc_fallback_filenames = ["CLAUDE.md"] # Fallback when AGENTS.md is not present.
 approval_policy = "on-request"
@@ -14,7 +14,7 @@ collaboration_mode = true
 suppress_unstable_features_warning = true
 plan_mode_reasoning_effort = "high"
 service_tier = "fast"
-model_reasoning_effort = "medium"
+model_reasoning_effort = "xhigh"
 
 [features]
 shell_tool = true
@@ -57,35 +57,13 @@ status_line = ["model-with-reasoning", "current-dir", "git-branch", "context-rem
 [notice]
 hide_rate_limit_model_nudge = true
 
-[notice.model_migrations]
-"gpt-5.2" = "gpt-5.3-codex"
-"gpt-5.2-codex" = "gpt-5.3-codex"
-
 [projects."/home/inm/workspace/bloc"]
-trust_level = "trusted"
-
-[projects."/home/inm/.codex"]
 trust_level = "trusted"
 
 [projects."/home/inm/dotfiles"]
 trust_level = "trusted"
 
-[projects."/home/inm/workspace/cotext"]
-trust_level = "trusted"
-
 [projects."/home/inm/open-source-project/qrippy"]
-trust_level = "trusted"
-
-[projects."/home/inm/open-source-project/tuicr"]
-trust_level = "trusted"
-
-[projects."/home/inm/open-source-project/copanion"]
-trust_level = "trusted"
-
-[projects."/home/inm/open-source-project/Stim"]
-trust_level = "trusted"
-
-[projects."/home/inm/open-source-project/ppr"]
 trust_level = "trusted"
 
 [projects."/home/inm/open-source-project/codex"]
