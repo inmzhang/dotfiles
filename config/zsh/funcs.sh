@@ -9,30 +9,11 @@ y() {
 }
 
 proxy_on() {
-    export http_proxy=http://127.0.0.1:10808
+    export http_proxy=http://127.0.0.1:7897
     export https_proxy=$http_proxy
-    export all_proxy=socks5://127.0.0.1:10808
-    echo -e "Set http(s)_proxy=http://127.0.0.1:10808."
+    export all_proxy=socks5://127.0.0.1:7897
+    echo -e "Set http(s)_proxy=http://127.0.0.1:7897."
 }
-# clash-verge defaults port to 7897
-# proxy_on() {
-#     if [[ "$(uname)" == "Darwin" ]]; then
-#         export http_proxy=http://127.0.0.1:7897
-#         export https_proxy=$http_proxy
-#         export all_proxy=socks5://127.0.0.1:7897
-#         echo -e "Set http(s)_proxy=http://127.0.0.1:7897."
-#     elif command -v clash-verge >/dev/null 2>&1; then
-#         export http_proxy=http://127.0.0.1:7897
-#         export https_proxy=$http_proxy
-#         export all_proxy=socks5://127.0.0.1:7897
-#         echo -e "Set http(s)_proxy=http://127.0.0.1:7897."
-#     else
-#         export http_proxy=http://127.0.0.1:7890
-#         export https_proxy=$http_proxy
-#         export all_proxy=socks5://127.0.0.1:7891
-#         echo -e "Set http(s)_proxy=http://127.0.0.1:7890."
-#     fi
-# }
 
 proxy_off(){
     unset http_proxy https_proxy all_proxy
