@@ -87,8 +87,3 @@ approval_mode = "approve"
 max_threads = 6
 max_depth = 2
 
-[lsp.servers.rust-analyzer]
-command = "rust-analyzer"
-args = ["--stdio"]
-extension_to_language = { rs = "rust" }
-startup_timeout_sec = 20.0
