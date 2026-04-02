@@ -36,7 +36,10 @@
     "hookify@claude-plugins-official": true,
     "clangd-lsp@claude-plugins-official": true,
     "sci-brain@sci-brain": true,
-    "skill-creator@claude-plugins-official": true
+    "skill-creator@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true,
+    "superpowers@superpowers-marketplace": true,
+    "superpowers@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "sci-brain": {
@@ -50,10 +53,14 @@
         "source": "github",
         "repo": "anthropics/skills"
       }
+    },
+    "superpowers-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "obra/superpowers-marketplace"
+      }
     }
   },
   "alwaysThinkingEnabled": true,
-  "effortLevel": "high",
-  "fastMode": true,
   "skipDangerousModePermissionPrompt": true
 }
