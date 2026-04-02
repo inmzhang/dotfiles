@@ -69,6 +69,9 @@ trust_level = "trusted"
 [projects."/home/inm/open-source-project/codex"]
 trust_level = "trusted"
 
+[projects."/home/inm/open-source-project/qblaze"]
+trust_level = "trusted"
+
 [mcp_servers.context7]
 command = "npx"
 args = ["-y", "@upstash/context7-mcp", "--api-key", "ctx7sk-97b036eb-fec9-4616-8392-8c46bba62104"]
@@ -88,3 +91,4 @@ max_depth = 2
 command = "rust-analyzer"
 args = ["--stdio"]
 extension_to_language = { rs = "rust" }
+startup_timeout_sec = 20.0

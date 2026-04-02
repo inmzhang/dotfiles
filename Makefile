@@ -46,6 +46,8 @@ link: ## Create all symlinks for current platform
 	$(call ln_sf,$(DOTDIR)/config/claude/scripts,$(HOME)/.claude/scripts)
 	$(call ln_sf,$(DOTDIR)/config/claude/skills,$(HOME)/.claude/skills)
 	@echo "Linking Codex configs..."
+	$(call ln_sf,$(DOTDIR)/config/codex/AGENTS.md,$(CODEX_HOME)/AGENTS.md)
+	$(call ln_sf,$(DOTDIR)/config/codex/RTK.md,$(CODEX_HOME)/RTK.md)
 	$(call ln_sf,$(DOTDIR)/config/codex/config.toml,$(CODEX_HOME)/config.toml)
 	$(call ln_sf,$(DOTDIR)/config/codex/rules/default.rules,$(CODEX_HOME)/rules/default.rules)
 	@$(MAKE) --no-print-directory codex-memories-link
@@ -92,6 +94,8 @@ unlink: ## Remove all symlinks
 	rm -f $(HOME)/.claude/rules
 	rm -f $(HOME)/.claude/scripts
 	rm -f $(HOME)/.claude/skills
+	rm -f $(CODEX_HOME)/AGENTS.md
+	rm -f $(CODEX_HOME)/RTK.md
 	rm -f $(CODEX_HOME)/config.toml
 	rm -f $(CODEX_HOME)/rules/default.rules
 	rm -f $(CODEX_HOME)/memories
