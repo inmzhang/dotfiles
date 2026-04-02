@@ -1,19 +1,12 @@
-
-
-# model_provider = "OpenAI"
-# model_provider = "IkunCoding"
-# model_provider = "codex-for-me"
-model = "gpt-5.4"
+model = "gpt-5.3-codex-spark"
 review_model = "gpt-5.4"
-project_doc_fallback_filenames = ["CLAUDE.md"] # agents.md找不到，则找claude.md
+project_doc_fallback_filenames = ["CLAUDE.md"] # Fallback when AGENTS.md is not present.
 approval_policy = "on-request"
 sandbox_mode = "danger-full-access"
 model_context_window = 1000000
 model_auto_compact_token_limit = 700000
-tool_output_token_limit = 40000 # 工具输出最大token; default: 10000 for gpt-5.2-codex
-model_reasoning_summary = "detailed" # 模型输出思维链的summary风格，可以是auto | concise | detailed | none (default: auto)
-model_verbosity = "high"
-model_supports_reasoning_summaries = true # Force reasoning
+tool_output_token_limit = 40000 # Higher than the default to avoid truncating large tool output.
+model_reasoning_summary = "auto" # Valid values: auto, concise, detailed, none.
 disable_response_storage = true
 network_access = "enabled"
 web_search = "live"
@@ -21,89 +14,43 @@ collaboration_mode = true
 suppress_unstable_features_warning = true
 plan_mode_reasoning_effort = "high"
 service_tier = "fast"
+model_reasoning_effort = "medium"
 
-# [model_providers.codex-for-me]
-# name = "codex-for-me"
-# base_url = "https://api-vip.codex-for.me/v1"
-# wire_api = "responses"
-# requires_openai_auth = true
-
-# [model_providers.IkunCoding]
-# name = "IkunCoding"
-# base_url = "https://api.ikuncode.cc/v1"
-# wire_api = "responses"
-# requires_openai_auth = true
-
-# Centralized Feature Flags (preferred)
-################################################################################
 [features]
-shell_tool = true # 启用 shell 工具。默认: true
-apply_patch_freeform = true # 通过自由格式编辑路径包含apply_patch（影响默认工具集）。默认: false
-shell_snapshot = true # 启用shell快照功能。默认: false
-undo = true # 启用undo功能。默认: true
+shell_tool = true
+apply_patch_freeform = true # Keep this enabled to use freeform `apply_patch`.
+shell_snapshot = true
+undo = true
 steer = true
 prevent_idle_sleep = true
 unified_exec = false
 requires_openai_auth = true
 memories = false
-fast_mode = true # 必开 -- 当然会让gpt-5.4用量2倍
+fast_mode = true # Preferred here, though it increases GPT-5.4 usage.
+tool_suggest = false # Disabled because local discoverable tool suggestions hit 403s.
 
-[memories] # ⭐️⭐️⭐️，强烈建议用新模型来总结memories
+[memories]
 consolidation_model = "gpt-5.4"
 extract_model = "gpt-5.4"
-# generate_memories = true # 默认true
-use_memories = false # 默认true，表示把 memory_summary.md 注入 developer instructions
+use_memories = false # When enabled, `memory_summary.md` is injected into developer instructions.
 max_raw_memories_for_consolidation = 512
-max_unused_days = 30 # 默认 30
-max_rollout_age_days = 45 # 默认 30
-# max_rollouts_per_startup = 16 # 默认 16
-# min_rollout_idle_hours = 6 # 默认 6
+max_unused_days = 30
+max_rollout_age_days = 45
 
-################################################################################
-# Shell Environment Policy for spawned processes (table)
-################################################################################
-[shell_environment_policy] # Shell环境配置
-# 环境变量继承策略inherit: all (default) | core | none 
-inherit = "all" # 可以全给他看
-# 是否忽略默认的 KEY/SECRET/TOKEN Skip default excludes for names containing KEY/SECRET/TOKEN (case-insensitive). Default: true
-ignore_default_excludes = true # 意思是可以给他看
-# Case-insensitive glob patterns to remove (e.g., "AWS_*", "AZURE_*"). Default: []
-# exclude = []
-# Explicit key/value overrides (always win). Default: {}
-# set = {}
-# Whitelist; if non-empty, keep only matching vars. Default: []
-# include_only = []
-# Experimental: run via user shell profile. Default: false
-# experimental_use_profile = false
+[shell_environment_policy]
+inherit = "all"
+ignore_default_excludes = true # Allow access to environment entries normally excluded by default.
 
-################################################################################
-# Sandbox settings (tables)
-################################################################################
 [sandbox_workspace_write]
-# Additional writable roots beyond the workspace (cwd). Default: [] 例如在/root/paddlejob/RLHF 启动，但需要让他访问 /root/paddlejob 下的其他文件夹，可以在这里加上 /root/paddlejob
-# writable_roots = [] 
-network_access = true # # Allow outbound network access inside the sandbox. Default: false
-
-################################################################################
-# Notifications
-################################################################################
-# External notifier program (argv array). When unset: disabled.
-# Example: notify = ["notify-send", "Codex"]
-
+network_access = true # Allow outbound network access inside the sandbox.
 
 [tui]
-# Send desktop notifications when approvals are required or a turn completes. # Defaults to false.
 notifications = true
 
-# 使用包装脚本以集中配置通知偏好（声音/图标/分组等）
-# notify = [ ] # linux机器不开 wrapper.sh
+# Optional wrapper for centralized notification preferences.
+# notify = []
 
-################################################################################
-# Project Controls
-################################################################################
-# Max bytes from AGENTS.md to embed into first-turn instructions. Default: 32768
-# project_doc_max_bytes = 32768
-
+# project_doc_max_bytes = 32768 # Max bytes loaded from AGENTS.md into first-turn instructions.
 
 status_line = ["model-with-reasoning", "current-dir", "git-branch", "context-remaining", "five-hour-limit", "context-window-size", "used-tokens", "context-used", "fast-mode"]
 
@@ -149,9 +96,6 @@ command = "npx"
 args = ["-y", "@upstash/context7-mcp", "--api-key", "ctx7sk-97b036eb-fec9-4616-8392-8c46bba62104"]
 startup_timeout_sec = 20.0
 
-[mcp_servers.fff]
-command = "fff-mcp"
-
 [mcp_servers.openaiDeveloperDocs]
 url = "https://developers.openai.com/mcp"
 
@@ -161,3 +105,8 @@ approval_mode = "approve"
 [agents]
 max_threads = 6
 max_depth = 2
+
+[lsp.servers.rust-analyzer]
+command = "rust-analyzer"
+args = ["--stdio"]
+extension_to_language = { rs = "rust" }
