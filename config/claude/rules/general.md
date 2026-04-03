@@ -37,10 +37,14 @@ sufficient. **Do not write your accomplishments into this file.**
   use.
 
 ### Useful Rust frameworks for testing
+- Prefer `cargo nextest run` over `cargo test`. Nextest runs tests in
+  separate processes with better parallelism, output handling, and
+  failure reporting.
 - **`quickcheck`**: Property-based testing for when you have an
   obviously-correct comparison you can test against.
 - **`insta`**: Snapshot testing for regression prevention. Use `cargo
-  insta test` as a stand-in for `cargo test` to run the snapshot tests.
+  insta test --test-runner nextest` as a stand-in for `cargo test` to
+  run the snapshot tests.
 
 ### Writing compile_fail Tests
 
