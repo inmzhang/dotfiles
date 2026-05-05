@@ -29,6 +29,7 @@ bun-bin
 serie
 gitui
 shellcheck-bin
+zed
 
 # Fonts
 ttf-jetbrains-mono-nerd

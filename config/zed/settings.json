@@ -1,0 +1,55 @@
+{
+  "icon_theme": "Colored Zed Icons Theme Dark",
+  "project_panel": {
+    "hide_hidden": false,
+    "dock": "left",
+  },
+  "outline_panel": {
+    "dock": "left",
+  },
+  "collaboration_panel": {
+    "dock": "left",
+  },
+  "agent": {
+    "dock": "right",
+    "favorite_models": [],
+    "model_parameters": [],
+  },
+  "session": {
+    "trust_all_worktrees": true,
+  },
+  "git": {
+    "inline_blame": {
+      "enabled": true,
+    },
+  },
+  "git_panel": {
+    "dock": "left",
+  },
+  "vim": {
+    "toggle_relative_line_numbers": true,
+  },
+  "which_key": {
+    "enabled": true,
+  },
+  "relative_line_numbers": "enabled",
+  "ui_font_size": 18.0,
+  "buffer_font_weight": 400.0,
+  "buffer_font_size": 15.0,
+  "buffer_font_family": "JetBrainsMono Nerd Font",
+  "vim_mode": true,
+  "server_url": "https://zed.dev",
+  "proxy": "",
+  "edit_predictions": {
+    "provider": "copilot",
+  },
+  "theme": "Gruvbox Material Neovim Dark",
+  "lsp": {
+    "tinymist": {
+      "settings": {
+        "exportPdf": "onSave",
+        "outputPath": "$root/$name",
+      },
+    },
+  },
+}

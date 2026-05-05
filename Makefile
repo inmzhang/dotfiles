@@ -37,6 +37,8 @@ link: ## Create all symlinks for current platform
 	$(call ln_sf,$(DOTDIR)/config/bat/config,$(HOME)/.config/bat/config)
 	$(call ln_sf,$(DOTDIR)/config/atuin/config.toml,$(HOME)/.config/atuin/config.toml)
 	$(call ln_sf,$(DOTDIR)/config/tuicr/config.toml,$(HOME)/.config/tuicr/config.toml)
+	$(call ln_sf,$(DOTDIR)/config/zed/keymap.json,$(HOME)/.config/zed/keymap.json)
+	$(call ln_sf,$(DOTDIR)/config/zed/settings.json,$(HOME)/.config/zed/settings.json)
 	@echo "Linking Claude Code configs..."
 	$(call ln_sf,$(DOTDIR)/config/claude/settings.json,$(HOME)/.claude/settings.json)
 	$(call ln_sf,$(DOTDIR)/config/claude/agents,$(HOME)/.claude/agents)
@@ -87,6 +89,8 @@ unlink: ## Remove all symlinks
 	rm -f $(HOME)/.config/bat/config
 	rm -f $(HOME)/.config/atuin/config.toml
 	rm -f $(HOME)/.config/tuicr/config.toml
+	rm -f $(HOME)/.config/zed/keymap.json
+	rm -f $(HOME)/.config/zed/settings.json
 	rm -f $(HOME)/.claude/settings.json
 	rm -f $(HOME)/.claude/agents
 	rm -f $(HOME)/.claude/commands
