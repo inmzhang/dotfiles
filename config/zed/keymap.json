@@ -11,6 +11,9 @@
       "shift-l": "pane::ActivateNextItem",
       "ctrl-q": "pane::CloseActiveItem",
       "ctrl-s": "workspace::Save",
+      // wrap motion
+      "j": ["vim::Down", { "display_lines": true }],
+      "k": ["vim::Up", { "display_lines": true }],
     },
   },
   {
