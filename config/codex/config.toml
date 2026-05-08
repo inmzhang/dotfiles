@@ -15,6 +15,7 @@ suppress_unstable_features_warning = true
 plan_mode_reasoning_effort = "xhigh"
 
 model_provider = "OpenAI"
+model_reasoning_effort = "xhigh"
 
 [model_providers.OpenAI]
 name = "OpenAI"
@@ -37,7 +38,8 @@ tool_suggest = false
 
 multi_agent = true
 child_agents_md = true
-codex_hooks = true
+hooks = true
+goals = true
 voice_transcription = true
 [memories]
 consolidation_model = "gpt-5.4"
@@ -129,6 +131,18 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/home/inm/open-source-paper-data/magic-state-cultivation"]
+trust_level = "trusted"
+
+[projects."/home/inm/workspace/clifft-paper"]
+trust_level = "trusted"
+
+[projects."/home/inm/open-source-project/learn-claude-code-rs"]
+trust_level = "trusted"
+
+[projects."/home/inm/.codex"]
+trust_level = "trusted"
+
+[projects."/home/inm/open-source-paper-data/msc-ls"]
 trust_level = "trusted"
 
 [mcp_servers.context7]
