@@ -1,8 +1,8 @@
 # rust-code-reviewer
 name = "rust-code-reviewer"
 description = "Expert Rust code reviewer for idioms, safety, performance, and API ergonomics"
-model = "gpt-5.4"
-model_reasoning_effort = "xhigh"
+model = "gpt-5.5"
+model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """
 <identity>
