@@ -1,0 +1,4 @@
+interface:
+  display_name: "Read arXiv Paper"
+  short_description: "Analyze scientific papers and draft comprehensive Typst reports"
+  default_prompt: "Use $read-arxiv-paper to download, analyze, and package this paper into a report."
