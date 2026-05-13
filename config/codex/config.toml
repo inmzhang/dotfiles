@@ -15,7 +15,7 @@ suppress_unstable_features_warning = true
 plan_mode_reasoning_effort = "xhigh"
 
 model_provider = "OpenAI"
-model_reasoning_effort = "xhigh"
+model_reasoning_effort = "high"
 
 [model_providers.OpenAI]
 name = "OpenAI"
@@ -35,12 +35,10 @@ requires_openai_auth = true
 memories = false
 fast_mode = true
 tool_suggest = false
-
-multi_agent = true
-child_agents_md = true
 hooks = true
 goals = true
 voice_transcription = true
+
 [memories]
 consolidation_model = "gpt-5.4"
 extract_model = "gpt-5.4"
@@ -145,6 +143,24 @@ trust_level = "trusted"
 [projects."/home/inm/open-source-paper-data/msc-ls"]
 trust_level = "trusted"
 
+[projects."/home/inm/aider/simulator"]
+trust_level = "trusted"
+
+[projects."/home/inm/aider/logical-compilation"]
+trust_level = "trusted"
+
+[projects."/home/inm/aider/crabook"]
+trust_level = "trusted"
+
+[projects."/home/inm/open-source-project/Pluto.jl"]
+trust_level = "trusted"
+
+[projects."/home/inm/aider/ideas"]
+trust_level = "trusted"
+
+[projects."/home/inm/aider/atfile"]
+trust_level = "trusted"
+
 [mcp_servers.context7]
 command = "npx"
 args = ["-y", "@upstash/context7-mcp", "--api-key", "ctx7sk-97b036eb-fec9-4616-8392-8c46bba62104"]
@@ -179,48 +195,3 @@ approval_mode = "approve"
 [agents]
 max_threads = 6
 max_depth = 2
-
-[env]
-USE_OMX_EXPLORE_CMD = "1"
-
-# ============================================================
-# oh-my-codex (OMX) Configuration
-# Managed by omx setup - manual edits preserved on next setup
-# ============================================================
-
-# OMX State Management MCP Server
-[mcp_servers.omx_state]
-command = "node"
-args = ["/home/inm/.npm-global/lib/node_modules/oh-my-codex/dist/mcp/state-server.js"]
-enabled = true
-startup_timeout_sec = 5
-
-# OMX Project Memory MCP Server
-[mcp_servers.omx_memory]
-command = "node"
-args = ["/home/inm/.npm-global/lib/node_modules/oh-my-codex/dist/mcp/memory-server.js"]
-enabled = true
-startup_timeout_sec = 5
-
-# OMX Code Intelligence MCP Server (LSP diagnostics, AST search)
-[mcp_servers.omx_code_intel]
-command = "node"
-args = ["/home/inm/.npm-global/lib/node_modules/oh-my-codex/dist/mcp/code-intel-server.js"]
-enabled = true
-startup_timeout_sec = 10
-
-# OMX Trace MCP Server (agent flow timeline & statistics)
-[mcp_servers.omx_trace]
-command = "node"
-args = ["/home/inm/.npm-global/lib/node_modules/oh-my-codex/dist/mcp/trace-server.js"]
-enabled = true
-startup_timeout_sec = 5
-
-# OMX Wiki MCP Server (persistent project knowledge base)
-[mcp_servers.omx_wiki]
-command = "node"
-args = ["/home/inm/.npm-global/lib/node_modules/oh-my-codex/dist/mcp/wiki-server.js"]
-enabled = true
-startup_timeout_sec = 5
-# ============================================================
-# End oh-my-codex
