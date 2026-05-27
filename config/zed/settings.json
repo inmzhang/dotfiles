@@ -1,4 +1,27 @@
 {
+  "language_models": {
+    "openai_compatible": {
+      "OpenQ": {
+        "api_url": "https://bench.openq.top/v1",
+        "available_models": [
+          {
+            "name": "gpt-5.5",
+            "max_tokens": 200000,
+            "max_output_tokens": 32000,
+            "max_completion_tokens": 200000,
+            "capabilities": {
+              "tools": true,
+              "images": false,
+              "parallel_tool_calls": false,
+              "prompt_cache_key": false,
+              "chat_completions": true,
+              "interleaved_reasoning": false,
+            },
+          },
+        ],
+      },
+    },
+  },
   "autosave": "on_focus_change",
   "terminal": {
     "font_size": 15.0,
@@ -21,6 +44,11 @@
     "dock": "left",
   },
   "agent": {
+    "default_model": {
+      "provider": "OpenQ",
+      "model": "gpt-5.5",
+      "enable_thinking": false,
+    },
     "dock": "right",
     "favorite_models": [],
     "model_parameters": [],
@@ -56,9 +84,23 @@
   "theme": "Gruvbox Material Neovim Dark",
   "lsp": {
     "tinymist": {
+      "initialization_options": {
+        "preview": {
+          "background": {
+            "enabled": true,
+          },
+        },
+      },
       "settings": {
         "exportPdf": "onSave",
         "outputPath": "$root/$name",
+      },
+    },
+    "rust-analyzer": {
+      "initialization_options": {
+        "check": {
+          "command": "clippy",
+        },
       },
     },
   },
