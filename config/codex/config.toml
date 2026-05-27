@@ -32,12 +32,12 @@ steer = true
 prevent_idle_sleep = true
 unified_exec = false
 requires_openai_auth = true
-memories = false
 fast_mode = true
 tool_suggest = false
 hooks = true
 goals = true
 voice_transcription = true
+terminal_resize_reflow = true
 
 [memories]
 consolidation_model = "gpt-5.4"
@@ -56,7 +56,8 @@ network_access = true # Allow outbound network access inside the sandbox.
 
 [tui]
 notifications = true
-status_line = ["model-with-reasoning", "git-branch", "context-remaining", "total-input-tokens", "total-output-tokens", "five-hour-limit", "weekly-limit", "context-window-size"]
+status_line = ["model-with-reasoning", "git-branch", "context-remaining", "total-input-tokens", "total-output-tokens", "five-hour-limit", "weekly-limit", "context-window-size", "task-progress"]
+status_line_use_colors = true
 
 [tui.model_availability_nux]
 "gpt-5.5" = 4
@@ -159,6 +160,30 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/home/inm/aider/atfile"]
+trust_level = "trusted"
+
+[projects."/home/inm/open-source-project/hugr"]
+trust_level = "trusted"
+
+[projects."/home/inm/open-source-project/el-loom"]
+trust_level = "trusted"
+
+[projects."/home/inm/open-source-project/tket2"]
+trust_level = "trusted"
+
+[projects."/home/inm/open-source-project/qiskit"]
+trust_level = "trusted"
+
+[projects."/home/inm/open-source-project/Stim"]
+trust_level = "trusted"
+
+[projects."/home/inm/open-source-project/deepwiki-open"]
+trust_level = "trusted"
+
+[projects."/home/inm"]
+trust_level = "trusted"
+
+[projects."/home/inm/workspace/barebone-agents-bench"]
 trust_level = "trusted"
 
 [mcp_servers.context7]
