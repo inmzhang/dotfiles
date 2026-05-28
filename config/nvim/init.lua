@@ -1,5 +1,4 @@
 require 'config.foundation'
-require 'config.pack'
 require 'config.plugins'
 require 'config.lsp'
 require 'config.formatting'
