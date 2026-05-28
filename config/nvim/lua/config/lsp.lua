@@ -45,7 +45,45 @@ vim.api.nvim_create_autocmd('LspAttach', {
 })
 
 local servers = {
-  stylua = {},
+  basedpyright = {
+    settings = {
+      python = {
+        pythonPath = vim.fn.exepath 'python',
+      },
+      basedpyright = {
+        analysis = {
+          typeCheckingMode = 'basic',
+          autoImportCompletions = true,
+          diagnosticSeverityOverrides = {
+            reportUnusedImport = 'information',
+            reportUnusedFunction = 'information',
+            reportUnusedVariable = 'information',
+            reportGeneralTypeIssues = 'none',
+            reportOptionalMemberAccess = 'none',
+            reportOptionalSubscript = 'none',
+            reportPrivateImportUsage = 'none',
+          },
+        },
+      },
+    },
+  },
+  clangd = {
+    capabilities = {
+      offsetEncoding = { 'utf-8' },
+    },
+  },
+  ruff = {},
+  tinymist = {
+    settings = {
+      formatterMode = 'typstyle',
+      exportPdf = 'onType',
+      semanticTokens = 'disable',
+      outputPath = '$root/pdfs/$dir',
+      lint = {
+        enable = true,
+      },
+    },
+  },
   lua_ls = {
     on_init = function(client)
       client.server_capabilities.documentFormattingProvider = false
@@ -86,8 +124,17 @@ vim.pack.add {
 
 require('mason').setup {}
 
-local ensure_installed = vim.tbl_keys(servers or {})
-vim.list_extend(ensure_installed, {})
+local ensure_installed = {
+  'basedpyright',
+  'clangd',
+  'lua-language-server',
+  'ruff',
+  'rust-analyzer',
+  'stylua',
+  'tinymist',
+  'tree-sitter-cli',
+  'typstyle',
+}
 
 require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 

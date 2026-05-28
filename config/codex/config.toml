@@ -15,7 +15,7 @@ suppress_unstable_features_warning = true
 plan_mode_reasoning_effort = "xhigh"
 
 model_provider = "OpenAI"
-model_reasoning_effort = "high"
+model_reasoning_effort = "medium"
 
 [model_providers.OpenAI]
 name = "OpenAI"
@@ -184,6 +184,9 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/home/inm/workspace/barebone-agents-bench"]
+trust_level = "trusted"
+
+[projects."/Users/inm/dotfiles"]
 trust_level = "trusted"
 
 [mcp_servers.context7]

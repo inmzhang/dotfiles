@@ -5,16 +5,20 @@ vim.pack.add { gh 'stevearc/conform.nvim' }
 require('conform').setup {
   notify_on_error = false,
   format_on_save = function(bufnr)
-    local enabled_filetypes = {}
+    local enabled_filetypes = { lua = true }
     if enabled_filetypes[vim.bo[bufnr].filetype] then
-      return { timeout_ms = 500 }
+      return { timeout_ms = 1000 }
     end
     return nil
   end,
   default_format_opts = {
     lsp_format = 'fallback',
   },
-  formatters_by_ft = {},
+  formatters_by_ft = {
+    lua = { 'stylua' },
+    python = { 'ruff_format' },
+    typst = { 'typstyle' },
+  },
 }
 
 vim.keymap.set({ 'n', 'v' }, '<leader>f', function() require('conform').format { async = true } end,

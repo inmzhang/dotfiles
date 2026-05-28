@@ -2,7 +2,23 @@ local gh = require('config.util').gh
 
 vim.pack.add { { src = gh 'nvim-treesitter/nvim-treesitter', version = 'main' } }
 
-local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+local parsers = {
+  'bash',
+  'c',
+  'diff',
+  'html',
+  'lua',
+  'luadoc',
+  'markdown',
+  'markdown_inline',
+  'python',
+  'query',
+  'regex',
+  'rust',
+  'toml',
+  'vim',
+  'vimdoc',
+}
 require('nvim-treesitter').install(parsers)
 
 local function treesitter_try_attach(buf, language)
@@ -16,6 +32,7 @@ end
 
 local available_parsers = require('nvim-treesitter').get_available()
 vim.api.nvim_create_autocmd('FileType', {
+  group = vim.api.nvim_create_augroup('user-treesitter-start', { clear = true }),
   callback = function(args)
     local buf, filetype = args.buf, args.match
     local language = vim.treesitter.language.get_lang(filetype)
