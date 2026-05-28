@@ -32,7 +32,7 @@ vim.o.confirm = true
 
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set({ 'n', 'i', 'v' }, '<C-s>', '<Esc><cmd>write<CR>', { desc = 'Save file' })
-vim.keymap.set({ 'n', 'i', 'v' }, '<C-q>', '<Esc><cmd>write | quit<CR>', { desc = 'Save and quit' })
+vim.keymap.set({ 'n', 'i', 'v' }, '<C-q>', '<Esc><cmd>silent! write | quit<CR>', { desc = 'Save and quit' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 vim.keymap.set('n', 'j', 'gj', { desc = 'Move down by display line' })
 vim.keymap.set('n', 'k', 'gk', { desc = 'Move up by display line' })
