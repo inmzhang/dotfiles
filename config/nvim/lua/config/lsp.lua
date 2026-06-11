@@ -128,6 +128,7 @@ local ensure_installed = {
   'basedpyright',
   'clangd',
   'lua-language-server',
+  'prettier',
   'ruff',
   'rust-analyzer',
   'stylua',

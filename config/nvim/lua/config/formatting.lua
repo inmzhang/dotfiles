@@ -5,7 +5,7 @@ vim.pack.add { gh 'stevearc/conform.nvim' }
 require('conform').setup {
   notify_on_error = false,
   format_on_save = function(bufnr)
-    local enabled_filetypes = { lua = true }
+    local enabled_filetypes = { json = true, jsonc = true, lua = true }
     if enabled_filetypes[vim.bo[bufnr].filetype] then
       return { timeout_ms = 1000 }
     end
@@ -15,6 +15,8 @@ require('conform').setup {
     lsp_format = 'fallback',
   },
   formatters_by_ft = {
+    json = { 'prettier' },
+    jsonc = { 'prettier' },
     lua = { 'stylua' },
     python = { 'ruff_format' },
     typst = { 'typstyle' },
