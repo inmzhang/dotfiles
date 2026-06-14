@@ -19,7 +19,6 @@
       "Bash(agent-browser *)"
     ]
   },
-  "model": "opus[1m]",
   "statusLine": {
     "type": "command",
     "command": "~/.claude/scripts/context-bar.sh"
@@ -70,7 +69,10 @@
     }
   },
   "alwaysThinkingEnabled": true,
-  "skipDangerousModePermissionPrompt": true,
   "effortLevel": "high",
-  "fastMode": true
+  "fastMode": false,
+  "skipDangerousModePermissionPrompt": true,
+  "sounds": {
+    "dictation": false
+  }
 }
