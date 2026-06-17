@@ -67,160 +67,23 @@ vim_mode_default = true
 hide_rate_limit_model_nudge = true
 fast_default_opt_out = true
 
-[projects."/home/inm/workspace/bloc"]
-trust_level = "trusted"
-
-[projects."/home/inm/dotfiles"]
-trust_level = "trusted"
-
-[projects."/home/inm/open-source-project/qrippy"]
-trust_level = "trusted"
-
-[projects."/home/inm/open-source-project/codex"]
-trust_level = "trusted"
-
-[projects."/home/inm/open-source-project/qblaze"]
-trust_level = "trusted"
-
-[projects."/home/inm/open-source-project/AutoResearchClaw"]
-trust_level = "trusted"
-
-[projects."/home/inm/workspace/paper-read"]
-trust_level = "trusted"
-
-[projects."/home/inm/open-source-project/ticket"]
-trust_level = "trusted"
-
-[projects."/home/inm/workspace/transession"]
-trust_level = "trusted"
-
-[projects."/home/inm/open-source-project/leaky"]
-trust_level = "trusted"
-
-[projects."/home/inm/workspace/correlation"]
-trust_level = "trusted"
-
-[projects."/home/inm/open-source-project/acsc"]
-trust_level = "trusted"
-
-[projects."/home/inm/workspace/llm-wiki"]
-trust_level = "trusted"
-
-[projects."/home/inm/temp/HyperAgents"]
-trust_level = "trusted"
-
-[projects."/home/inm/open-source-project/stim-rs"]
-trust_level = "trusted"
-
-[projects."/home/inm/Videos"]
-trust_level = "trusted"
-
-[projects."/home/inm/open-source-project/pymatching-rs"]
-trust_level = "trusted"
-
-[projects."/home/inm/open-source-project/awesome-tqec"]
-trust_level = "trusted"
-
-[projects."/home/inm/open-source-project/lord"]
-trust_level = "trusted"
-
-[projects."/home/inm/workspace/bloc-worktrees"]
-trust_level = "trusted"
-
-[projects."/home/inm/open-source-project/tqec"]
-trust_level = "trusted"
-
-[projects."/home/inm/open-source-paper-data/magic-state-cultivation"]
-trust_level = "trusted"
-
-[projects."/home/inm/workspace/clifft-paper"]
-trust_level = "trusted"
-
-[projects."/home/inm/open-source-project/learn-claude-code-rs"]
-trust_level = "trusted"
-
-[projects."/home/inm/.codex"]
-trust_level = "trusted"
-
-[projects."/home/inm/open-source-paper-data/msc-ls"]
-trust_level = "trusted"
-
-[projects."/home/inm/aider/simulator"]
-trust_level = "trusted"
-
-[projects."/home/inm/aider/logical-compilation"]
-trust_level = "trusted"
-
-[projects."/home/inm/aider/crabook"]
-trust_level = "trusted"
-
-[projects."/home/inm/open-source-project/Pluto.jl"]
-trust_level = "trusted"
-
-[projects."/home/inm/aider/ideas"]
-trust_level = "trusted"
-
-[projects."/home/inm/aider/atfile"]
-trust_level = "trusted"
-
-[projects."/home/inm/open-source-project/hugr"]
-trust_level = "trusted"
-
-[projects."/home/inm/open-source-project/el-loom"]
-trust_level = "trusted"
-
-[projects."/home/inm/open-source-project/tket2"]
-trust_level = "trusted"
-
-[projects."/home/inm/open-source-project/qiskit"]
-trust_level = "trusted"
-
-[projects."/home/inm/open-source-project/Stim"]
-trust_level = "trusted"
-
-[projects."/home/inm/open-source-project/deepwiki-open"]
-trust_level = "trusted"
-
-[projects."/home/inm"]
-trust_level = "trusted"
-
-[projects."/home/inm/workspace/barebone-agents-bench"]
-trust_level = "trusted"
-
-[projects."/Users/inm/dotfiles"]
-trust_level = "trusted"
-
-[mcp_servers.context7]
-command = "npx"
-args = ["-y", "@upstash/context7-mcp", "--api-key", "ctx7sk-97b036eb-fec9-4616-8392-8c46bba62104"]
-startup_timeout_sec = 20.0
-
-[mcp_servers.openaiDeveloperDocs]
-url = "https://developers.openai.com/mcp"
-
-[mcp_servers.openaiDeveloperDocs.tools.search_openai_docs]
-approval_mode = "approve"
-
-[mcp_servers.agentify-desktop]
-command = "npx"
-args = ["-y", "@agentify/desktop", "mcp"]
-startup_timeout_sec = 15
-
-[mcp_servers.agentify-desktop.tools.agentify_ensure_ready]
-approval_mode = "approve"
-
-[mcp_servers.agentify-desktop.tools.agentify_query]
-approval_mode = "approve"
-
-[mcp_servers.agentify-desktop.tools.agentify_status]
-approval_mode = "approve"
-
-[mcp_servers.agentify-desktop.tools.agentify_read_page]
-approval_mode = "approve"
-
-[mcp_servers.agentify-desktop.tools.agentify_stop_query]
-approval_mode = "approve"
-
 [agents]
 max_threads = 6
 max_depth = 2
+
+[marketplaces.ponytail]
+last_updated = "2026-06-17T02:48:28Z"
+last_revision = "45f7d2f83fb430a65fd512a98ad7b14d79e06636"
+source_type = "git"
+source = "https://github.com/DietrichGebert/ponytail.git"
+
+[plugins."ponytail@ponytail"]
+enabled = true
+
+[hooks.state]
+
+[hooks.state."ponytail@ponytail:hooks/hooks.json:session_start:0:0"]
+trusted_hash = "sha256:195e73e498a4cdb40bbe765719d39371ac72c0ebb084fee1beee9d28d21fb7a0"
+
+[hooks.state."ponytail@ponytail:hooks/hooks.json:user_prompt_submit:0:0"]
+trusted_hash = "sha256:f79c8de133c1109b841f9835a9d032231900a0d96ecf5f6d1866132df5ca4aa4"
