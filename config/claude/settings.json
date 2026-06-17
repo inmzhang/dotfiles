@@ -21,7 +21,9 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "~/.claude/scripts/context-bar.sh"
+    "command": "ccstatusline",
+    "padding": 0,
+    "refreshInterval": 10
   },
   "enabledPlugins": {
     "rust-analyzer-lsp@claude-plugins-official": true,
@@ -40,7 +42,9 @@
     "playwright@claude-plugins-official": true,
     "superpowers@superpowers-marketplace": true,
     "superpowers@claude-plugins-official": true,
-    "codex@openai-codex": true
+    "codex@openai-codex": true,
+    "ponytail@ponytail": true,
+    "lean4-contribute@lean4-skills": true
   },
   "extraKnownMarketplaces": {
     "sci-brain": {
@@ -65,6 +69,18 @@
       "source": {
         "source": "github",
         "repo": "openai/codex-plugin-cc"
+      }
+    },
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
+      }
+    },
+    "lean4-skills": {
+      "source": {
+        "source": "github",
+        "repo": "cameronfreer/lean4-skills"
       }
     }
   },
