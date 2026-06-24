@@ -1,8 +1,10 @@
 ## General best practices
 
-- Always ask the user clarifying questions to resolve any confusion or
-  ambiguity **before** planning or implementation. Do not guess at
-  requirements or make assumptions when you can ask instead.
+- Ask, don't assume. If something is unclear, ask before writing a single line. Never make silent assumptions about intent, architecture, or requirements. When running unattended, pick the most reasonable interpretation, proceed, and record the assumption rather than blocking.
+- Implement the simplest solution for simple problems, better solutions for harder problems. Do not over-engineer or add flexibility that isn't needed yet. 
+- Don't touch unrelated code but please do surface bad code or design smells you discover with me so we can address them as a separate issue.
+- Flag uncertainty explicitly. If you're unsure about something, see point 1 above. If it makes sense to do so, conduct a small, localised and low-risk experiment and bring the hypothesis and results to me to discuss. Confidence without certainty causes more damage than admitting a gap.
+- I'm always open to ideas on better ways to do things. Please don't hesitate to suggest a better way, or one that has long lasting impact over a tactical change. (as a few examples)
 - Run shell scripts through shellcheck.
 - Use `tmp/` (project-local) for intermediate files and comparison
   artifacts, not `/tmp`. This keeps outputs discoverable and
@@ -11,15 +13,6 @@
   possible (e.g., researching multiple files, running tests while
   editing, exploring separate modules). Limit teams to at most
   **three teammates** to avoid running out of memory.
-
-### SESSION.md
-
-While working, if you come across any bugs, missing features, or other
-oddities about the implementation, structure, or workflow, **add a
-concise description of them to SESSION.md** to defer solving such
-incidental tasks until later. You do not need to fix them all straight
-away unless they block your progress; writing them down is often
-sufficient. **Do not write your accomplishments into this file.**
 
 ## Rust guidelines
 

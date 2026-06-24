@@ -26,7 +26,6 @@
     "refreshInterval": 10
   },
   "enabledPlugins": {
-    "rust-analyzer-lsp@claude-plugins-official": true,
     "frontend-design@claude-plugins-official": true,
     "context7@claude-plugins-official": true,
     "code-review@claude-plugins-official": true,
@@ -36,15 +35,11 @@
     "claude-md-management@claude-plugins-official": true,
     "claude-code-setup@claude-plugins-official": true,
     "hookify@claude-plugins-official": true,
-    "clangd-lsp@claude-plugins-official": true,
-    "sci-brain@sci-brain": true,
     "skill-creator@claude-plugins-official": true,
-    "playwright@claude-plugins-official": true,
-    "superpowers@superpowers-marketplace": true,
-    "superpowers@claude-plugins-official": true,
     "codex@openai-codex": true,
     "ponytail@ponytail": true,
-    "lean4-contribute@lean4-skills": true
+    "lean4-contribute@lean4-skills": true,
+    "rust-analyzer-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "sci-brain": {
@@ -85,10 +80,15 @@
     }
   },
   "alwaysThinkingEnabled": true,
-  "effortLevel": "high",
+  "effortLevel": "xhigh",
   "fastMode": false,
   "skipDangerousModePermissionPrompt": true,
   "sounds": {
     "dictation": false
+  },
+  "voiceEnabled": true,
+  "voice": {
+    "enabled": true,
+    "mode": "hold"
   }
 }
