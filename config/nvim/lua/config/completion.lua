@@ -7,6 +7,7 @@ vim.pack.add { { src = gh 'saghen/blink.cmp', version = vim.version.range '1.*' 
 require('blink.cmp').setup {
   keymap = {
     preset = 'default',
+    ['<CR>'] = { 'select_and_accept', 'fallback' },
   },
   appearance = {
     nerd_font_variant = 'mono',
