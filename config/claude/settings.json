@@ -19,6 +19,7 @@
       "Bash(agent-browser *)"
     ]
   },
+  "model": "opus[1m]",
   "statusLine": {
     "type": "command",
     "command": "ccstatusline",
@@ -39,7 +40,8 @@
     "codex@openai-codex": true,
     "ponytail@ponytail": true,
     "lean4-contribute@lean4-skills": true,
-    "rust-analyzer-lsp@claude-plugins-official": true
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "caveman@caveman": true
   },
   "extraKnownMarketplaces": {
     "sci-brain": {
@@ -77,18 +79,25 @@
         "source": "github",
         "repo": "cameronfreer/lean4-skills"
       }
+    },
+    "caveman": {
+      "source": {
+        "source": "github",
+        "repo": "JuliusBrussee/caveman"
+      }
     }
   },
   "alwaysThinkingEnabled": true,
-  "effortLevel": "xhigh",
+  "effortLevel": "high",
   "fastMode": false,
-  "skipDangerousModePermissionPrompt": true,
-  "sounds": {
-    "dictation": false
-  },
-  "voiceEnabled": true,
   "voice": {
     "enabled": true,
     "mode": "hold"
+  },
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "dark",
+  "voiceEnabled": true,
+  "sounds": {
+    "dictation": false
   }
 }
