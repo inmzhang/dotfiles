@@ -12,3 +12,6 @@ workspaces.conf
 
 # agent
 .omx
+
+# Project-local intermediate/eval artifacts (per CLAUDE.md convention)
+tmp/
