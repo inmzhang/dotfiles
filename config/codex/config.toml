@@ -72,8 +72,8 @@ max_threads = 6
 max_depth = 2
 
 [marketplaces.ponytail]
-last_updated = "2026-06-17T02:48:28Z"
-last_revision = "45f7d2f83fb430a65fd512a98ad7b14d79e06636"
+last_updated = "2026-07-07T04:33:38Z"
+last_revision = "1b2760d384c44e573a9d8c7a729fac616e5c3a76"
 source_type = "git"
 source = "https://github.com/DietrichGebert/ponytail.git"
 
@@ -87,3 +87,27 @@ trusted_hash = "sha256:195e73e498a4cdb40bbe765719d39371ac72c0ebb084fee1beee9d28d
 
 [hooks.state."ponytail@ponytail:hooks/hooks.json:user_prompt_submit:0:0"]
 trusted_hash = "sha256:f79c8de133c1109b841f9835a9d032231900a0d96ecf5f6d1866132df5ca4aa4"
+
+[hooks.state."ponytail@ponytail:hooks/claude-codex-hooks.json:session_start:0:0"]
+trusted_hash = "sha256:10e0ac0497512b279dc2b073d0d559fb9fb252bc18b9c943d2f0a6d58152b1f4"
+
+[hooks.state."ponytail@ponytail:hooks/claude-codex-hooks.json:user_prompt_submit:0:0"]
+trusted_hash = "sha256:2a3c9015a1fe10f0809ffec8da3d67c326e27c38ebf720725099283b1e2085a8"
+
+[hooks.state."ponytail@ponytail:hooks/claude-codex-hooks.json:subagent_start:0:0"]
+trusted_hash = "sha256:4765354e31cc783c9cc7379f8beac7ac7ff68743c3cd7dad333d1f6a64e7a6f3"
+
+[projects."/home/inm/dotfiles"]
+trust_level = "trusted"
+
+[projects."/home/inm/open-source-project/stim-rs"]
+trust_level = "trusted"
+
+[projects."/home/inm/workspace/bloc"]
+trust_level = "trusted"
+
+[projects."/home/inm/make-some-fun/tpil-exercise"]
+trust_level = "trusted"
+
+[projects."/home/inm/open-source-project/lefo"]
+trust_level = "trusted"

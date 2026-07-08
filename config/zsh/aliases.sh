@@ -57,6 +57,9 @@ alias gra='git remote add'
 alias grv='git remote -v'
 alias grr='git remote remove'
 
+# Claude Code: default to skipping permission prompts
+alias claude='claude --dangerously-skip-permissions'
+
 # Open Zotero storage directory with yazi
 alias yz='yazi ~/Zotero/storage'
 

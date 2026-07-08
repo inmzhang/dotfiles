@@ -85,10 +85,16 @@
         "source": "github",
         "repo": "JuliusBrussee/caveman"
       }
+    },
+    "academic-research-skills": {
+      "source": {
+        "source": "github",
+        "repo": "Imbad0202/academic-research-skills"
+      }
     }
   },
   "alwaysThinkingEnabled": true,
-  "effortLevel": "high",
+  "effortLevel": "medium",
   "fastMode": false,
   "voice": {
     "enabled": true,
