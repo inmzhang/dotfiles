@@ -1,10 +1,8 @@
-model = "gpt-5.5"
-review_model = "gpt-5.5"
+model = "gpt-5.6-sol"
+review_model = "gpt-5.6-terra"
 project_doc_fallback_filenames = ["CLAUDE.md"] # Fallback when AGENTS.md is not present.
 approval_policy = "on-request"
 sandbox_mode = "danger-full-access"
-model_context_window = 1000000
-model_auto_compact_token_limit = 700000
 tool_output_token_limit = 40000 # Higher than the default to avoid truncating large tool output.
 model_reasoning_summary = "auto" # Valid values: auto, concise, detailed, none.
 disable_response_storage = true
@@ -15,7 +13,7 @@ suppress_unstable_features_warning = true
 plan_mode_reasoning_effort = "xhigh"
 
 model_provider = "OpenAI"
-model_reasoning_effort = "high"
+model_reasoning_effort = "max"
 
 [model_providers.OpenAI]
 name = "OpenAI"
@@ -56,12 +54,13 @@ network_access = true # Allow outbound network access inside the sandbox.
 
 [tui]
 notifications = true
-status_line = ["model-with-reasoning", "git-branch", "context-remaining", "total-input-tokens", "total-output-tokens", "five-hour-limit", "weekly-limit", "context-window-size", "task-progress"]
+status_line = ["model-with-reasoning", "git-branch", "context-remaining", "total-input-tokens", "total-output-tokens", "context-window-size", "task-progress", "branch-changes"]
 status_line_use_colors = true
 vim_mode_default = true
 
 [tui.model_availability_nux]
 "gpt-5.5" = 4
+"gpt-5.6-sol" = 4
 
 [notice]
 hide_rate_limit_model_nudge = true
@@ -72,8 +71,8 @@ max_threads = 6
 max_depth = 2
 
 [marketplaces.ponytail]
-last_updated = "2026-07-07T04:33:38Z"
-last_revision = "1b2760d384c44e573a9d8c7a729fac616e5c3a76"
+last_updated = "2026-07-16T02:53:21Z"
+last_revision = "16f29800fd2681bdf24f3eb4ccffe38be3baec6b"
 source_type = "git"
 source = "https://github.com/DietrichGebert/ponytail.git"
 
@@ -89,13 +88,13 @@ trusted_hash = "sha256:195e73e498a4cdb40bbe765719d39371ac72c0ebb084fee1beee9d28d
 trusted_hash = "sha256:f79c8de133c1109b841f9835a9d032231900a0d96ecf5f6d1866132df5ca4aa4"
 
 [hooks.state."ponytail@ponytail:hooks/claude-codex-hooks.json:session_start:0:0"]
-trusted_hash = "sha256:10e0ac0497512b279dc2b073d0d559fb9fb252bc18b9c943d2f0a6d58152b1f4"
+trusted_hash = "sha256:5f81d38f47448a1581c08ec877e044d9e04dd6f814dce3f2671f7a8edadd719b"
 
 [hooks.state."ponytail@ponytail:hooks/claude-codex-hooks.json:user_prompt_submit:0:0"]
-trusted_hash = "sha256:2a3c9015a1fe10f0809ffec8da3d67c326e27c38ebf720725099283b1e2085a8"
+trusted_hash = "sha256:6a6f42bc3b58d6262db38bfd74d7f340fcca2b09cdb134aad365063f0bfefca4"
 
 [hooks.state."ponytail@ponytail:hooks/claude-codex-hooks.json:subagent_start:0:0"]
-trusted_hash = "sha256:4765354e31cc783c9cc7379f8beac7ac7ff68743c3cd7dad333d1f6a64e7a6f3"
+trusted_hash = "sha256:1423b56c1322f96c8f74c51c1e7ae9a047b904c1fa43ee9165d462fd7a6e70ef"
 
 [projects."/home/inm/dotfiles"]
 trust_level = "trusted"
@@ -110,4 +109,10 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/home/inm/open-source-project/lefo"]
+trust_level = "trusted"
+
+[projects."/home/inm/open-source-project/qdk-ec"]
+trust_level = "trusted"
+
+[projects."/home/inm/open-source-project/pymatching-rs"]
 trust_level = "trusted"
