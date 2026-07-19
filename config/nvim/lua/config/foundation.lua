@@ -44,6 +44,12 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 
 vim.keymap.set('i', 'jk', '<Esc>', { desc = 'Exit insert mode' })
 
+-- Review mode: position markers + notes.md artifact
+local util = require 'config.util'
+vim.keymap.set('n', '<leader>rp', util.copy_review_position, { desc = '[R]eview [p]osition (copy)' })
+vim.keymap.set('n', '<leader>rr', util.open_review_notes, { desc = '[R]eview notes ([r]oot notes.md)' })
+vim.keymap.set('n', '<leader>rP', util.append_review_position, { desc = '[R]eview [P]osition append to notes' })
+
 vim.diagnostic.config {
   update_in_insert = false,
   severity_sort = true,
