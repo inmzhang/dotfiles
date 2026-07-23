@@ -20,8 +20,5 @@ require 'markview.extras.checkboxes'
 vim.api.nvim_create_autocmd('FileType', {
   pattern = 'markdown',
   desc = 'Markdown checkbox toggle mapping',
-  callback = function(args)
-    vim.keymap.set({ 'n', 'x' }, '<leader>tc', '<Cmd>Checkbox toggle<CR>',
-      { buffer = args.buf, desc = '[T]oggle [c]heckbox' })
-  end,
+  callback = function(args) vim.keymap.set({ 'n', 'x' }, '<leader>tc', '<Cmd>Checkbox toggle<CR>', { buffer = args.buf, desc = '[T]oggle [c]heckbox' }) end,
 })
