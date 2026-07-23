@@ -19,7 +19,7 @@
       "Bash(agent-browser *)"
     ]
   },
-  "model": "opus[1m]",
+  "model": "claude-fable-5[1m]",
   "statusLine": {
     "type": "command",
     "command": "ccstatusline",
@@ -41,7 +41,8 @@
     "ponytail@ponytail": true,
     "lean4-contribute@lean4-skills": true,
     "rust-analyzer-lsp@claude-plugins-official": true,
-    "caveman@caveman": true
+    "caveman@caveman": true,
+    "mattpocock-skills@mattpocock": true
   },
   "extraKnownMarketplaces": {
     "sci-brain": {
@@ -91,10 +92,16 @@
         "source": "github",
         "repo": "Imbad0202/academic-research-skills"
       }
+    },
+    "mattpocock": {
+      "source": {
+        "source": "github",
+        "repo": "mattpocock/skills"
+      }
     }
   },
   "alwaysThinkingEnabled": true,
-  "effortLevel": "xhigh",
+  "effortLevel": "high",
   "fastMode": false,
   "voice": {
     "enabled": true,
