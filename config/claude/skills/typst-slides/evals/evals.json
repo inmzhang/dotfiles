@@ -1,0 +1,62 @@
+{
+  "skill_name": "typst-slides",
+  "evals": [
+    {
+      "id": 0,
+      "name": "transformer-talk",
+      "prompt": "I'm giving a 15-minute talk at our ML reading group about the Transformer architecture from 'Attention Is All You Need'. Make me a slide deck of about 10 slides in Typst. I want an architecture diagram of the Transformer, the scaled dot-product attention formula, and a comparison table against RNNs/CNNs. Cite the key papers properly. Don't ask me any questions \u2014 make reasonable choices yourself and note your assumptions. Deliver the .typ source and the compiled PDF.",
+      "expected_output": "A ~10-slide 16:9 Metropolis deck: typst default fonts, a fletcher/cetz architecture diagram that fits the slide, attention formula in math, comparison table, footnote citations, references slide. PDF compiles clean.",
+      "files": [],
+      "assertions": [
+        "A compiled PDF is delivered",
+        "Shipped .typ source recompiles without errors",
+        "Deck uses Touying with the Metropolis theme",
+        "Only typst-default fonts embedded (hermetic build)",
+        "Page count within requested range (8-13)",
+        "A references/bibliography slide is present",
+        "Architecture diagram is drawn (fletcher/cetz or generated figure)",
+        "Scaled dot-product attention formula appears",
+        "RNN/CNN comparison present",
+        "Vaswani et al. 2017 cited"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "surface-code-journal-club",
+      "prompt": "Prepare journal-club slides introducing the surface code for quantum error correction \u2014 about 8 slides, in Typst. Include: a short stabilizer formalism recap, a distance-3 surface code layout figure, the syndrome extraction circuit drawn as a quantum circuit diagram, and an interactive link the audience can click to explore that circuit in a browser. Cite foundational papers (e.g. Kitaev, Fowler et al.). Don't ask me questions; decide and note your assumptions. Deliver the .typ source and the compiled PDF.",
+      "expected_output": "A ~8-slide deck with a quill syndrome-extraction circuit, a surface-code lattice figure (cetz or stim SVG), a clickable Quirk URL for the syndrome-extraction gadget, footnote citations, references slide.",
+      "files": [],
+      "assertions": [
+        "A compiled PDF is delivered",
+        "Shipped .typ source recompiles without errors",
+        "Deck uses Touying with the Metropolis theme",
+        "Only typst-default fonts embedded (hermetic build)",
+        "Page count within requested range (6-11)",
+        "A references/bibliography slide is present",
+        "Syndrome-extraction circuit drawn as a quantum circuit",
+        "Clickable Quirk link included",
+        "Surface-code layout figure present",
+        "Kitaev and Fowler cited"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "benchmark-results-deck",
+      "prompt": "Turn the benchmark results in bench.csv into a 5-slide results deck for my advisor, in Typst: a title slide, one summary slide with the headline finding, a chart comparing throughput across the three implementations at 1 and 8 threads, a table with the raw numbers, and a conclusions slide. Deliver the .typ source and the compiled PDF.",
+      "expected_output": "A ~5-slide deck: chart of throughput (lilaq or external tool), table matching CSV values, headline identifying lockfree_mpmc as fastest at 8 threads.",
+      "files": [
+        "bench.csv"
+      ],
+      "assertions": [
+        "A compiled PDF is delivered",
+        "Shipped .typ source recompiles without errors",
+        "Deck uses Touying with the Metropolis theme",
+        "Only typst-default fonts embedded (hermetic build)",
+        "Page count within requested range (4-8)",
+        "A throughput chart is generated (lilaq/cetz-plot/external figure)",
+        "Raw CSV values appear in the table (96.5, 71.2, 18.9)",
+        "Headline names the lock-free implementation as fastest at 8 threads"
+      ]
+    }
+  ]
+}
