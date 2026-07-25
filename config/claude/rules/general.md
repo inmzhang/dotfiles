@@ -6,13 +6,6 @@
 - Flag uncertainty explicitly. If you're unsure about something, see point 1 above. If it makes sense to do so, conduct a small, localised and low-risk experiment and bring the hypothesis and results to me to discuss. Confidence without certainty causes more damage than admitting a gap.
 - I'm always open to ideas on better ways to do things. Please don't hesitate to suggest a better way, or one that has long lasting impact over a tactical change. (as a few examples)
 - Run shell scripts through shellcheck.
-- Use `tmp/` (project-local) for intermediate files and comparison
-  artifacts, not `/tmp`. This keeps outputs discoverable and
-  project-scoped, and avoids requesting permissions for `/tmp`.
-- Use agent teams to parallelize independent subtasks whenever
-  possible (e.g., researching multiple files, running tests while
-  editing, exploring separate modules). Limit teams to at most
-  **three teammates** to avoid running out of memory.
 
 ## Rust guidelines
 
@@ -87,6 +80,10 @@ Add TODO comments for features or nuances that were deemed not important
 to add, support, or implement right away.
 
 ### Literate Programming
+
+Comment density loses to brevity: prefer short, clean code over verbose
+comments, and comment only where the code is not self-explanatory. The
+principles below apply to what you *do* write, not to how much.
 
 Apply literate programming principles to make code self-documenting and maintainable across all languages:
 
@@ -206,8 +203,8 @@ be unsandboxable.
 ### Prefer temp files over pipes for sub-agent CLI testing
 
 When testing a CLI with ad-hoc input, write the input to a temp file
-in `tmp/` using the Write tool (not `cat`/`echo` with heredoc + `>`),
-then pass it by path rather than piping. This avoids interactive
+using the Write tool (not `cat`/`echo` with heredoc + `>`), then pass
+it by path rather than piping. This avoids interactive
 permission prompts in sub-agents.
 
 # Common failure modes when helping
