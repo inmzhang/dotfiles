@@ -49,6 +49,7 @@ link: ## Create all symlinks for current platform
 	$(call ln_sf,$(DOTDIR)/config/codex/AGENTS.md,$(CODEX_HOME)/AGENTS.md)
 	$(call ln_sf,$(DOTDIR)/config/codex/RTK.md,$(CODEX_HOME)/RTK.md)
 	$(call ln_sf,$(DOTDIR)/config/codex/config.toml,$(CODEX_HOME)/config.toml)
+	$(call ln_sf,$(DOTDIR)/config/codex/hooks,$(CODEX_HOME)/hooks)
 	$(call ln_sf,$(DOTDIR)/config/codex/rules/default.rules,$(CODEX_HOME)/rules/default.rules)
 	@$(MAKE) --no-print-directory codex-memories-link
 	@$(MAKE) --no-print-directory codex-agents-link
@@ -97,6 +98,7 @@ unlink: ## Remove all symlinks
 	rm -f $(CODEX_HOME)/AGENTS.md
 	rm -f $(CODEX_HOME)/RTK.md
 	rm -f $(CODEX_HOME)/config.toml
+	rm -f $(CODEX_HOME)/hooks
 	rm -f $(CODEX_HOME)/rules/default.rules
 	rm -f $(CODEX_HOME)/memories
 	@$(MAKE) --no-print-directory codex-agents-unlink
