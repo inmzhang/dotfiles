@@ -12,14 +12,15 @@ collaboration_mode = true
 suppress_unstable_features_warning = true
 plan_mode_reasoning_effort = "xhigh"
 
-model_provider = "OpenAI"
-model_reasoning_effort = "max"
+model_reasoning_effort = "xhigh"
+service_tier = "fast"
 
-[model_providers.OpenAI]
-name = "OpenAI"
-base_url = "https://bench.openq.top/v1"
-wire_api = "responses"
-requires_openai_auth = true
+# model_provider = "OpenAI"
+# [model_providers.OpenAI]
+# name = "OpenAI"
+# base_url = "https://bench.openq.top/v1"
+# wire_api = "responses"
+# requires_openai_auth = true
 
 [features]
 shell_tool = true
@@ -36,25 +37,25 @@ hooks = true
 goals = true
 voice_transcription = true
 terminal_resize_reflow = true
-
-[memories]
-consolidation_model = "gpt-5.4"
-extract_model = "gpt-5.4"
-use_memories = false # When enabled, `memory_summary.md` is injected into developer instructions.
-max_raw_memories_for_consolidation = 512
-max_unused_days = 30
-max_rollout_age_days = 45
+apps = false
+enable_mcp_apps = false
+js_repl = false
 
 [shell_environment_policy]
 inherit = "all"
 ignore_default_excludes = true # Allow access to environment entries normally excluded by default.
+
+[shell_environment_policy.set]
+BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "e7fc907079d6797973cb63f97d2562c965aad8d33f52fb726005bf6702f30afc"
+NODE_REPL_TRUSTED_CODE_PATHS = "/home/inm/.codex"
 
 [sandbox_workspace_write]
 network_access = true # Allow outbound network access inside the sandbox.
 
 [tui]
 notifications = true
-status_line = ["model-with-reasoning", "git-branch", "context-remaining", "total-input-tokens", "total-output-tokens", "context-window-size", "task-progress", "branch-changes"]
+status_line = ["model-with-reasoning", "git-branch", "context-remaining", "total-input-tokens", "total-output-tokens", "weekly-limit", "fast-mode"]
 status_line_use_colors = true
 vim_mode_default = true
 
@@ -71,12 +72,61 @@ max_threads = 6
 max_depth = 2
 
 [marketplaces.ponytail]
-last_updated = "2026-07-16T02:53:21Z"
-last_revision = "16f29800fd2681bdf24f3eb4ccffe38be3baec6b"
+last_updated = "2026-08-08T03:34:15Z"
+last_revision = "2ed6c52c9d7e5e56942508591085fd45dea277d3"
 source_type = "git"
 source = "https://github.com/DietrichGebert/ponytail.git"
 
+[marketplaces.openai-bundled]
+last_updated = "2026-08-12T06:01:35Z"
+source_type = "local"
+source = "/home/inm/.codex/.tmp/bundled-marketplaces/openai-bundled"
+
+[marketplaces.openai-primary-runtime]
+last_updated = "2026-08-12T06:02:03Z"
+source_type = "local"
+source = "/home/inm/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
+
 [plugins."ponytail@ponytail"]
+enabled = true
+
+[plugins."sites@openai-bundled"]
+enabled = true
+
+[plugins."browser@openai-bundled"]
+enabled = true
+
+[plugins."computer-use@openai-bundled"]
+enabled = true
+
+[plugins."computer-use@openai-bundled".mcp_servers.computer-use.tools.activate_window]
+approval_mode = "approve"
+
+[plugins."computer-use@openai-bundled".mcp_servers.computer-use.tools.screenshot]
+approval_mode = "approve"
+
+[plugins."computer-use@openai-bundled".mcp_servers.computer-use.tools.press_key]
+approval_mode = "approve"
+
+[plugins."computer-use@openai-bundled".mcp_servers.computer-use.tools.scroll]
+approval_mode = "approve"
+
+[plugins."visualize@openai-bundled"]
+enabled = true
+
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+
+[plugins."pdf@openai-primary-runtime"]
+enabled = true
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+
+[plugins."presentations@openai-primary-runtime"]
+enabled = true
+
+[plugins."template-creator@openai-primary-runtime"]
 enabled = true
 
 [hooks.state]
@@ -115,4 +165,61 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/home/inm/open-source-project/pymatching-rs"]
+trust_level = "trusted"
+
+[projects."/home/inm/workspace/transession"]
+trust_level = "trusted"
+
+[projects."/home/inm/temp/PyMatching"]
+trust_level = "trusted"
+
+[projects."/home/inm/workspace/bloc-experiments"]
+trust_level = "trusted"
+
+[projects."/home/inm/open-source-project/tesseract-decoder"]
+trust_level = "trusted"
+
+[projects."/home/inm/workspace/ivault"]
+trust_level = "trusted"
+
+[projects."/home/inm/open-source-project/clifft"]
+trust_level = "trusted"
+
+[projects."/home/inm/workspace/bloc-paper"]
+trust_level = "trusted"
+
+[projects."/home/inm/workspace/rlsc"]
+trust_level = "trusted"
+
+[projects."/home/inm/open-source-project/tic"]
+trust_level = "trusted"
+
+[projects."/home/inm/open-source-project/ticit"]
+trust_level = "trusted"
+
+[projects."/home/inm/make-some-fun/odyssey"]
+trust_level = "trusted"
+
+[projects."/home/inm/open-source-project/SOFT"]
+trust_level = "trusted"
+
+[projects."/home/inm/Documents/Codex/2026-08-12/realtime-voice-chat"]
+trust_level = "trusted"
+
+[projects."/home/inm/Documents/Codex/2026-08-12/realtime-voice-chat-2"]
+trust_level = "trusted"
+
+[projects."/home/inm/open-source-project/topmux"]
+trust_level = "trusted"
+
+[projects."/home/inm/temp/codex-desktop-linux"]
+trust_level = "trusted"
+
+[projects."/home/inm/open-source-project/miro"]
+trust_level = "trusted"
+
+[projects."/home/inm/open-source-project/leaky"]
+trust_level = "trusted"
+
+[projects."/home/inm"]
 trust_level = "trusted"
