@@ -146,6 +146,7 @@ relink: unlink link ## Remove and recreate all symlinks
 omarchy-link: ## Activate the curated personal overrides for Omarchy
 	@echo "Linking personal Omarchy overrides..."
 	$(call ln_sf,$(DOTDIR)/config/zsh/.zshrc,$(HOME)/.zshrc)
+	$(call ln_sf,$(DOTDIR)/config/atuin/config.toml,$(HOME)/.config/atuin/config.toml)
 	$(call unlink_sf,$(DOTDIR)/config/tmux/tmux.conf,$(HOME)/.tmux.conf)
 	$(call ln_sf,$(DOTDIR)/config/tmux/tmux.conf,$(HOME)/.config/tmux/tmux.conf)
 	$(call ln_sf,$(DOTDIR)/config/nvim,$(HOME)/.config/nvim)
