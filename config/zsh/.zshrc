@@ -39,6 +39,7 @@ done
 
 command -v direnv >/dev/null 2>&1 && eval "$(direnv hook zsh)"
 command -v atuin >/dev/null 2>&1 && eval "$(atuin init zsh)"
+bindkey -v
 
 # The portable fallback has not loaded syntax highlighting yet.
 [[ ! -r "$_OMARCHY_ZSH_ROOT/all" ]] && [[ -r "${_ZSH_SYNTAX_HL:-}" ]] && source "$_ZSH_SYNTAX_HL"
