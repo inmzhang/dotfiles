@@ -1,254 +1,603 @@
 ---
 name: linux-perf
-description: >-
-  Profile and fix Linux performance problems using `perf`. Workflows: (A) hardware counters -- IPC, cache-miss, branch mispredictions; (B) hotspot profiling -- which functions and source lines consume CPU, with SIMD and accumulator detection; (C) cache-line contention -- false sharing, HITM, `perf c2c`; (D) core-count scaling -- dual-profile comparison, bottleneck categorization; (E) structured hotspot report with annotated source and pattern observations. Resolution strategies: TTAS spinlock, SIMD upconversion, parallel accumulator, structured false-sharing fix, per-CPU stats. Trigger on: perf, profiling, profile, hotspot, hotspots, cache miss, IPC, false sharing, HITM, scaling, core count, thread scaling, bottleneck, slow code, CPU bound, why is this slow, where does time go, does not scale. When in doubt, invoke this skill -- better to use it unnecessarily than to miss a performance opportunity.
+description: >
+  Linux perf performance analysis expert covering the complete workflow
+  from environment setup through data collection, analysis, and bottleneck diagnosis.
+  Expert in CPU profiling, call graph analysis, syscall tracing, and performance
+  optimization. Use this skill whenever profiling C/C++/Rust/Go applications,
+  diagnosing CPU bottlenecks, analyzing syscall overhead, or optimizing hot paths.
+  IMPORTANT: Check permissions first. User-space profiling works without sudo,
+  but kernel symbols require sudo to modify kptr_restrict and perf_event_paranoid.
+  Focus on user-space optimization rather than kernel.
 ---
 
-<!-- (C) 2026 Intel Corporation, MIT license -->
+# Linux Perf Performance Analysis Skill
 
-
-# Linux perf profiling skill
-
-Guide the user through profiling with Linux `perf` — from setup and data collection through reporting and interpretation.
-
-The skill is organized into five parts:
-- **Part 1: Setup** — permissions and build flags (always check these first)
-- **Part 2: Flows** — end-to-end workflows (A: quick stats, B: hotspot profiling, C: cache contention)
-- **Part 3: Cross-skill integrations** and **Reference** — when to delegate, and quick lookup tables
-- **Part 4: Building blocks** — focused data collection primitives that flows and other skills can call directly
-- **Part 5: Resolution strategies** — common fix patterns that flows can reference by name
+This skill provides expert guidance for using Linux `perf` tool to profile and
+optimize application performance. Focuses on practical, non-sudo workflows that
+work in development and CI/CD environments.
 
 ---
 
-# Part 1: setup
+## Quick Reference Commands
 
-## Check permissions (always do this first)
+### Environment Setup
+
+**User-space profiling works without sudo** (after one-time capability setup):
+- `perf record -p <PID>` - Record user-space samples
+- `perf report -i perf.data --dsos <app>` - Analyze user-space code
+
+**Kernel symbols require sudo** (security mechanism, cannot bypass):
+- Need sudo to modify: `kptr_restrict` and `perf_event_paranoid`
+- Without sudo: Kernel shows as `[unknown]` or hex addresses
 
 ```bash
+# Check current permissions
+cat /proc/sys/kernel/perf_event_paranoid   # -1=unrestricted, 0-2=restricted, 3+=no kernel
+cat /proc/sys/kernel/kptr_restrict          # 0=full access, 1=restricted, 2=no access
+
+# One-time capability setup (requires sudo once)
+sudo setcap "cap_perfmon,cap_sys_admin,cap_sys_ptrace+ep" /usr/bin/perf
+
+# Enable full kernel access (requires sudo OR run setup script)
+sudo sysctl -w kernel.perf_event_paranoid=-1 kernel.kptr_restrict=0
+
+# Make permanent (requires sudo once)
+echo "kernel.perf_event_paranoid = -1" | sudo tee -a /etc/sysctl.d/99-perf.conf
+echo "kernel.kptr_restrict = 0" | sudo tee -a /etc/sysctl.d/99-perf.conf
+
+# No external script needed - commands are included in this skill file!
+```
+
+### Data Collection
+
+```bash
+# Record CPU samples with call graphs
+perf record -p <PID> -g -e cycles -o perf.data -- sleep 30
+
+# With custom sampling frequency (default is 4000Hz)
+perf record -p <PID> -g -F 99 -o perf.data -- sleep 30
+
+# Record specific functions
+perf record -p <PID> -g -e 'cpu-cycles' -e 'instructions' -o perf.data -- sleep 30
+```
+
+### Data Analysis
+
+```bash
+# Interactive report (best for exploration)
+perf report -i perf.data -g graph
+
+# Flat profile (top hotspots)
+perf report --stdio -i perf.data -g none --sort symbol | head -50
+
+# Call graph with depth limit
+perf report --stdio -i perf.data -g graph --max-stack 20 | head -200
+
+# Filter by module/library
+perf report --stdio -i perf.data --dsos <app_name> -g graph
+
+# Filter by specific function
+perf report --stdio -i perf.data --symbol-filter 'tcp_sendmsg' -g graph
+```
+
+### Data Export
+
+```bash
+# Export as text for analysis
+perf script -i perf.data > perf_script.txt
+
+# Export with statistics
+perf report --stdio -i perf.data --show-total-period --show-nr-samples
+```
+
+---
+
+## Complete Workflow Phases
+
+### Phase 1: Environment Preparation
+
+**1.1 Permission Check**
+```bash
+# Check current settings
 cat /proc/sys/kernel/perf_event_paranoid
+# -1 = unrestricted (best)
+# 0-1 = partial kernel access
+# 2 = kernel profiling blocked
+# 3+ = very restricted
+
+cat /proc/sys/kernel/kptr_restrict
+# 0 = full kernel symbols (best)
+# 1 = addresses hidden
+# 2 = all hidden
 ```
 
-- **≤ 1**: no `sudo` needed for most data collection
-- **2 or higher**: hardware events (cycles, cache-misses, etc.) require root
+**1.2 Full Kernel Access Setup (Requires sudo - one time only)**
 
-To lower the limit (ask the user first):
-```bash
-echo 0 | sudo tee /proc/sys/kernel/perf_event_paranoid
-```
-
-**Sudo protocol**: if `sudo` is needed, present these options and wait for the user's answer before proceeding:
-1. Run with `sudo`
-2. Lower paranoia level with the command above
-3. Skip perf collection
-
-## Ensure debug symbols
-
-**Always compile with `-g`** alongside existing optimization flags (e.g. `-O2 -g`). This adds DWARF debug info so `perf report` and `perf annotate` show function names and source lines — it does not weaken optimization.
-
-If given a pre-built binary without `-g`, offer to recompile. If you cannot, use **Building block: resolve address to source** (Part 4) for address correlation.
+Run this once to enable full kernel symbol support:
 
 ```bash
-gcc -O2 -g -o <output> <source>
+# One-time setup (you can copy-paste these commands yourself):
+sudo setcap "cap_perfmon,cap_sys_admin,cap_sys_ptrace+ep" /usr/bin/perf
+sudo sysctl -w kernel.perf_event_paranoid=-1 kernel.kptr_restrict=0
+echo "kernel.perf_event_paranoid = -1" | sudo tee /etc/sysctl.d/99-perf.conf > /dev/null
+echo "kernel.kptr_restrict = 0" | sudo tee -a /etc/sysctl.d/99-perf.conf > /dev/null
+# After this, perf works WITHOUT sudo for all future runs!
 ```
 
----
+**1.3 Without sudo - User-space Only Mode**
 
-# Part 2: flows
-
-Choose a flow based on what the user needs:
-
-| Flow | Best for | Time needed |
-|------|----------|-------------|
-| **Flow A** — `perf stat` | Quick counters: IPC, cache-miss rate, branch-miss rate | Seconds |
-| **Flow B** — `perf record` + `perf report` | Which functions/lines are hot | Minutes |
-| **Flow C** — `perf c2c` | Cache-line contention in multi-threaded code | Minutes |
-| **Flow D** — dual-profile + focused c2c | Core-count scaling problems: workload does not get faster (or gets slower) as threads increase | 30+ min |
-| **Flow E** — hotspot analysis report | Structured formatted report: top functions table + annotated source with % column + pattern observations | Minutes |
-
-When in doubt, start with Flow A — it's fast and often answers the question without a full recording.
-
----
-
-## Flow A: Quick statistics with `perf stat`
-
-Best for workloads like `openssl speed ...` or any case where you want a fast CPU efficiency answer.
-
-Use **Building block: perf stat** (Part 4) to collect the counters.
-
-
-Read `references/flow-a.md` for the execution steps.
-
----
-
-## Flow B: Hotspot profiling with `perf record` + `perf report`
-
-Use this when the user wants to know *which functions* are consuming time, not just aggregate stats.
-
-
-Read `references/flow-b.md` for the execution steps.
-
----
-
-## Flow C: Cache-line contention with `perf c2c`
-
-Use to diagnose **false sharing** or **true sharing** of cache lines in multi-threaded code.
-
-**Trigger this flow when:**
-- User mentions multithreaded scalability problems
-- Flow B shows significant non-streaming loads/stores (repeated access to the same small structures, not iterating over large arrays/trees)
-- `lock` or `mutex` appears prominently in function names, variable names, or hotspot call chains
-- User explicitly mentions cache line contention, false sharing, or HITM events
-
-**Threshold**: ignore entries below **5% Tot Hitm** by default. User may override (e.g. "show me everything above 2%").
-
-
-Read `references/flow-c.md` for the execution steps.
-
----
-
-## Flow D: Core-count scaling analysis
-
-Use when a workload does not scale with core count — throughput plateaus or regresses
-as threads increase.
-
-**Trigger this flow when:**
-- User says "adding more threads doesn't help" or "performance gets worse with more cores"
-- A scaling sweep (throughput vs core count) shows a flat or declining curve
-- Flamegraph or profile shows lock-related functions dominating at high core counts
-
-Read `references/flow-d.md` for the execution steps.
-
----
-
-## Flow E: Hotspot analysis report
-
-Use when the user wants a structured, formatted deliverable rather than an exploratory
-profiling session — a document they can read, share, or file.
-
-**Trigger this flow when:**
-- User asks for a "hotspot report", "profiling report", or "analysis report"
-- User wants to know the top functions with annotated source and percentages
-- User wants a formatted, shareable summary of where time is spent
-
-Read `references/flow-e.md` for the execution steps.
-
----
-
-
-# Part 3: cross-skill integrations
-
-## `phoronix-test-suite`: PTS benchmarks
-
-**Invoke `phoronix-test-suite` immediately** — the moment the profiling target is identified as a `pts/<name>` benchmark, before any perf steps begin.
-
-### Trigger
-
-- **Workload is `pts/<name>`** (any Phoronix Test Suite benchmark) → invoke `phoronix-test-suite` skill before Phase 0 of any flow.
-
-### What it handles
-
-The `phoronix-test-suite` skill owns the full lifecycle for PTS benchmarks: install, source extraction, rebuild (with `-g`), binary deployment, and result recording. It knows the correct `install.sh` build flags, source layout, and where to copy the resulting binary — things a manual `gcc` or `make` invocation will get wrong.
-
-**Do not attempt to install, build, or rebuild a PTS test manually.** Always delegate to this skill.
-
-When the trigger fires, say: *"I'll invoke the `phoronix-test-suite` skill to handle install and rebuild before profiling."* then invoke it — before running any `perf` commands.
-
----
-
-## SIMD optimization → `performance-patterns`
-
-**Invoke `performance-patterns` as early as possible** — trigger it the moment you see any of these patterns, even from reading source code or looking at `perf stat` output. Do not wait for `perf annotate`.
-
-### Early triggers (source code or perf stat — no annotate needed)
-
-- **Serial accumulator in source** (`s += a[i] * b[i]`, `sum += x[i]`, running max/min) → always a SIMD opportunity; invoke `performance-patterns` immediately
-- **IPC < 2.0 + CPU-bound** (low kernel%, low cache-miss rate) → dependency-chain stall; serial accumulator is the most common cause
-
-### Later triggers (from Flow B report or annotate output)
-
-- **Scalar instructions in a hot loop** (`addsd`, `mulss`, `movsd` without `ymm`/`zmm`)
-- **Narrow SIMD** (`xmm`) on a CPU that supports `ymm` (AVX2) or `zmm` (AVX-512)
-- **Horizontal-reduction anti-pattern** (`shufps`/`addss`/`unpckhps` after `mulps`) — see Flow B Phase 4
-- **Extreme cost on first SSE instruction after an AVX function** — AVX↔SSE transition penalty; see below
-
-### AVX↔SSE transition penalty (missing vzeroupper)
-
-Detect with:
-```bash
-perf stat -e other_assists.avx_to_sse,other_assists.sse_to_avx ./program
-```
-
-A non-zero `other_assists.avx_to_sse` count confirms the penalty. In
-`perf annotate`, it appears as an extreme cycle count on the first SSE instruction
-following a function that used `ymm` or `zmm0`–`zmm15` registers.
-
-When detected, invoke `performance-patterns` with the `missing-vzeroupper` pattern:
-read `patterns/missing-vzeroupper.md` for the fix.
-
-When any trigger fires, say: *"I'll now invoke the `performance-patterns` skill to analyze and optimize the hot loop."* then invoke it — before doing further manual assembly analysis yourself.
-
----
-
-# Part 4: building blocks
-
-Detailed command syntax, flags, and output formats for each primitive. Read
-`references/building-blocks.md` when you need to execute one.
-
-| Building block | Purpose |
-|----------------|---------|
-| `Check CPU capabilities` | Read `/proc/cpuinfo` flags and `nproc` to determine supported ISA levels, vector width tier, and feature extensions; used by Annotate pattern scan and other blocks |
-| `Ensure debug symbols` | Check binary for DWARF info; offer to recompile with `-g` before expensive perf collection |
-| `perf stat` | Collect hardware counters (IPC, cache-miss rate, branch-miss rate) |
-| `perf record` | Sample a workload and write a perf.data file |
-| `perf annotate (assembly view)` | Per-instruction cycle attribution for a named function |
-| `resolve address to source` | Map raw addresses → file:line via addr2line / objdump |
-| `c2c hot cache lines` | Record + report cache-line HITM summary table |
-| `c2c access map for a cache line` | Per-offset accessor table for one cache line |
-| `Top-N functions` | Ranked list of hottest functions from a perf.data recording |
-| `Top-N lines within a function` | Ranked source lines inside one function |
-| `Dual-profile comparison` | Run top-15 at 1 core and at N cores; produce delta table of rank/% changes to identify scaling bottleneck candidates |
-| `Annotate pattern scan` | Scan `perf annotate` output for a function and return a structured table of detected anti-patterns (scalar FP, narrow SIMD, serial accumulator, horizontal reduction, lock CAS, memory load pressure) with suggested resolution strategies |
-| `Branch probability measurement` | Measure per-branch taken-probabilities in hot functions using Intel PMU events; identify near-zero-probability branches as `[[gnu::cold]]` candidates |
-| `GCC static branch probability` | Parse GCC's compile-time profile_estimate dump to obtain static branch-probability estimates; works on any platform; use as a proxy when no workload is available, or compare against perf data to find divergences worth optimizing |
-
-# Part 5: resolution strategies
-
-The resolution strategies are owned by the **`performance-patterns` skill**.
-When a flow identifies a named pattern, invoke `performance-patterns` — it will
-load `triggers/from-profile.md` to match the signal, then the appropriate
-`patterns/<name>.md` for the full fix.
-
-| Resolution strategy | `performance-patterns` pattern file |
-|---------------------|-------------------------------------|
-| Test-and-Test-and-Set (TTAS) | `patterns/ttas.md` |
-| SIMD vector width upconversion | `patterns/simd-upconversion.md` |
-| Parallel accumulator rewrite | `patterns/parallel-accumulator.md` |
-| Structured false-sharing fix | `patterns/false-sharing.md` |
-| Per-CPU statistics aggregation | `patterns/per-cpu-stats.md` |
-| Missing vzeroupper (AVX↔SSE penalty) | `patterns/missing-vzeroupper.md` |
-
-# Reference
-
-## Useful commands
+If you cannot use sudo, you can still profile user-space code:
 
 ```bash
-perf list                    # list all available event types
-sudo perf list               # full list including hardware events (requires root)
+# Record
+perf record -p <PID> -g -o perf.data -- sleep 30
+
+# Analyze user-space only (filter to your app)
+perf report --stdio -i perf.data --dsos yourapp -g graph
 ```
 
-Always check `perf list` before using `-e <event>` — event names vary between kernel versions and hardware.
-Some perf events require full root (sudo) privileges; the updated paranoia level is not sufficient for these.
+**Trade-off**: Kernel shows as `[unknown]` - but user-space profiling still works!
 
-## Common event names
+**1.4 Compile with Debug Symbols**
+```bash
+# CMake: RelWithDebInfo
+cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
 
-| Event | What it measures |
-|-------|-----------------|
-| `cycles` | CPU clock cycles (default) |
-| `instructions` | Instructions retired |
-| `cache-misses` | Last-level cache misses |
-| `cache-references` | Last-level cache accesses |
-| `branch-misses` | Branch mispredictions |
-| `branches` | Branch instructions retired |
-| `page-faults` | Page faults (useful for I/O-heavy workloads) |
-| `context-switches` | OS context switches |
-| `cpu-migrations` | Process migrations between CPUs |
+# GCC/Clang: -g
+gcc -g -O2 -o app app.c
+
+# Rust: debug info
+cargo build --release
+# Edit Cargo.toml: [profile.release] debug = true
+```
+
+**1.4 Performance Build Rules**
+- Always test without ASAN (2-5x overhead)
+- Use RelWithDebInfo or -g (not -O0, not stripped)
+- Verify symbols: `nm <app> | grep <function>` or `objdump -t <app> | grep <function>`
+
+---
+
+### Phase 2: Data Collection
+
+**2.1 Basic Recording**
+```bash
+# Find process PID
+pidof <app_name>
+# or
+ps aux | grep <app_name>
+
+# Start recording
+perf record -p <PID> -g -o perf.data -- sleep 30
+```
+
+**2.2 Recording During Load Test**
+```bash
+# Terminal 1: Start perf recording
+perf record -p <PID> -g -o perf.data -- sleep 30 &
+
+# Terminal 2: Run load test
+redis-benchmark -h 127.0.0.1 -p 6379 -t set,get -n 500000 -c 500 -q
+# or wrk, ab, k6, etc.
+
+# Wait for both to complete
+wait
+```
+
+**2.3 Advanced Recording Options**
+```bash
+# Multiple events
+perf record -p <PID> -g -e cycles,instructions,cache-misses -o perf.data -- sleep 30
+
+# Custom frequency (99Hz is good for production, 997Hz for dev)
+perf record -p <PID> -g -F 99 -o perf.data -- sleep 30
+
+# With process name instead of PID
+perf record -p $(pidof <app_name>) -g -o perf.data -- sleep 30
+```
+
+**2.4 Key Parameters**
+| Parameter | Meaning | Typical Value |
+|-----------|---------|---------------|
+| `-p <PID>` | Target process ID | `$(pidof app)` |
+| `-g` | Record call graph | Always use |
+| `-e cycles` | Sampling event | cycles, instructions, cache-misses |
+| `-F 99` | Sampling frequency (Hz) | 99 (prod), 997 (dev) |
+| `-o perf.data` | Output file | perf.data |
+| `-- sleep N` | Duration | 10-30 seconds |
+
+---
+
+### Phase 3: Data Analysis
+
+**3.1 Interactive Analysis (Best First Step)**
+```bash
+perf report -i perf.data -g graph
+# Navigate: ↑/↓ (move), Enter (expand), + (collapse), q (quit)
+```
+
+**3.2 Flat Profile (Top Hotspots)**
+```bash
+# Top 50 functions by self time
+perf report --stdio -i perf.data -g none --sort symbol | head -50
+
+# With percentage and samples
+perf report --stdio -i perf.data -g none -n --sort symbol | head -50
+```
+
+**3.3 Call Graph Analysis**
+```bash
+# Full call graph
+perf report --stdio -i perf.data -g graph --max-stack 20 | head -200
+
+# Trace specific function
+perf report --stdio -i perf.data -g graph --symbol-filter 'tcp_sendmsg'
+```
+
+**3.4 Module-Level Analysis**
+```bash
+# By library/DSO
+perf report --stdio -i perf.data --sort dso -g none
+
+# User-space only (replace <app_name>)
+perf report --stdio -i perf.data --dsos <app_name>,libc.so.6 -g graph
+
+# Kernel-space only
+perf report --stdio -i perf.data --dsos '[kernel]' -g graph
+```
+
+**3.5 Statistical Reports**
+```bash
+# With total period and sample counts
+perf report --stdio -i perf.data --show-total-period --show-nr-samples
+
+# Sorted by library then function
+perf report --stdio -i perf.data --sort dso,symbol -g none
+```
+
+---
+
+### Phase 4: Bottleneck Diagnosis
+
+**4.1 Common Bottleneck Patterns**
+
+| Symptom | Likely Cause | Optimization Focus |
+|---------|--------------|-------------------|
+| High syscall % / entry_SYSCALL_64 | Frequent system calls | Reduce syscall count, batch operations |
+| High futex_wait / futex_wake | Lock contention | Reduce lock scope, use lock-free algorithms |
+| High tcp_sendmsg / __send | Small packets, frequent sends | Batching, buffering, zero-copy |
+| High epoll_wait | I/O event processing | Event aggregation, async I/O |
+| High memmove / memcpy | Memory copies | Reduce copies, use views/references |
+| High operator new / malloc | Frequent allocation | Object pools, allocators, reuse |
+| High schedule / __schedule | Context switches | Reduce thread count, affinity pinning |
+| High strcmp / strlen | String operations | Use string views, pre-hash |
+
+**4.2 User vs Kernel Analysis**
+
+**Rule:** User space is the "cause", kernel space is the "effect"
+
+```bash
+# Check user vs kernel split
+perf report --stdio -i perf.data --sort dso -g none | head -20
+
+# If kernel is high (>50%), trace back to user-space calls
+perf report --stdio -i perf.data -g graph --max-stack 30 | grep -A 5 -B 5 'kernel'
+```
+
+**4.3 Hotspot Investigation Workflow**
+
+```bash
+# 1. Identify top hotspot
+perf report --stdio -i perf.data -g none --sort symbol | head -10
+
+# 2. Check if it's your code (look for your namespace/prefix)
+# 3. Get call stack for the hotspot
+perf report --stdio -i perf.data -g graph --symbol-filter '<hotspot>'
+
+# 4. Trace back to find the caller (your code)
+# 5. Optimize the caller (reduce calls, batch, cache, etc.)
+```
+
+---
+
+### Phase 5: Comparative Analysis
+
+**5.1 ASAN vs Non-ASAN Comparison**
+```bash
+# Record with ASAN
+perf record -p <ASAN_PID> -g -o perf-asan.data -- sleep 15
+
+# Record without ASAN
+perf record -p <NORMAL_PID> -g -o perf-normal.data -- sleep 15
+
+# Compare
+perf diff perf-asan.data perf-normal.data
+```
+
+**5.2 Load Comparison**
+```bash
+# Record at different concurrency levels
+for c in 100 500 1000; do
+    perf record -p $PID -g -o perf-$c.data -- sleep 10 &
+    redis-benchmark -c $c -t set,get -n 100000 -q
+    wait
+done
+
+# Compare
+perf diff perf-100.data perf-500.data perf-1000.data
+```
+
+**5.3 Optimization Validation**
+```bash
+# Before optimization
+perf record -p $PID_BEFORE -g -o before.data -- sleep 15
+perf report --stdio -i before.data -g none > before.txt
+
+# After optimization
+perf record -p $PID_AFTER -g -o after.data -- sleep 15
+perf report --stdio -i after.data -g none > after.txt
+
+# Compare output manually or use diff
+diff before.txt after.txt
+```
+
+---
+
+## Common Mistakes
+
+### Permission-Related Mistakes
+
+- **Running perf without setup** → Always check `/proc/sys/kernel/perf_event_paranoid` first
+- **Using sudo for every command** → Use `setcap` one-time setup instead
+- **Forgetting to chown perf.data** → If you must use sudo, run `sudo chown $(whoami):$(whoami) perf.data`
+
+### Data Collection Mistakes
+
+- **Sampling with ASAN enabled** → ASAN adds 2-5x overhead, distorts results
+- **Using -O0 builds** → Optimization changes hotspots, profile optimized code
+- **Stripped binaries** → No symbols = no function names, useless data
+- **Too short recordings (< 5s)** → Insufficient samples, statistical noise
+- **Recording idle processes** → Record during actual load, not idle time
+
+### Analysis Mistakes
+
+- **Looking at Children% instead of Self%** → Self% = actual CPU, Children% = callee cost
+- **Blaming kernel for slowness** → Kernel overhead is symptom, optimize user-space callers
+- **Optimizing without measuring** → Profile first, then optimize, then verify
+- **Focusing on micro-optimizations** → Look for algorithmic/structural changes first
+
+---
+
+## Analysis Best Practices
+
+### 1. Always Use Self% for Prioritization
+
+```bash
+# Show self percentage
+perf report --stdio -i perf.data -g none -n --sort symbol | head -20
+
+# Prioritize functions with high Self% (direct CPU time)
+# Ignore Children% (includes callees - misleading)
+```
+
+### 2. Follow the Call Chain
+
+```bash
+# Find a hotspot, then trace up the stack
+perf report --stdio -i perf.data -g graph --max-stack 20 | less
+
+# Use keyboard navigation:
+# ↑/↓ : move cursor
+# Enter : expand/collapse node
+# + : expand all
+# - : collapse all
+# a : annotate source (if symbols available)
+# q : quit
+```
+
+### 3. Focus on Your Code
+
+```bash
+# Filter to only show your application
+perf report --stdio -i perf.data --dsos <your_app> -g graph
+
+# Or filter out kernel/system
+perf report --stdio -i perf.data --dsos='![kernel],[vdso]' -g graph
+```
+
+### 4. Validate with Multiple Runs
+
+```bash
+# Record 3 times to ensure consistency
+for i in 1 2 3; do
+    perf record -p $PID -g -o run-$i.data -- sleep 10 &
+    load_test
+    wait
+done
+
+# Compare to ensure results are stable
+```
+
+---
+
+## Performance Tuning Checklist
+
+Use this checklist when optimizing based on perf results:
+
+- [ ] Profiled without ASAN/sanitizers
+- [ ] Profiled optimized build (-O2/-O3/RelWithDebInfo)
+- [ ] Debug symbols available (nm/objdump can find functions)
+- [ ] Recording during actual load (not idle)
+- [ ] Analyzed Self% (not Children%)
+- [ ] Traced back to user-space caller
+- [ ] Verified hotspot is reproducible
+- [ ] Made code change
+- [ ] Re-profiled to confirm improvement
+- [ ] No regression in other metrics
+
+---
+
+## Advanced Analysis Scenarios
+
+### CPU Cache Analysis
+
+```bash
+# Record cache events
+perf record -p $PID -g -e cache-misses,cache-references -o cache.data -- sleep 15
+
+# Analyze cache efficiency
+perf report --stdio -i cache.data -g none --sort symbol | head -20
+
+# Calculate cache miss rate
+perf stat -e cache-misses,cache-references -p $PID -- sleep 10
+```
+
+### Instruction Efficiency
+
+```bash
+# Record cycles vs instructions (IPC)
+perf record -p $PID -g -e cycles,instructions -o ipc.data -- sleep 15
+
+# Check IPC (Instructions Per Cycle)
+perf report --stdio -i ipc.data -g none
+
+# Live IPC measurement
+perf stat -e cycles,instructions -p $PID -- sleep 10
+# IPC > 2.0 is good, IPC < 1.0 indicates stalls
+```
+
+### Context Switch Analysis
+
+```bash
+# Record context switches
+perf record -p $PID -g -e context-switches,cs -o ctx.data -- sleep 15
+
+# Analyze
+perf report --stdio -i ctx.data -g none
+```
+
+---
+
+## Integration with Other Tools
+
+### Flame Graphs
+
+```bash
+# Generate flame graph
+perf script -i perf.data | stackcollapse-perf.pl | flamegraph.pl > flamegraph.svg
+
+# Install tools
+sudo apt-get install linux-tools-common linux-tools-generic
+git clone https://github.com/brendangregg/FlameGraph
+```
+
+### perf + GDB
+
+```bash
+# Find hotspot line
+perf report --stdio -i perf.data -g graph | grep <function>
+
+# Annotate source (needs debug symbols)
+perf annotate -i perf.data <function>
+
+# Or use perf report with 'a' key in interactive mode
+```
+
+### perf + pprof
+
+```bash
+# Convert perf data to pprof format
+perf script -i perf.data > perf.script
+
+# Use with Go's pprof tool if available
+```
+
+---
+
+## FAQ
+
+**Q: Why do I need sudo for perf?**
+A: Linux has two security mechanisms:
+- `perf_event_paranoid`: Controls event access (default: 2, restricted)
+- `kptr_restrict`: Controls kernel symbol visibility (default: 1, restricted)
+- `setcap` lets perf run without sudo for capability checks, but kernel symbols still need these settings modified.
+
+**Q: Can I profile without debug symbols?**
+A: Yes, but you'll only see addresses, not function names. Always compile with `-g` or `RelWithDebInfo`.
+
+**Q: Why does ASAN slow down my app so much?**
+A: ASAN adds runtime checks that add 2-5x overhead. Profile non-ASAN builds for accurate performance data.
+
+**Q: Should I look at Self% or Children%?**
+A: Always Self% - it's the actual CPU time spent in that function. Children% includes callee costs.
+
+**Q: Kernel shows as [unknown] or hex addresses, why?**
+A: This is the expected behavior without sudo. You have two options:
+1. **No sudo**: Filter to user-space only (`--dsos <app>`) - good for app-specific optimization
+2. **With sudo**: `sudo sysctl -w kernel.perf_event_paranoid=-1 kernel.kptr_restrict=0` - shows kernel symbols
+
+**Q: My app is 80% in kernel, what do I do?**
+A: Don't optimize kernel directly. Filter user-space (`--dsos <app>`) and trace back to find which user-space function is making all the syscalls, optimize that caller instead.
+
+**Q: How long should I record?**
+A: 10-30 seconds for development, 60+ seconds for production-like loads. Longer is better for statistical significance.
+
+**Q: Can I record multiple processes?**
+A: Yes: `perf record -p <PID1>,<PID2>,<PID3> -g -o perf.data -- sleep 30`
+
+**Q: What if perf is not installed?**
+A: Install with: `sudo apt-get install linux-tools-common linux-tools-$(uname -r)` (Ubuntu/Debian)
+
+---
+
+## Troubleshooting
+
+### perf: Permission denied
+
+```bash
+# Check permissions
+cat /proc/sys/kernel/perf_event_paranoid
+
+# If 1 or higher, use setcap
+sudo setcap "cap_perfmon,cap_sys_admin,cap_sys_ptrace+ep" /usr/bin/perf
+```
+
+### perf: No symbols found
+
+```bash
+# Check if binary is stripped
+file <app>
+# If "stripped", rebuild without strip
+
+# Check for debug symbols
+nm <app> | grep <function>
+# If empty, compile with -g
+```
+
+### perf: Operation not permitted
+
+```bash
+# Check capabilities
+getcap /usr/bin/perf
+
+# If empty, set capabilities
+sudo setcap "cap_perfmon,cap_sys_admin,cap_sys_ptrace+ep" /usr/bin/perf
+```
+
+### perf.data: Permission denied
+
+```bash
+# If you used sudo to record
+sudo chown $(whoami):$(whoami) perf.data
+```
+
+---
+
+## Summary: The 5-Step Workflow
+
+1. **Setup**: Check permissions, use `setcap`, compile with `-g`
+2. **Record**: `perf record -p $PID -g -o perf.data -- sleep 30`
+3. **Analyze**: `perf report -i perf.data -g graph` (interactive first)
+4. **Diagnose**: Focus on Self%, trace to user-space caller
+5. **Validate**: Re-profile after optimization to confirm improvement

@@ -1,3 +1,4 @@
 # AUR-only tools
 rm-improved-bin
+rtk-bin
 shellcheck-bin

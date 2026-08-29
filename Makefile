@@ -84,7 +84,6 @@ link: ## Create all symlinks for current platform
 	$(call ln_sf,$(DOTDIR)/config/claude/skills,$(HOME)/.claude/skills)
 	@echo "Linking Codex configs..."
 	$(call ln_sf,$(DOTDIR)/config/codex/AGENTS.md,$(CODEX_HOME)/AGENTS.md)
-	$(call ln_sf,$(DOTDIR)/config/codex/RTK.md,$(CODEX_HOME)/RTK.md)
 	$(call ln_sf,$(DOTDIR)/config/codex/config.toml,$(CODEX_HOME)/config.toml)
 	$(call ln_sf,$(DOTDIR)/config/codex/hooks,$(CODEX_HOME)/hooks)
 	$(call ln_sf,$(DOTDIR)/config/codex/rules/default.rules,$(CODEX_HOME)/rules/default.rules)
@@ -126,7 +125,6 @@ unlink: ## Remove all symlinks
 	$(call unlink_sf,$(DOTDIR)/config/claude/scripts,$(HOME)/.claude/scripts)
 	$(call unlink_sf,$(DOTDIR)/config/claude/skills,$(HOME)/.claude/skills)
 	$(call unlink_sf,$(DOTDIR)/config/codex/AGENTS.md,$(CODEX_HOME)/AGENTS.md)
-	$(call unlink_sf,$(DOTDIR)/config/codex/RTK.md,$(CODEX_HOME)/RTK.md)
 	$(call unlink_sf,$(DOTDIR)/config/codex/config.toml,$(CODEX_HOME)/config.toml)
 	$(call unlink_sf,$(DOTDIR)/config/codex/hooks,$(CODEX_HOME)/hooks)
 	$(call unlink_sf,$(DOTDIR)/config/codex/rules/default.rules,$(CODEX_HOME)/rules/default.rules)
