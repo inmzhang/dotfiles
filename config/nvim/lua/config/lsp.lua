@@ -134,7 +134,6 @@ local ensure_installed = {
   'stylua',
   'tinymist',
   'tree-sitter-cli',
-  'typstyle',
 }
 
 require('mason-tool-installer').setup { ensure_installed = ensure_installed }

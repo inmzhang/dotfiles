@@ -7,20 +7,55 @@ UNAME_S := $(shell uname -s)
 CODEX_HOME := $(HOME)/.codex
 CODEX_MEMORY_SEED_DIR := $(DOTDIR)/config/codex/memories/seed
 CODEX_MEMORY_STATE_DIR := $(HOME)/.local/state/codex/memories
+OMARCHY_MONITORS := $(DOTDIR)/config/omarchy/hypr/monitors.lua
+GHOSTTY_LINUX_CONFIG := $(DOTDIR)/config/ghostty/linux
+GHOSTTY_LINUX_OVERRIDES := $(DOTDIR)/config/ghostty/linux-overrides
 
 # Symlink helper: ln_sf(source, target)
-#   Creates parent dirs, removes existing target, creates symlink
+#   Creates parent dirs and backs up an existing target before linking.
 define ln_sf
-	mkdir -p $(dir $(2)) && rm -rf $(2) && ln -sfn $(1) $(2) && printf "  %s → %s\n" "$(2)" "$(1)"
+	@source="$(1)"; target="$(2)"; \
+	if [ ! -e "$$source" ]; then \
+		printf "Missing source: %s\n" "$$source" >&2; exit 1; \
+	fi; \
+	mkdir -p "$$(dirname "$$target")"; \
+	if [ -L "$$target" ] && [ "$$(readlink "$$target")" = "$$source" ]; then \
+		printf "  %s already linked\n" "$$target"; \
+	else \
+		if [ -e "$$target" ] || [ -L "$$target" ]; then \
+			backup="$$target.bak.$$(date +%Y%m%d-%H%M%S)"; \
+			mv "$$target" "$$backup"; \
+			printf "  backed up %s → %s\n" "$$target" "$$backup"; \
+		fi; \
+		ln -s "$$source" "$$target"; \
+		printf "  %s → %s\n" "$$target" "$$source"; \
+	fi
 endef
 
-.PHONY: help install link unlink relink packages firefox hyprland-setup codex-agents-link codex-agents-unlink codex-memories-link codex-skills-link codex-skills-unlink
+# Unlink helper: unlink_sf(source, target)
+#   Removes only links created by this repository; regular files are preserved.
+define unlink_sf
+	@if [ -L "$(2)" ] && [ "$$(readlink "$(2)")" = "$(1)" ]; then \
+		rm "$(2)"; \
+		printf "  removed %s\n" "$(2)"; \
+	fi
+endef
+
+.PHONY: help install link unlink relink packages firefox ghostty-link omarchy-link omarchy-apply omarchy-diff codex-agents-link codex-agents-unlink codex-memories-link codex-skills-link codex-skills-unlink
 
 help: ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
 		awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}'
 
-install: packages link ## Full setup: install packages + create symlinks
+install: packages ## Install packages and activate the appropriate config set
+	@if command -v omarchy >/dev/null 2>&1; then \
+		if command -v omarchy-setup-zsh >/dev/null 2>&1 && ! grep -q 'exec zsh' "$(HOME)/.bashrc" 2>/dev/null; then \
+			omarchy-setup-zsh; \
+		fi; \
+		$(MAKE) --no-print-directory omarchy-link; \
+	else \
+		$(MAKE) --no-print-directory link; \
+	fi
 
 # ── Symlink management ──────────────────────────────────────────────────────
 
@@ -28,7 +63,8 @@ link: ## Create all symlinks for current platform
 	@echo "Linking common configs..."
 	$(call ln_sf,$(DOTDIR)/config/zsh/.zshrc,$(HOME)/.zshrc)
 	$(call ln_sf,$(DOTDIR)/config/ssh/config,$(HOME)/.ssh/config)
-	$(call ln_sf,$(DOTDIR)/config/tmux/tmux.conf,$(HOME)/.tmux.conf)
+	$(call unlink_sf,$(DOTDIR)/config/tmux/tmux.conf,$(HOME)/.tmux.conf)
+	$(call ln_sf,$(DOTDIR)/config/tmux/tmux.conf,$(HOME)/.config/tmux/tmux.conf)
 	$(call ln_sf,$(DOTDIR)/config/nvim,$(HOME)/.config/nvim)
 	$(call ln_sf,$(DOTDIR)/config/starship/starship.toml,$(HOME)/.config/starship.toml)
 	$(call ln_sf,$(DOTDIR)/config/sioyek,$(HOME)/.config/sioyek)
@@ -57,19 +93,10 @@ link: ## Create all symlinks for current platform
 	@$(MAKE) --no-print-directory codex-skills-link
 ifeq ($(UNAME_S),Linux)
 	@echo "Linking Linux configs..."
-	$(call ln_sf,$(DOTDIR)/config/hyprland/config,$(HOME)/.config/hypr)
-	$(call ln_sf,$(DOTDIR)/config/waybar,$(HOME)/.config/waybar)
-	$(call ln_sf,$(DOTDIR)/config/rofi,$(HOME)/.config/rofi)
-	$(call ln_sf,$(DOTDIR)/config/ghostty/linux,$(HOME)/.config/ghostty/config)
-	$(call ln_sf,$(DOTDIR)/config/ags,$(HOME)/.config/ags)
+	@if ! command -v omarchy >/dev/null 2>&1; then $(MAKE) --no-print-directory ghostty-link; fi
 	$(call ln_sf,$(DOTDIR)/config/cava,$(HOME)/.config/cava)
-	$(call ln_sf,$(DOTDIR)/config/qt5ct,$(HOME)/.config/qt5ct)
-	$(call ln_sf,$(DOTDIR)/config/qt6ct,$(HOME)/.config/qt6ct)
-	$(call ln_sf,$(DOTDIR)/config/wallust,$(HOME)/.config/wallust)
-	$(call ln_sf,$(DOTDIR)/config/wlogout,$(HOME)/.config/wlogout)
 	$(call ln_sf,$(DOTDIR)/config/wallpapers,$(HOME)/Pictures/wallpapers)
-	$(call ln_sf,$(DOTDIR)/config/Kvantum,$(HOME)/.config/Kvantum)
-	$(call ln_sf,$(DOTDIR)/config/swappy,$(HOME)/.config/swappy)
+	@$(MAKE) --no-print-directory omarchy-apply
 else ifeq ($(UNAME_S),Darwin)
 	@echo "Linking macOS configs..."
 	$(call ln_sf,$(DOTDIR)/config/ghostty/macos,$(HOME)/.config/ghostty/config)
@@ -78,64 +105,77 @@ endif
 
 unlink: ## Remove all symlinks
 	@echo "Removing symlinks..."
-	rm -f $(HOME)/.zshrc
-	rm -f $(HOME)/.ssh/config
-	rm -f $(HOME)/.tmux.conf
-	rm -f $(HOME)/.config/nvim
-	rm -f $(HOME)/.config/starship.toml
-	rm -f $(HOME)/.config/sioyek
-	rm -f $(HOME)/.config/uv
-	rm -f $(HOME)/.config/fastfetch
-	rm -f $(HOME)/.config/git/config
-	rm -f $(HOME)/.config/bat/config
-	rm -f $(HOME)/.config/atuin/config.toml
-	rm -f $(HOME)/.config/tuicr/config.toml
-	rm -f $(HOME)/.config/zed/keymap.json
-	rm -f $(HOME)/.config/zed/settings.json
-	rm -f $(HOME)/.claude/settings.json
-	rm -f $(HOME)/.claude/commands
-	rm -f $(HOME)/.claude/rules
-	rm -f $(HOME)/.claude/scripts
-	rm -f $(HOME)/.claude/skills
-	rm -f $(CODEX_HOME)/AGENTS.md
-	rm -f $(CODEX_HOME)/RTK.md
-	rm -f $(CODEX_HOME)/config.toml
-	rm -f $(CODEX_HOME)/hooks
-	rm -f $(CODEX_HOME)/rules/default.rules
-	rm -f $(CODEX_HOME)/memories
+	$(call unlink_sf,$(DOTDIR)/config/zsh/.zshrc,$(HOME)/.zshrc)
+	$(call unlink_sf,$(DOTDIR)/config/ssh/config,$(HOME)/.ssh/config)
+	$(call unlink_sf,$(DOTDIR)/config/tmux/tmux.conf,$(HOME)/.tmux.conf)
+	$(call unlink_sf,$(DOTDIR)/config/tmux/tmux.conf,$(HOME)/.config/tmux/tmux.conf)
+	$(call unlink_sf,$(DOTDIR)/config/nvim,$(HOME)/.config/nvim)
+	$(call unlink_sf,$(DOTDIR)/config/starship/starship.toml,$(HOME)/.config/starship.toml)
+	$(call unlink_sf,$(DOTDIR)/config/sioyek,$(HOME)/.config/sioyek)
+	$(call unlink_sf,$(DOTDIR)/config/uv,$(HOME)/.config/uv)
+	$(call unlink_sf,$(DOTDIR)/config/fastfetch,$(HOME)/.config/fastfetch)
+	$(call unlink_sf,$(DOTDIR)/config/git/config,$(HOME)/.config/git/config)
+	$(call unlink_sf,$(DOTDIR)/config/bat/config,$(HOME)/.config/bat/config)
+	$(call unlink_sf,$(DOTDIR)/config/atuin/config.toml,$(HOME)/.config/atuin/config.toml)
+	$(call unlink_sf,$(DOTDIR)/config/tuicr/config.toml,$(HOME)/.config/tuicr/config.toml)
+	$(call unlink_sf,$(DOTDIR)/config/zed/keymap.json,$(HOME)/.config/zed/keymap.json)
+	$(call unlink_sf,$(DOTDIR)/config/zed/settings.json,$(HOME)/.config/zed/settings.json)
+	$(call unlink_sf,$(DOTDIR)/config/claude/settings.json,$(HOME)/.claude/settings.json)
+	$(call unlink_sf,$(DOTDIR)/config/claude/commands,$(HOME)/.claude/commands)
+	$(call unlink_sf,$(DOTDIR)/config/claude/rules,$(HOME)/.claude/rules)
+	$(call unlink_sf,$(DOTDIR)/config/claude/scripts,$(HOME)/.claude/scripts)
+	$(call unlink_sf,$(DOTDIR)/config/claude/skills,$(HOME)/.claude/skills)
+	$(call unlink_sf,$(DOTDIR)/config/codex/AGENTS.md,$(CODEX_HOME)/AGENTS.md)
+	$(call unlink_sf,$(DOTDIR)/config/codex/RTK.md,$(CODEX_HOME)/RTK.md)
+	$(call unlink_sf,$(DOTDIR)/config/codex/config.toml,$(CODEX_HOME)/config.toml)
+	$(call unlink_sf,$(DOTDIR)/config/codex/hooks,$(CODEX_HOME)/hooks)
+	$(call unlink_sf,$(DOTDIR)/config/codex/rules/default.rules,$(CODEX_HOME)/rules/default.rules)
+	$(call unlink_sf,$(CODEX_MEMORY_STATE_DIR),$(CODEX_HOME)/memories)
 	@$(MAKE) --no-print-directory codex-agents-unlink
 	@$(MAKE) --no-print-directory codex-skills-unlink
 ifeq ($(UNAME_S),Linux)
-	rm -f $(HOME)/.config/hypr
-	rm -f $(HOME)/.config/waybar
-	rm -f $(HOME)/.config/rofi
-	rm -f $(HOME)/.config/ghostty/config
-	rm -f $(HOME)/.config/ags
-	rm -f $(HOME)/.config/cava
-	rm -f $(HOME)/.config/qt5ct
-	rm -f $(HOME)/.config/qt6ct
-	rm -f $(HOME)/.config/wallust
-	rm -f $(HOME)/.config/wlogout
-	rm -f $(HOME)/Pictures/wallpapers
-	rm -f $(HOME)/.config/Kvantum
-	rm -f $(HOME)/.config/swappy
+	$(call unlink_sf,$(GHOSTTY_LINUX_CONFIG),$(HOME)/.config/ghostty/config)
+	$(call unlink_sf,$(GHOSTTY_LINUX_OVERRIDES),$(HOME)/.config/ghostty/dotfiles.conf)
+	$(call unlink_sf,$(DOTDIR)/config/cava,$(HOME)/.config/cava)
+	$(call unlink_sf,$(DOTDIR)/config/wallpapers,$(HOME)/Pictures/wallpapers)
 else ifeq ($(UNAME_S),Darwin)
-	rm -f $(HOME)/.config/ghostty/config
+	$(call unlink_sf,$(DOTDIR)/config/ghostty/macos,$(HOME)/.config/ghostty/config)
 endif
 	@echo "Done."
 
 relink: unlink link ## Remove and recreate all symlinks
 
+omarchy-link: ## Activate the curated personal overrides for Omarchy
+	@echo "Linking personal Omarchy overrides..."
+	$(call ln_sf,$(DOTDIR)/config/zsh/.zshrc,$(HOME)/.zshrc)
+	$(call unlink_sf,$(DOTDIR)/config/tmux/tmux.conf,$(HOME)/.tmux.conf)
+	$(call ln_sf,$(DOTDIR)/config/tmux/tmux.conf,$(HOME)/.config/tmux/tmux.conf)
+	$(call ln_sf,$(DOTDIR)/config/nvim,$(HOME)/.config/nvim)
+	@$(MAKE) --no-print-directory omarchy-apply
+	@echo "Done. Omarchy still owns the rest of the desktop configuration."
+
+ghostty-link:
+	$(call ln_sf,$(GHOSTTY_LINUX_CONFIG),$(HOME)/.config/ghostty/config)
+	$(call ln_sf,$(GHOSTTY_LINUX_OVERRIDES),$(HOME)/.config/ghostty/dotfiles.conf)
+
 codex-agents-link: ## Link all Codex custom agents from this repo
 	@echo "Linking Codex agents..."
-	@mkdir -p $(CODEX_HOME)/agents
+	@mkdir -p "$(CODEX_HOME)/agents"
 	@if [ -d "$(DOTDIR)/config/codex/agents" ]; then \
 		for agent_file in $(DOTDIR)/config/codex/agents/*.toml; do \
 			if [ -f "$$agent_file" ]; then \
 				agent_name=$$(basename "$$agent_file"); \
-				rm -rf "$(CODEX_HOME)/agents/$$agent_name"; \
-				ln -sfn "$$agent_file" "$(CODEX_HOME)/agents/$$agent_name"; \
-				printf "  %s → %s\n" "$(CODEX_HOME)/agents/$$agent_name" "$$agent_file"; \
+				target="$(CODEX_HOME)/agents/$$agent_name"; \
+				if [ -L "$$target" ] && [ "$$(readlink "$$target")" = "$$agent_file" ]; then \
+					printf "  %s already linked\n" "$$target"; \
+				else \
+					if [ -e "$$target" ] || [ -L "$$target" ]; then \
+						backup="$$target.bak.$$(date +%Y%m%d-%H%M%S)"; mv "$$target" "$$backup"; \
+						printf "  backed up %s → %s\n" "$$target" "$$backup"; \
+					fi; \
+					ln -s "$$agent_file" "$$target"; \
+					printf "  %s → %s\n" "$$target" "$$agent_file"; \
+				fi; \
 			fi; \
 		done; \
 	fi
@@ -146,7 +186,8 @@ codex-agents-unlink: ## Remove Codex agent symlinks that came from this repo
 		for agent_file in $(DOTDIR)/config/codex/agents/*.toml; do \
 			if [ -f "$$agent_file" ]; then \
 				agent_name=$$(basename "$$agent_file"); \
-				rm -f "$(CODEX_HOME)/agents/$$agent_name"; \
+				target="$(CODEX_HOME)/agents/$$agent_name"; \
+				if [ -L "$$target" ] && [ "$$(readlink "$$target")" = "$$agent_file" ]; then rm "$$target"; fi; \
 			fi; \
 		done; \
 	fi
@@ -167,19 +208,35 @@ codex-memories-link: ## Seed live Codex memories into state and link runtime pat
 			fi; \
 		fi; \
 	done
-	@rm -rf "$(CODEX_HOME)/memories"
-	@ln -sfn "$(CODEX_MEMORY_STATE_DIR)" "$(CODEX_HOME)/memories"
-	@printf "  %s → %s\n" "$(CODEX_HOME)/memories" "$(CODEX_MEMORY_STATE_DIR)"
+	@if [ -L "$(CODEX_HOME)/memories" ] && [ "$$(readlink "$(CODEX_HOME)/memories")" = "$(CODEX_MEMORY_STATE_DIR)" ]; then \
+		printf "  %s already linked\n" "$(CODEX_HOME)/memories"; \
+	else \
+		if [ -e "$(CODEX_HOME)/memories" ] || [ -L "$(CODEX_HOME)/memories" ]; then \
+			backup="$(CODEX_HOME)/memories.bak.$$(date +%Y%m%d-%H%M%S)"; \
+			mv "$(CODEX_HOME)/memories" "$$backup"; \
+			printf "  backed up %s → %s\n" "$(CODEX_HOME)/memories" "$$backup"; \
+		fi; \
+		ln -s "$(CODEX_MEMORY_STATE_DIR)" "$(CODEX_HOME)/memories"; \
+		printf "  %s → %s\n" "$(CODEX_HOME)/memories" "$(CODEX_MEMORY_STATE_DIR)"; \
+	fi
 
 codex-skills-link: ## Link all Codex skills from this repo
 	@echo "Linking Codex skills..."
-	@mkdir -p $(CODEX_HOME)/skills
+	@mkdir -p "$(CODEX_HOME)/skills"
 	@for skill_dir in $(DOTDIR)/config/codex/skills/*; do \
 		if [ -d "$$skill_dir" ] && [ -f "$$skill_dir/SKILL.md" ]; then \
 			skill_name=$$(basename "$$skill_dir"); \
-			rm -rf "$(CODEX_HOME)/skills/$$skill_name"; \
-			ln -sfn "$$skill_dir" "$(CODEX_HOME)/skills/$$skill_name"; \
-			printf "  %s → %s\n" "$(CODEX_HOME)/skills/$$skill_name" "$$skill_dir"; \
+			target="$(CODEX_HOME)/skills/$$skill_name"; \
+			if [ -L "$$target" ] && [ "$$(readlink "$$target")" = "$$skill_dir" ]; then \
+				printf "  %s already linked\n" "$$target"; \
+			else \
+				if [ -e "$$target" ] || [ -L "$$target" ]; then \
+					backup="$$target.bak.$$(date +%Y%m%d-%H%M%S)"; mv "$$target" "$$backup"; \
+					printf "  backed up %s → %s\n" "$$target" "$$backup"; \
+				fi; \
+				ln -s "$$skill_dir" "$$target"; \
+				printf "  %s → %s\n" "$$target" "$$skill_dir"; \
+			fi; \
 		fi; \
 	done
 
@@ -189,7 +246,8 @@ codex-skills-unlink: ## Remove Codex skill symlinks from this repo
 		for skill_dir in $(DOTDIR)/config/codex/skills/*; do \
 			if [ -d "$$skill_dir" ] && [ -f "$$skill_dir/SKILL.md" ]; then \
 				skill_name=$$(basename "$$skill_dir"); \
-				rm -rf "$(CODEX_HOME)/skills/$$skill_name"; \
+				target="$(CODEX_HOME)/skills/$$skill_name"; \
+				if [ -L "$$target" ] && [ "$$(readlink "$$target")" = "$$skill_dir" ]; then rm "$$target"; fi; \
 			fi; \
 		done; \
 	fi
@@ -198,8 +256,15 @@ codex-skills-unlink: ## Remove Codex skill symlinks from this repo
 
 packages: ## Install packages for current platform
 ifeq ($(UNAME_S),Linux)
-	@echo "Installing Arch packages via yay..."
-	yay -S --needed $$(grep -vE '^\s*(#|$$)' packages/arch.txt)
+	@if command -v omarchy >/dev/null 2>&1; then \
+		echo "Installing Arch packages through Omarchy..."; \
+		omarchy pkg add $$(grep -vE '^\s*(#|$$)' packages/arch.txt); \
+		omarchy pkg add $$(grep -vE '^\s*(#|$$)' packages/omarchy.txt); \
+		omarchy pkg aur add $$(grep -vE '^\s*(#|$$)' packages/arch-aur.txt); \
+	else \
+		echo "Installing Arch packages via yay..."; \
+		yay -S --needed $$(grep -vE '^\s*(#|$$)' packages/arch.txt packages/arch-aur.txt); \
+	fi
 else ifeq ($(UNAME_S),Darwin)
 	@echo "Installing Homebrew packages..."
 	grep -vE '^\s*(#|$$)' packages/brew.txt | xargs brew install
@@ -207,22 +272,67 @@ endif
 
 # ── Special targets ─────────────────────────────────────────────────────────
 
+omarchy-apply: ## Copy tracked Omarchy overrides into ~/.config with backups
+ifeq ($(UNAME_S),Linux)
+	@if command -v omarchy >/dev/null 2>&1; then \
+		set -e; \
+		apply_file() { \
+			source="$$1"; target="$$2"; label="$$3"; \
+			if [ ! -f "$$source" ]; then printf "Missing source: %s\n" "$$source" >&2; return 1; fi; \
+			mkdir -p "$$(dirname "$$target")"; \
+			if [ ! -L "$$target" ] && cmp -s "$$source" "$$target"; then \
+				printf "  %s already current\n" "$$label"; return 0; \
+			fi; \
+			if [ -L "$$target" ]; then \
+				backup="$$target.bak.$$(date +%Y%m%d-%H%M%S)"; mv "$$target" "$$backup"; \
+				printf "  backed up %s → %s\n" "$$target" "$$backup"; \
+			elif [ -f "$$target" ]; then \
+				backup="$$target.bak.$$(date +%Y%m%d-%H%M%S)"; cp -p "$$target" "$$backup"; \
+				printf "  backed up %s → %s\n" "$$target" "$$backup"; \
+			elif [ -e "$$target" ]; then \
+				printf "Refusing to replace non-file target: %s\n" "$$target" >&2; return 1; \
+			fi; \
+			install -m 644 "$$source" "$$target"; \
+			printf "  applied %s → %s\n" "$$source" "$$target"; \
+		}; \
+		apply_file "$(GHOSTTY_LINUX_CONFIG)" "$(HOME)/.config/ghostty/config" "Ghostty base overlay"; \
+		apply_file "$(GHOSTTY_LINUX_OVERRIDES)" "$(HOME)/.config/ghostty/dotfiles.conf" "Ghostty personal override"; \
+		apply_file "$(OMARCHY_MONITORS)" "$(HOME)/.config/hypr/monitors.lua" "Omarchy monitor override"; \
+		omarchy restart terminal >/dev/null; \
+		if [ -n "$${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then \
+			hyprctl reload >/dev/null; \
+			errors="$$(hyprctl configerrors)"; \
+			if [ -n "$$errors" ]; then printf "%s\n" "$$errors" >&2; exit 1; fi; \
+		fi; \
+	else \
+		echo "Omarchy not detected; skipping Omarchy overrides."; \
+	fi
+endif
+
+omarchy-diff: ## Compare tracked Omarchy overrides with the live files
+ifeq ($(UNAME_S),Linux)
+	@diff -u "$(GHOSTTY_LINUX_CONFIG)" "$(HOME)/.config/ghostty/config" || true
+	@diff -u "$(GHOSTTY_LINUX_OVERRIDES)" "$(HOME)/.config/ghostty/dotfiles.conf" || true
+	@diff -u "$(OMARCHY_MONITORS)" "$(HOME)/.config/hypr/monitors.lua" || true
+endif
+
 firefox: ## Symlink Firefox userChrome.css (Linux, auto-detects profile)
 ifeq ($(UNAME_S),Linux)
 	@profile=$$(ls -d $(HOME)/.mozilla/firefox/*.default-release 2>/dev/null | head -1); \
 	if [ -n "$$profile" ]; then \
-		mkdir -p "$$profile/chrome"; \
-		ln -sfn "$(DOTDIR)/config/firefox/chrome/userChrome.css" "$$profile/chrome/userChrome.css"; \
-		echo "  $$profile/chrome/userChrome.css → config/firefox/chrome/userChrome.css"; \
+		source="$(DOTDIR)/config/firefox/chrome/userChrome.css"; target="$$profile/chrome/userChrome.css"; \
+		mkdir -p "$$(dirname "$$target")"; \
+		if [ -L "$$target" ] && [ "$$(readlink "$$target")" = "$$source" ]; then \
+			printf "  %s already linked\n" "$$target"; \
+		else \
+			if [ -e "$$target" ] || [ -L "$$target" ]; then \
+				backup="$$target.bak.$$(date +%Y%m%d-%H%M%S)"; mv "$$target" "$$backup"; \
+				printf "  backed up %s → %s\n" "$$target" "$$backup"; \
+			fi; \
+			ln -s "$$source" "$$target"; \
+			printf "  %s → %s\n" "$$target" "$$source"; \
+		fi; \
 	else \
 		echo "No Firefox profile found. Run Firefox first, then retry."; \
 	fi
-endif
-
-hyprland-setup: ## Bootstrap Hyprland desktop via JaKooLit installer (Arch only)
-ifeq ($(UNAME_S),Linux)
-	@if [ ! -d "$(HOME)/Arch-Hyprland" ]; then \
-		git clone --depth=1 https://github.com/JaKooLit/Arch-Hyprland.git $(HOME)/Arch-Hyprland; \
-	fi
-	cd $(HOME)/Arch-Hyprland && chmod +x install.sh && ./install.sh
 endif

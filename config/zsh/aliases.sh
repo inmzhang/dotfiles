@@ -1,7 +1,7 @@
 # Dotfiles path
 dotfiles_path="$HOME/dotfiles"
 
-alias zen="zen-browser"
+command -v zen-browser >/dev/null 2>&1 && alias zen="zen-browser"
 
 alias python='python3'
 
@@ -13,7 +13,11 @@ alias zshrc='nvim ~/.zshrc'
 alias sc='source ~/.zshrc'
 alias aa="nvim $dotfiles_path/config/zsh/aliases.sh"
 alias dot="cd $dotfiles_path && nvim ."
-alias dots='cd $dotfiles_path && make relink'
+if command -v omarchy >/dev/null 2>&1; then
+    alias dots="cd $dotfiles_path && make omarchy-link"
+else
+    alias dots="cd $dotfiles_path && make relink"
+fi
 
 # Neovim
 alias v='nvim .'
@@ -21,16 +25,18 @@ alias vi='nvim'
 alias vim='nvim'
 
 # System tools
-alias ls='lsd'
-alias l='lsd -l'
-alias ll='lsd -latrh'
-alias cat='bat'
+if command -v lsd >/dev/null 2>&1; then
+    alias ls='lsd'
+    alias l='lsd -l'
+    alias ll='lsd -latrh'
+fi
+command -v bat >/dev/null 2>&1 && alias cat='bat'
 alias t='tmux'
-alias du='dust'
+command -v dust >/dev/null 2>&1 && alias du='dust'
 
 # Others
 alias cl='clear'
-alias s='kitten ssh'
+command -v kitten >/dev/null 2>&1 && alias s='kitten ssh'
 alias cvenv='python -m venv .venv'
 alias avenv='source .venv/bin/activate'
 alias ~='cd ~'

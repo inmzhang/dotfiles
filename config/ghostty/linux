@@ -1,9 +1,7 @@
-font-size = 16
+# Keep Omarchy's dynamic theme, font integration, key encoding, and Hyprland
+# compatibility fixes as the updateable base layer.
+config-file = ?"/usr/share/omarchy/config/ghostty/config"
 
-theme = "Gruvbox Dark"
-
-window-decoration = false
-
-background-opacity = 0.7
-
-keybind = shift+enter=text:\n
+# Keep personal values in a separate include. Omarchy's global text-size tool
+# edits only this top-level file, so it cannot replace the terminal-only size.
+config-file = ?"~/.config/ghostty/dotfiles.conf"

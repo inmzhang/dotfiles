@@ -1,151 +1,149 @@
 # dotfiles
 
-Personal configuration files for Arch Linux and macOS, managed with a
-Makefile and explicit symlinks.
+Personal configuration for Omarchy and macOS. On Omarchy this repository is a
+thin user-owned layer over the distribution defaults, not a replacement
+Hyprland distribution.
 
-## Structure
+## Omarchy ownership model
 
-```
-~/dotfiles/
-├── config/            # Application configs (one directory per app)
-│   ├── nvim/          #   Neovim
-│   ├── zsh/           #   Zsh (.zshrc + helper scripts)
-│   ├── git/           #   Git (config)
-│   ├── hyprland/      #   Hyprland (Linux only)
-│   ├── ...
-│   ├── claude/        #   Claude Code (settings, scripts, skills)
-│   └── codex/         #   Codex CLI (config, agents, rules, memories, skills)
-├── packages/          # Package lists
-│   ├── arch.txt       #   Arch Linux (yay)
-│   └── brew.txt       #   macOS (Homebrew)
-├── Makefile           # Symlink & package orchestration
-├── setup.sh           # Fresh machine bootstrap
-└── README.md
-```
+| Path | Owner | Git strategy |
+|---|---|---|
+| `/usr/share/omarchy` | Omarchy packages | Never edit or track |
+| `~/.config/hypr`, `~/.config/omarchy` | Omarchy user overrides | Track only intentional deltas |
+| `~/.config/nvim`, `~/.config/tmux`, `~/.zshrc` | Personal | Symlink from this repository |
+| `~/.local/state/omarchy` | Generated theme/runtime state | Never track |
 
-Each directory under `config/` holds the raw config files for one
-application. The `Makefile` maps each to its target location under `$HOME`.
+The only tracked Hyprland delta is
+`config/omarchy/hypr/monitors.lua`. `make omarchy-apply` copies it into the
+live Omarchy config and checks Hyprland for configuration errors. It is copied
+instead of symlinked so an Omarchy refresh cannot accidentally write into the
+Git checkout.
 
-## Fresh machine setup
+Ghostty is also a thin overlay. `config/ghostty/linux` loads Omarchy's packaged
+configuration and then `~/.config/ghostty/dotfiles.conf`, copied from
+`config/ghostty/linux-overrides`. Keeping the terminal font size in that
+second file prevents Omarchy's global text-size control from rewriting it.
+
+## Set up an Omarchy machine
 
 ```sh
 git clone https://github.com/inmzhang/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-chmod +x setup.sh
 ./setup.sh
 ```
 
-`setup.sh` will:
-1. Install the package manager (`yay` on Arch, Homebrew on macOS)
-2. Install all packages from `packages/{arch,brew}.txt`
-3. Install Claude Code
-4. Symlink every config via `make link`
-5. Set zsh as the default shell
+The setup script installs packages through `omarchy pkg`, enables the official
+`omarchy-zsh` Bash-to-Zsh handoff, and runs the curated migration target. Any
+existing config replaced by a symlink or managed copy is first preserved at a
+timestamped `.bak.YYYYmmdd-HHMMSS` path.
 
-## Day-to-day usage
+If packages and Zsh are already installed, activate just the intended personal
+overrides with:
+
+```sh
+make omarchy-link
+```
+
+This activates:
+
+- the repository's vanilla Neovim 0.12+ configuration instead of LazyVim;
+- the personal tmux configuration under `~/.config/tmux/tmux.conf`;
+- the personal Zsh layer on top of `omarchy-zsh`;
+- the Ghostty overlay on top of Omarchy's packaged config;
+- the tracked monitor override.
+
+The rest of Hyprland, Waybar, launchers, logout UI, Qt theming, screenshots,
+themes, and wallpaper integration remain owned by Omarchy.
+
+## Zsh on Omarchy
+
+Omarchy intentionally leaves Bash as the login shell and launches Zsh from its
+interactive Bash startup. Do not use `chsh` on Omarchy. The tracked `.zshrc`
+sources `/usr/share/omarchy-zsh/shell/{zoptions,all}` first and then loads the
+personal aliases, functions, environment, and optional private file.
+
+`config/zsh/zsh-private.sh` is ignored by Git. Use it for machine-local values
+or secrets:
+
+```sh
+# config/zsh/zsh-private.sh
+export OPENAI_API_KEY="..."
+```
+
+## Everyday commands
 
 | Command | Description |
-|---------|-------------|
-| `make link` | Create all symlinks |
-| `make unlink` | Remove all symlinks |
-| `make relink` | Remove + recreate symlinks |
-| `make packages` | Install packages for current platform |
-| `make firefox` | Symlink Firefox userChrome.css (Linux) |
-| `make hyprland-setup` | Bootstrap Hyprland via JaKooLit installer |
-| `make codex-agents-link` | Sync Codex custom agents from this repo into `~/.codex/agents` |
-| `make codex-skills-link` | Sync Codex skills from this repo into `~/.codex/skills` |
-| `make codex-agents-unlink` | Remove Codex agent symlinks that came from this repo |
-| `make codex-skills-unlink` | Remove Codex skill symlinks that came from this repo |
+|---|---|
+| `make omarchy-link` | Activate the curated Omarchy config set with backups |
+| `make omarchy-apply` | Copy Ghostty/monitor overrides and reload affected apps |
+| `make omarchy-diff` | Compare tracked and live Omarchy-managed copies |
+| `make packages` | Install packages for the current platform |
+| `make link` | Link the complete config collection, including AI tooling |
+| `make unlink` | Remove only symlinks that point into this repository |
+| `make relink` | Recreate the complete non-curated symlink set |
+| `make firefox` | Link Firefox `userChrome.css` after a profile exists |
 
-## Codex custom agents
+Use Omarchy's own menus and commands for desktop settings. Refresh commands can
+replace user configuration from packaged defaults; `make omarchy-apply`
+restores the tracked Ghostty and monitor deltas afterward.
 
-`make link` automatically runs `make codex-agents-link`, which symlinks every
-TOML file in `config/codex/agents/` into `~/.codex/agents/`.
+## Git sync workflow
 
-Current local Codex agents:
-- `rust-code-reviewer`: Rust-focused review agent with `gpt-5.4`, `xhigh` reasoning, and `sandbox_mode = "read-only"`.
-
-## Codex skills
-
-`make link` automatically runs `make codex-skills-link`, which symlinks every
-skill directory in `config/codex/skills/` into `~/.codex/skills/`.
-
-Current local Codex skills:
-- `ask-user-question`: Structured requirement interviews using option-based questions.
-- `gh-fix-ci`: Diagnose and fix failing GitHub Actions PR checks with `gh`.
-- `ideas`: Research brainstorming conversations from the `sci-brain` project.
-- `pdf`: Read/create/review PDFs with layout-aware validation.
-- `quicknote`: Save the last substantial research exchange as a markdown note.
-- `researchstyle`: Build a research profile from Zotero or Google Scholar context.
-- `survey`: Map literature and adjacent work before brainstorming.
-- `tuicr`: Review local git changes with tuicr in a tmux split pane.
-- `writer`: Turn prior brainstorming sessions into a structured write-up.
-
-## Codex MCP servers
-
-`config/codex/config.toml` is symlinked into `~/.codex/config.toml`, agent TOML
-files in `config/codex/agents/` are symlinked into `~/.codex/agents/`, and the
-file tracks the Codex MCP server configuration for this machine.
-
-Current tracked MCP servers:
-- `context7`: Library and framework documentation lookup.
-- `arxiv`: Search arXiv papers and download paper PDFs into a dedicated cache.
-- `paper_search`: Search multiple academic sources including PubMed and preprint servers.
-- `semantic_scholar`: Query citation graphs, related work, and recommendations.
-- `zotero`: Search the local Zotero library through Zotero's local API.
-
-## Adding a new application config
-
-1. Create a directory under `config/`:
-
-   ```sh
-   mkdir -p config/myapp
-   ```
-
-2. Place the config files inside. Use the flat structure &mdash; no need to
-   mirror `~/.config/`:
-
-   ```
-   config/myapp/
-   └── settings.toml
-   ```
-
-3. Add a symlink mapping in the `Makefile` `link` target:
-
-   ```makefile
-   $(call ln_sf,$(DOTDIR)/config/myapp/settings.toml,$(HOME)/.config/myapp/settings.toml)
-   ```
-
-   For platform-specific configs, place the line inside the
-   `ifeq ($(UNAME_S),Linux)` or `Darwin` block.
-
-4. Add the matching `rm -f` line in the `unlink` target:
-
-   ```makefile
-   rm -f $(HOME)/.config/myapp/settings.toml
-   ```
-
-5. Run `make relink` to activate.
-
-## Adding system packages
-
-Append the package name to the appropriate list:
-
-- **Arch Linux**: `packages/arch.txt` (one package per line, `#` for comments)
-- **macOS**: `packages/brew.txt`
-
-Then run:
+Only this repository is synchronized. Do not turn the whole home directory or
+Omarchy's generated state into a dotfiles repository.
 
 ```sh
-make packages
+# On the source machine
+git add -A
+git commit -m "Update dotfiles"
+git push
+
+# On another Omarchy machine
+git pull --ff-only
+make omarchy-link
+make omarchy-diff
 ```
 
-## Private / machine-specific config
+Inspect changes and backups before committing. Secrets, state databases,
+downloaded plugins, theme state, and caches should stay outside Git.
 
-`config/zsh/zsh-private.sh` is sourced by `.zshrc` but gitignored.
-Use it for API keys, proxy settings, or anything machine-specific:
+## Package lists
 
-```sh
-# config/zsh/zsh-private.sh (not tracked)
-export OPENAI_API_KEY="sk-..."
+- `packages/arch.txt`: packages available through Omarchy/Arch repositories;
+- `packages/arch-aur.txt`: AUR-only packages;
+- `packages/omarchy.txt`: Omarchy-specific integrations such as
+  `omarchy-zsh`;
+- `packages/brew.txt`: macOS Homebrew packages.
+
+Run `make packages` after editing a list. On Omarchy, package installation may
+prompt for the user's sudo password.
+
+## Repository structure
+
+```text
+config/
+├── omarchy/hypr/     # Deliberately tracked Omarchy overrides
+├── ghostty/          # Linux overlay and macOS config
+├── nvim/             # Vanilla Neovim configuration
+├── tmux/             # tmux configuration
+├── zsh/              # Personal Zsh layer
+├── claude/           # Optional Claude Code configuration
+└── codex/             # Optional Codex configuration, agents, and skills
+packages/               # Platform-specific package manifests
+Makefile                # Safe linking, backup, and apply targets
+setup.sh                # Fresh-machine bootstrap
 ```
+
+## macOS and non-Omarchy Arch
+
+`make link` retains the complete, cross-platform symlink behavior. On macOS,
+`setup.sh` uses Homebrew and changes the login shell to Zsh. On a non-Omarchy
+Arch system it uses `yay` and also changes the login shell.
+
+## Adding another personal config
+
+Place the file under `config/<application>/`, then add matching `ln_sf` and
+`unlink_sf` calls to the Makefile. `ln_sf` backs up an existing target;
+`unlink_sf` removes only a symlink that points to the expected repository
+source. Add it to `omarchy-link` only if the application is genuinely
+user-owned rather than part of Omarchy's desktop stack.

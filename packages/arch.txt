@@ -1,5 +1,4 @@
 # Core CLI tools
-xclip
 dust
 ripgrep
 lsd
@@ -8,11 +7,12 @@ tmux
 tree-sitter-cli
 lazygit
 gdu
-rm-improved-bin
 just
 jujutsu
 rustup
 ruff
+typst
+typstyle
 yt-dlp
 hyperfine
 github-cli
@@ -28,7 +28,6 @@ nvm
 bun-bin
 serie
 gitui
-shellcheck-bin
 zed
 
 # Fonts

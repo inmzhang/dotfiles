@@ -1,0 +1,2 @@
+# Omarchy-specific integrations
+omarchy-zsh

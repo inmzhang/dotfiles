@@ -1,0 +1,3 @@
+# AUR-only tools
+rm-improved-bin
+shellcheck-bin

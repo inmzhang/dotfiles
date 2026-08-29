@@ -13,7 +13,9 @@ info "Detected platform: $OS"
 
 # ── Install prerequisites ───────────────────────────────────────────────────
 
-if [[ "$OS" == "Linux" ]]; then
+if [[ "$OS" == "Linux" ]] && command -v omarchy >/dev/null 2>&1; then
+    ok "Omarchy package management detected."
+elif [[ "$OS" == "Linux" ]]; then
     if ! command -v yay >/dev/null 2>&1; then
         info "Installing yay (AUR helper)..."
         sudo pacman -S --needed --noconfirm base-devel git
@@ -42,6 +44,18 @@ info "Installing packages..."
 cd "$REPO_DIR"
 make packages
 
+# Configure Omarchy's supported Bash-to-Zsh handoff before linking our
+# user-owned .zshrc. Bash remains the login shell for desktop startup.
+if command -v omarchy >/dev/null 2>&1 && command -v omarchy-setup-zsh >/dev/null 2>&1; then
+    if ! grep -q 'exec zsh' "$HOME/.bashrc" 2>/dev/null; then
+        info "Enabling Omarchy's Bash-to-Zsh handoff..."
+        omarchy-setup-zsh
+        ok "Omarchy Zsh integration enabled."
+    else
+        ok "Omarchy Zsh integration already enabled."
+    fi
+fi
+
 # ── Install Claude Code ────────────────────────────────────────────────────
 
 if ! command -v claude >/dev/null 2>&1; then
@@ -52,9 +66,13 @@ else
     ok "Claude Code already installed."
 fi
 
-# ── Link all dotfiles ───────────────────────────────────────────────────────
+# ── Activate the appropriate config set ────────────────────────────────────
 info "Linking dotfiles..."
-make link
+if command -v omarchy >/dev/null 2>&1; then
+    make omarchy-link
+else
+    make link
+fi
 
 # ── Firefox (Linux only) ────────────────────────────────────────────────────
 
@@ -64,7 +82,7 @@ fi
 
 # ── Default shell ───────────────────────────────────────────────────────────
 
-if [[ "$SHELL" != *zsh* ]]; then
+if ! command -v omarchy >/dev/null 2>&1 && [[ "$SHELL" != *zsh* ]]; then
     info "Changing default shell to zsh..."
     chsh -s "$(which zsh)"
     ok "Default shell changed. Log out and back in."
@@ -81,10 +99,18 @@ echo "    2. Run 'tldr --update' to populate tealdeer cache"
 echo ""
 echo "  To update packages:"
 if [[ "$OS" == "Linux" ]]; then
-    echo "    yay -Syu"
+    if command -v omarchy >/dev/null 2>&1; then
+        echo "    omarchy update"
+    else
+        echo "    yay -Syu"
+    fi
 else
     echo "    brew update && brew upgrade"
 fi
 echo ""
 echo "  To re-link dotfiles after changes:"
-echo "    make relink"
+if command -v omarchy >/dev/null 2>&1; then
+    echo "    make omarchy-link"
+else
+    echo "    make relink"
+fi
