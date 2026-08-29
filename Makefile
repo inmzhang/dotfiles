@@ -27,6 +27,7 @@ install: packages link ## Full setup: install packages + create symlinks
 link: ## Create all symlinks for current platform
 	@echo "Linking common configs..."
 	$(call ln_sf,$(DOTDIR)/config/zsh/.zshrc,$(HOME)/.zshrc)
+	$(call ln_sf,$(DOTDIR)/config/ssh/config,$(HOME)/.ssh/config)
 	$(call ln_sf,$(DOTDIR)/config/tmux/tmux.conf,$(HOME)/.tmux.conf)
 	$(call ln_sf,$(DOTDIR)/config/nvim,$(HOME)/.config/nvim)
 	$(call ln_sf,$(DOTDIR)/config/starship/starship.toml,$(HOME)/.config/starship.toml)
@@ -78,6 +79,7 @@ endif
 unlink: ## Remove all symlinks
 	@echo "Removing symlinks..."
 	rm -f $(HOME)/.zshrc
+	rm -f $(HOME)/.ssh/config
 	rm -f $(HOME)/.tmux.conf
 	rm -f $(HOME)/.config/nvim
 	rm -f $(HOME)/.config/starship.toml

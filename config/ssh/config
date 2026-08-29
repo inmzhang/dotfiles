@@ -1,0 +1,26 @@
+Host *
+  AddKeysToAgent yes
+  IgnoreUnknown UseKeychain
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_ed25519
+
+Host github.com
+  HostName ssh.github.com
+  Port 443
+  User git
+  AddressFamily inet
+
+Host gpucluster
+  HostName 114.214.202.40
+  Port 7002
+  User zhangyiming
+
+Host m9cluster
+  HostName ssh.cn-zhongwei-1-v6.paracloud.com
+  Port 22
+  User m9s005666@BSCC-M9
+
+Host m6cluster
+  HostName ssh.cn-zhongwei-1-v6.paracloud.com
+  Port 22
+  User m6l601320@ZC-M6L
