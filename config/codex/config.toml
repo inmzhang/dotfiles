@@ -1,4 +1,4 @@
-model = "gpt-5.6-sol"
+model = "gpt-5.6-luna"
 review_model = "gpt-5.6-terra"
 project_doc_fallback_filenames = ["CLAUDE.md"] # Fallback when AGENTS.md is not present.
 approval_policy = "on-request"
@@ -12,8 +12,8 @@ collaboration_mode = true
 suppress_unstable_features_warning = true
 plan_mode_reasoning_effort = "xhigh"
 
-model_reasoning_effort = "xhigh"
-service_tier = "fast"
+model_reasoning_effort = "max"
+service_tier = "default"
 
 # model_provider = "OpenAI"
 # [model_providers.OpenAI]
@@ -87,6 +87,10 @@ last_updated = "2026-08-12T06:02:03Z"
 source_type = "local"
 source = "/home/inm/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
 
+[marketplaces.ask-pro]
+source_type = "git"
+source = "https://github.com/Pimpmuckl/ask-pro.git"
+
 [plugins."ponytail@ponytail"]
 enabled = true
 
@@ -111,6 +115,9 @@ approval_mode = "approve"
 [plugins."computer-use@openai-bundled".mcp_servers.computer-use.tools.scroll]
 approval_mode = "approve"
 
+[plugins."computer-use@openai-bundled".mcp_servers.computer-use.tools.click]
+approval_mode = "approve"
+
 [plugins."visualize@openai-bundled"]
 enabled = true
 
@@ -127,6 +134,9 @@ enabled = true
 enabled = true
 
 [plugins."template-creator@openai-primary-runtime"]
+enabled = true
+
+[plugins."ask-pro@ask-pro"]
 enabled = true
 
 [[hooks.Stop]]
@@ -243,4 +253,7 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/home/inm"]
+trust_level = "trusted"
+
+[projects."/home/inm/workspace/private-slides"]
 trust_level = "trusted"
