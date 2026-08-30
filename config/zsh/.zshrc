@@ -10,6 +10,7 @@ if [[ -r "$_OMARCHY_ZSH_ROOT/all" ]]; then
     unalias ga gd 2>/dev/null
     source "$_OMARCHY_ZSH_ROOT/zoptions"
     source "$_OMARCHY_ZSH_ROOT/all"
+    [[ -r /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 else
     # Portable fallback for macOS and non-Omarchy systems.
     if [[ "$(uname -s)" == Darwin ]] && [[ -x /opt/homebrew/bin/brew ]]; then

@@ -1,11 +1,7 @@
 # Core CLI tools
 dust
-ripgrep
 lsd
 bottom
-tmux
-tree-sitter-cli
-lazygit
 gdu
 just
 jujutsu
@@ -14,13 +10,9 @@ ruff
 typst
 tectonic
 typstyle
-yt-dlp
 hyperfine
 github-cli
 onefetch
-fastfetch
-tealdeer
-fd
 skim
 parallel
 bacon
@@ -31,18 +23,9 @@ serie
 gitui
 zed
 
-# Fonts
-ttf-jetbrains-mono-nerd
-
 # Shell & integrations
-git
 git-delta
-zoxide
-starship
 yazi
-bat
 atuin
 direnv
-zsh
 zsh-autosuggestions
-zsh-syntax-highlighting

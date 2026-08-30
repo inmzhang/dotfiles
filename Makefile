@@ -261,6 +261,7 @@ codex-skills-unlink: ## Remove Codex skill symlinks from this repo
 packages: ## Install packages for current platform
 ifeq ($(UNAME_S),Linux)
 	@if command -v omarchy >/dev/null 2>&1; then \
+		set -e; \
 		echo "Installing Arch packages through Omarchy..."; \
 		omarchy pkg add $$(grep -vE '^\s*(#|$$)' packages/arch.txt); \
 		omarchy pkg add $$(grep -vE '^\s*(#|$$)' packages/omarchy.txt); \
