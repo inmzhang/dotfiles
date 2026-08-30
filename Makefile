@@ -8,6 +8,8 @@ CODEX_HOME := $(HOME)/.codex
 CODEX_MEMORY_SEED_DIR := $(DOTDIR)/config/codex/memories/seed
 CODEX_MEMORY_STATE_DIR := $(HOME)/.local/state/codex/memories
 OMARCHY_MONITORS := $(DOTDIR)/config/omarchy/hypr/monitors.lua
+OMARCHY_AUTOSTART := $(DOTDIR)/config/omarchy/hypr/autostart.lua
+OMARCHY_CODEX_WRAPPER := $(DOTDIR)/config/omarchy/bin/codex
 GHOSTTY_LINUX_CONFIG := $(DOTDIR)/config/ghostty/linux
 GHOSTTY_LINUX_OVERRIDES := $(DOTDIR)/config/ghostty/linux-overrides
 
@@ -92,6 +94,7 @@ link: ## Create all symlinks for current platform
 	@$(MAKE) --no-print-directory codex-skills-link
 ifeq ($(UNAME_S),Linux)
 	@echo "Linking Linux configs..."
+	$(call ln_sf,$(DOTDIR)/config/bash/.bash_profile,$(HOME)/.bash_profile)
 	@if ! command -v omarchy >/dev/null 2>&1; then $(MAKE) --no-print-directory ghostty-link; fi
 	$(call ln_sf,$(DOTDIR)/config/cava,$(HOME)/.config/cava)
 	$(call ln_sf,$(DOTDIR)/config/wallpapers,$(HOME)/Pictures/wallpapers)
@@ -132,6 +135,7 @@ unlink: ## Remove all symlinks
 	@$(MAKE) --no-print-directory codex-agents-unlink
 	@$(MAKE) --no-print-directory codex-skills-unlink
 ifeq ($(UNAME_S),Linux)
+	$(call unlink_sf,$(DOTDIR)/config/bash/.bash_profile,$(HOME)/.bash_profile)
 	$(call unlink_sf,$(GHOSTTY_LINUX_CONFIG),$(HOME)/.config/ghostty/config)
 	$(call unlink_sf,$(GHOSTTY_LINUX_OVERRIDES),$(HOME)/.config/ghostty/dotfiles.conf)
 	$(call unlink_sf,$(DOTDIR)/config/cava,$(HOME)/.config/cava)
@@ -145,6 +149,7 @@ relink: unlink link ## Remove and recreate all symlinks
 
 omarchy-link: ## Activate the curated personal overrides for Omarchy
 	@echo "Linking personal Omarchy overrides..."
+	$(call ln_sf,$(DOTDIR)/config/bash/.bash_profile,$(HOME)/.bash_profile)
 	$(call ln_sf,$(DOTDIR)/config/zsh/.zshrc,$(HOME)/.zshrc)
 	$(call ln_sf,$(DOTDIR)/config/atuin/config.toml,$(HOME)/.config/atuin/config.toml)
 	$(call unlink_sf,$(DOTDIR)/config/tmux/tmux.conf,$(HOME)/.tmux.conf)
@@ -297,6 +302,9 @@ ifeq ($(UNAME_S),Linux)
 		apply_file "$(GHOSTTY_LINUX_CONFIG)" "$(HOME)/.config/ghostty/config" "Ghostty base overlay"; \
 		apply_file "$(GHOSTTY_LINUX_OVERRIDES)" "$(HOME)/.config/ghostty/dotfiles.conf" "Ghostty personal override"; \
 		apply_file "$(OMARCHY_MONITORS)" "$(HOME)/.config/hypr/monitors.lua" "Omarchy monitor override"; \
+		apply_file "$(OMARCHY_AUTOSTART)" "$(HOME)/.config/hypr/autostart.lua" "Omarchy autostart override"; \
+		apply_file "$(OMARCHY_CODEX_WRAPPER)" "$(HOME)/.local/bin/codex" "Codex compatibility wrapper"; \
+		chmod 755 "$(HOME)/.local/bin/codex"; \
 		omarchy restart terminal >/dev/null; \
 		if [ -n "$${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then \
 			hyprctl reload >/dev/null; \
@@ -313,6 +321,8 @@ ifeq ($(UNAME_S),Linux)
 	@diff -u "$(GHOSTTY_LINUX_CONFIG)" "$(HOME)/.config/ghostty/config" || true
 	@diff -u "$(GHOSTTY_LINUX_OVERRIDES)" "$(HOME)/.config/ghostty/dotfiles.conf" || true
 	@diff -u "$(OMARCHY_MONITORS)" "$(HOME)/.config/hypr/monitors.lua" || true
+	@diff -u "$(OMARCHY_AUTOSTART)" "$(HOME)/.config/hypr/autostart.lua" || true
+	@diff -u "$(OMARCHY_CODEX_WRAPPER)" "$(HOME)/.local/bin/codex" || true
 endif
 
 firefox: ## Symlink Firefox userChrome.css (Linux, auto-detects profile)

@@ -1,0 +1,9 @@
+#!/bin/bash
+export MISE_MINIMUM_RELEASE_AGE=0
+mise use -g --quiet "codex" || exit 1
+
+if [[ "$*" == "-s read-only -a untrusted app-server" ]]; then
+  set -- -s read-only -a never app-server
+  export http_proxy=http://127.0.0.1:7897 https_proxy=$http_proxy all_proxy=socks5://127.0.0.1:7897
+fi
+exec mise x "codex" -- "codex" "$@"

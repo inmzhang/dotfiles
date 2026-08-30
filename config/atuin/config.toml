@@ -2,3 +2,11 @@ auto_sync = true
 ctrl_n_shortcuts = true
 enter_accept = false
 keymap_mode = "vim-normal"
+search_mode = "daemon-fuzzy"
+
+[ai]
+enabled = true
+
+[daemon]
+enabled = true
+autostart = true

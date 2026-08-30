@@ -10,7 +10,7 @@ Hyprland distribution.
 |---|---|---|
 | `/usr/share/omarchy` | Omarchy packages | Never edit or track |
 | `~/.config/hypr`, `~/.config/omarchy` | Omarchy user overrides | Track only intentional deltas |
-| `~/.config/nvim`, `~/.config/tmux`, `~/.zshrc` | Personal | Symlink from this repository |
+| `~/.config/nvim`, `~/.config/tmux`, `~/.bash_profile`, `~/.zshrc` | Personal | Symlink from this repository |
 | `~/.local/state/omarchy` | Generated theme/runtime state | Never track |
 
 The only tracked Hyprland delta is
@@ -48,6 +48,7 @@ This activates:
 
 - the repository's vanilla Neovim 0.12+ configuration instead of LazyVim;
 - the personal tmux configuration under `~/.config/tmux/tmux.conf`;
+- the Bash login profile, including terminal proxy variables;
 - the personal Zsh layer on top of `omarchy-zsh`;
 - the Ghostty overlay on top of Omarchy's packaged config;
 - the tracked monitor override.
@@ -61,6 +62,8 @@ Omarchy intentionally leaves Bash as the login shell and launches Zsh from its
 interactive Bash startup. Do not use `chsh` on Omarchy. The tracked `.zshrc`
 sources `/usr/share/omarchy-zsh/shell/{zoptions,all}` first and then loads the
 personal aliases, functions, environment, and optional private file.
+The tracked `.bash_profile` exports the terminal proxy before that handoff, so
+commands launched directly through a Bash login shell inherit it too.
 
 `config/zsh/zsh-private.sh` is ignored by Git. Use it for machine-local values
 or secrets:

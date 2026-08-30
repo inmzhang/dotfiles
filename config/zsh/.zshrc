@@ -48,3 +48,5 @@ proxy_on
 command -v fastfetch >/dev/null 2>&1 && fastfetch
 
 unset _DOTFILES_ZSH _OMARCHY_ZSH_ROOT _ZSH_AUTOSUGGEST _ZSH_SYNTAX_HL
+
+. "$HOME/.local/share/../bin/env"
