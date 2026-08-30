@@ -13,11 +13,10 @@ Hyprland distribution.
 | `~/.config/nvim`, `~/.config/tmux`, `~/.bash_profile`, `~/.zshrc` | Personal | Symlink from this repository |
 | `~/.local/state/omarchy` | Generated theme/runtime state | Never track |
 
-The only tracked Hyprland delta is
-`config/omarchy/hypr/monitors.lua`. `make omarchy-apply` copies it into the
-live Omarchy config and checks Hyprland for configuration errors. It is copied
-instead of symlinked so an Omarchy refresh cannot accidentally write into the
-Git checkout.
+Tracked Hyprland deltas live under `config/omarchy/hypr/`. `make
+omarchy-apply` copies them into the live Omarchy config and checks Hyprland for
+configuration errors. They are copied instead of symlinked so an Omarchy
+refresh cannot accidentally write into the Git checkout.
 
 Ghostty is also a thin overlay. `config/ghostty/linux` loads Omarchy's packaged
 configuration and then `~/.config/ghostty/dotfiles.conf`, copied from
@@ -51,7 +50,7 @@ This activates:
 - the Bash login profile, including terminal proxy variables;
 - the personal Zsh layer on top of `omarchy-zsh`;
 - the Ghostty overlay on top of Omarchy's packaged config;
-- the tracked monitor override.
+- the tracked Hyprland overrides.
 
 The rest of Hyprland, Waybar, launchers, logout UI, Qt theming, screenshots,
 themes, and wallpaper integration remain owned by Omarchy.

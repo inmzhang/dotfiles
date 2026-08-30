@@ -9,6 +9,7 @@ CODEX_MEMORY_SEED_DIR := $(DOTDIR)/config/codex/memories/seed
 CODEX_MEMORY_STATE_DIR := $(HOME)/.local/state/codex/memories
 OMARCHY_MONITORS := $(DOTDIR)/config/omarchy/hypr/monitors.lua
 OMARCHY_AUTOSTART := $(DOTDIR)/config/omarchy/hypr/autostart.lua
+OMARCHY_BINDINGS := $(DOTDIR)/config/omarchy/hypr/bindings.lua
 OMARCHY_CODEX_WRAPPER := $(DOTDIR)/config/omarchy/bin/codex
 GHOSTTY_LINUX_CONFIG := $(DOTDIR)/config/ghostty/linux
 GHOSTTY_LINUX_OVERRIDES := $(DOTDIR)/config/ghostty/linux-overrides
@@ -304,6 +305,7 @@ ifeq ($(UNAME_S),Linux)
 		apply_file "$(GHOSTTY_LINUX_OVERRIDES)" "$(HOME)/.config/ghostty/dotfiles.conf" "Ghostty personal override"; \
 		apply_file "$(OMARCHY_MONITORS)" "$(HOME)/.config/hypr/monitors.lua" "Omarchy monitor override"; \
 		apply_file "$(OMARCHY_AUTOSTART)" "$(HOME)/.config/hypr/autostart.lua" "Omarchy autostart override"; \
+		apply_file "$(OMARCHY_BINDINGS)" "$(HOME)/.config/hypr/bindings.lua" "Omarchy keybinding override"; \
 		apply_file "$(OMARCHY_CODEX_WRAPPER)" "$(HOME)/.local/bin/codex" "Codex compatibility wrapper"; \
 		chmod 755 "$(HOME)/.local/bin/codex"; \
 		omarchy restart terminal >/dev/null; \
@@ -323,6 +325,7 @@ ifeq ($(UNAME_S),Linux)
 	@diff -u "$(GHOSTTY_LINUX_OVERRIDES)" "$(HOME)/.config/ghostty/dotfiles.conf" || true
 	@diff -u "$(OMARCHY_MONITORS)" "$(HOME)/.config/hypr/monitors.lua" || true
 	@diff -u "$(OMARCHY_AUTOSTART)" "$(HOME)/.config/hypr/autostart.lua" || true
+	@diff -u "$(OMARCHY_BINDINGS)" "$(HOME)/.config/hypr/bindings.lua" || true
 	@diff -u "$(OMARCHY_CODEX_WRAPPER)" "$(HOME)/.local/bin/codex" || true
 endif
 
