@@ -12,6 +12,7 @@ jujutsu
 rustup
 ruff
 typst
+tectonic
 typstyle
 yt-dlp
 hyperfine
