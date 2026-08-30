@@ -96,6 +96,7 @@ link: ## Create all symlinks for current platform
 ifeq ($(UNAME_S),Linux)
 	@echo "Linking Linux configs..."
 	$(call ln_sf,$(DOTDIR)/config/bash/.bash_profile,$(HOME)/.bash_profile)
+	$(call ln_sf,$(DOTDIR)/config/xcompose/.XCompose,$(HOME)/.XCompose)
 	@if ! command -v omarchy >/dev/null 2>&1; then $(MAKE) --no-print-directory ghostty-link; fi
 	$(call ln_sf,$(DOTDIR)/config/cava,$(HOME)/.config/cava)
 	$(call ln_sf,$(DOTDIR)/config/wallpapers,$(HOME)/Pictures/wallpapers)
@@ -137,6 +138,7 @@ unlink: ## Remove all symlinks
 	@$(MAKE) --no-print-directory codex-skills-unlink
 ifeq ($(UNAME_S),Linux)
 	$(call unlink_sf,$(DOTDIR)/config/bash/.bash_profile,$(HOME)/.bash_profile)
+	$(call unlink_sf,$(DOTDIR)/config/xcompose/.XCompose,$(HOME)/.XCompose)
 	$(call unlink_sf,$(GHOSTTY_LINUX_CONFIG),$(HOME)/.config/ghostty/config)
 	$(call unlink_sf,$(GHOSTTY_LINUX_OVERRIDES),$(HOME)/.config/ghostty/dotfiles.conf)
 	$(call unlink_sf,$(DOTDIR)/config/cava,$(HOME)/.config/cava)
@@ -151,6 +153,7 @@ relink: unlink link ## Remove and recreate all symlinks
 omarchy-link: ## Activate the curated personal overrides for Omarchy
 	@echo "Linking personal Omarchy overrides..."
 	$(call ln_sf,$(DOTDIR)/config/bash/.bash_profile,$(HOME)/.bash_profile)
+	$(call ln_sf,$(DOTDIR)/config/xcompose/.XCompose,$(HOME)/.XCompose)
 	$(call ln_sf,$(DOTDIR)/config/zsh/.zshrc,$(HOME)/.zshrc)
 	$(call ln_sf,$(DOTDIR)/config/atuin/config.toml,$(HOME)/.config/atuin/config.toml)
 	$(call unlink_sf,$(DOTDIR)/config/tmux/tmux.conf,$(HOME)/.tmux.conf)
