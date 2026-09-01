@@ -8,6 +8,7 @@ jujutsu
 rustup
 ruff
 typst
+pandoc
 tectonic
 typstyle
 hyperfine
