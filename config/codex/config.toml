@@ -138,6 +138,13 @@ enabled = true
 [plugins."codex-app-tools@openai-bundled"]
 enabled = true
 
+[[hooks.UserPromptSubmit]]
+
+[[hooks.UserPromptSubmit.hooks]]
+type = "command"
+command = 'python3 ~/.codex/hooks/markdown-preview.py'
+timeout = 3
+
 [[hooks.Stop]]
 
 [[hooks.Stop.hooks]]
@@ -175,6 +182,9 @@ trusted_hash = "sha256:670cc7abf4835865bac00d6a469588257fb57b3a4fe3100513a07bab7
 
 [hooks.state."/home/inm/.codex/config.toml:stop:0:0"]
 trusted_hash = "sha256:c0e16ca8ceeb0c9b1535b6aec26eb65a56fd22ebacbb120b62497f967e489e66"
+
+[hooks.state."/home/inm/.codex/config.toml:user_prompt_submit:0:0"]
+trusted_hash = "sha256:68919cfc0a30c059c324d0ff2ac3b0af99ecbabcdf14ad3d2bda68cd94c76aeb"
 
 [projects."/home/inm/dotfiles"]
 trust_level = "trusted"
