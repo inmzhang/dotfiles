@@ -1,4 +1,6 @@
-model = "gpt-5.6-sol"
+model = "gpt-5.6-luna"
+model_context_window = 516000
+model_auto_compact_token_limit = 464400
 review_model = "gpt-5.6-terra"
 project_doc_fallback_filenames = ["CLAUDE.md"] # Fallback when AGENTS.md is not present.
 approval_policy = "on-request"
@@ -12,7 +14,7 @@ collaboration_mode = true
 suppress_unstable_features_warning = true
 plan_mode_reasoning_effort = "xhigh"
 
-model_reasoning_effort = "high"
+model_reasoning_effort = "max"
 service_tier = "default"
 
 # model_provider = "OpenAI"
@@ -40,6 +42,9 @@ terminal_resize_reflow = true
 apps = false
 enable_mcp_apps = false
 js_repl = false
+context_management = { experimental_mode = true }
+token_budget.enabled = true
+token_budget.use_history_notes_extension = true
 
 [shell_environment_policy]
 inherit = "all"
@@ -53,13 +58,14 @@ network_access = true # Allow outbound network access inside the sandbox.
 
 [tui]
 notifications = true
-status_line = ["model-with-reasoning", "git-branch", "context-remaining", "total-input-tokens", "total-output-tokens", "weekly-limit", "fast-mode"]
+status_line = ["model-with-reasoning", "git-branch", "context-remaining", "total-input-tokens", "total-output-tokens", "weekly-limit", "fast-mode", "task-progress", "context-window-size"]
 status_line_use_colors = true
 vim_mode_default = true
 
 [tui.model_availability_nux]
 "gpt-5.5" = 4
 "gpt-5.6-sol" = 4
+gpt-6-astra = 4
 
 [notice]
 hide_rate_limit_model_nudge = true
@@ -136,6 +142,9 @@ enabled = true
 enabled = true
 
 [plugins."codex-app-tools@openai-bundled"]
+enabled = true
+
+[plugins."unified-computer-use@openai-bundled"]
 enabled = true
 
 [[hooks.UserPromptSubmit]]
@@ -270,6 +279,27 @@ trust_level = "trusted"
 [projects."/home/inm/Work"]
 trust_level = "trusted"
 
+[projects."/home/inm/Downloads/ask-pro"]
+trust_level = "trusted"
+
+[projects."/home/inm/open-source-projects/qrab"]
+trust_level = "trusted"
+
+[projects."/home/inm/workspace/cv"]
+trust_level = "trusted"
+
+[projects."/home/inm/codex-markdown-preview"]
+trust_level = "trusted"
+
+[projects."/home/inm/Documents/Codex/2026-09-04/create-a-scheduled-task-called-weekday"]
+trust_level = "trusted"
+
+[projects."/home/inm/Documents/Codex/2026-09-04/gmail-plugin-gmail-openai-curated-remote"]
+trust_level = "trusted"
+
+[projects."/home/inm/Documents/Codex/2026-09-05/html-svg-2d"]
+trust_level = "trusted"
+
 [mcp_servers.node_repl]
 args = []
 command = "/usr/lib/chatgpt/resources/cua_node/bin/node_repl"
@@ -282,16 +312,18 @@ NODE_REPL_NODE_PATH = "/usr/lib/chatgpt/resources/cua_node/bin/node"
 NODE_REPL_TRUSTED_CODE_PATHS = "/home/inm/.codex:/usr/lib/chatgpt/resources/cua_node/lib/node_modules"
 CODEX_HOME = "/home/inm/.codex"
 BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
-BROWSER_USE_TINYSKY_ENABLED = "0"
-NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
-NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
+BROWSER_USE_TINYSKY_ENABLED = "1"
+NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = ""
+NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = ""
 BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
-BROWSER_USE_CODEX_APP_VERSION = "26.820.80927"
-NODE_REPL_TRUSTED_SERVICES = '{"browser":"/home/inm/.codex/plugins/cache/openai-bundled/browser/26.820.80927/scripts/browser-service.mjs"}'
+BROWSER_USE_CODEX_APP_VERSION = "26.901.20858"
+NODE_REPL_TRUSTED_SERVICES = '{"browser":"/home/inm/.codex/plugins/cache/openai-bundled/browser/26.901.20858/scripts/browser-service.mjs"}'
 CODEX_CLI_PATH = "/usr/lib/chatgpt/resources/codex"
 
 [desktop]
-conversationDetailMode = "STEPS_PROSE"
+conversationDetailMode = "STEPS_COMMANDS"
 sansFontSize = 14
 codeFontSize = 13
 ambient-suggestions-enabled = false
+followUpQueueMode = "queue"
+enabled-reasoning-efforts = ["low", "medium", "high", "xhigh", "ultra", "max"]

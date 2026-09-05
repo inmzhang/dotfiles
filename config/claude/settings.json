@@ -19,7 +19,7 @@
       "Bash(agent-browser *)"
     ]
   },
-  "model": "claude-fable-5[1m]",
+  "model": "opus[1m]",
   "hooks": {
     "PreToolUse": [
       {
@@ -33,9 +33,10 @@
       }
     ]
   },
+  "enableArtifact": false,
   "statusLine": {
     "type": "command",
-    "command": "ccstatusline",
+    "command": "bunx -y ccstatusline@latest",
     "padding": 0,
     "refreshInterval": 10
   },
@@ -116,8 +117,17 @@
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
+  "modelSettings": {
+    "claude-opus-5": {
+      "effortLevel": "high"
+    },
+    "claude-fable-5": {
+      "effortLevel": "xhigh"
+    }
+  },
   "autoCompactWindow": 1000000,
   "fastMode": false,
+  "awaySummaryEnabled": false,
   "voice": {
     "enabled": true,
     "mode": "hold"
@@ -125,6 +135,7 @@
   "autoMemoryEnabled": false,
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark",
+  "remoteControlAtStartup": false,
   "voiceEnabled": true,
   "sounds": {
     "dictation": false
